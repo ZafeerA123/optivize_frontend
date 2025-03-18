@@ -3,6 +3,7 @@ layout: base
 title: Flashcards
 description: Flashcards
 hide: true
+permalink: /flashcards
 ---
 
 
