@@ -212,13 +212,13 @@ menu: nav/home.html
 
     @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
-    .cantella-title {
+    .bioludica-title {
         text-align: center;
         margin: 20px 0;
         position: relative;
     }
 
-    .cantella-title h1 {
+    .bioludica-title h1 {
         font-size: 5rem;
         color: #FF8A5B;
         font-family: 'Arial', sans-serif;
@@ -227,16 +227,16 @@ menu: nav/home.html
         margin: 20px 0;
     }
 
-    .cantella-title h1 span {
+    .bioludica-title h1 span {
         display: inline-block;
         animation: bounce 1.5s infinite alternate;
     }
 
-    .cantella-title h1 span:nth-child(odd) {
+    .bioludica-title h1 span:nth-child(odd) {
         animation-delay: 0.1s;
     }
 
-    .cantella-title h1 span:nth-child(even) {
+    .bioludica-title h1 span:nth-child(even) {
         animation-delay: 0.2s;
     }
 
@@ -253,7 +253,7 @@ menu: nav/home.html
 <div class="floating-shape shape2"></div>
 <div class="floating-shape shape3"></div>
 
-<div class="cantella-title">
+<div class="bioludica-title">
     <h1>
         <span>C</span><span>a</span><span>n</span><span>t</span><span>e</span><span>l</span><span>l</span><span>a</span>
     </h1>

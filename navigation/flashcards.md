@@ -475,7 +475,7 @@ async function fetchDecks() {
             });
         } else if (response.status === 401) {
             alert('You are not authorized. Please log in.');
-            window.location.href = '/cantella_frontend/login';
+            window.location.href = '/bioludica_frontend/login';
         } else {
             const error = await response.json();
             console.error('Failed to fetch decks:', error);

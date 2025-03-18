@@ -113,7 +113,7 @@ permalink: classes/ap/chem/home
 
 <script>
   function goToIndex() {
-    window.location.href = '/cantella_frontend/';
+    window.location.href = '/bioludica_frontend/';
   }
 
   // Add some fun lab sounds

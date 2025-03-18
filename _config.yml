@@ -1,9 +1,9 @@
-title: Cantella
+title: Bioludica
 description: "Study Site for DNHS"
 owner_name: Xavier Thompson
 github_username: XavierTho
-github_repo: "cantella_frontend" 
-baseurl: "/cantella_frontend"
+github_repo: "bioludica_frontend" 
+baseurl: "/bioludica_frontend"
 future: true
 remote_theme: jekyll/minima
 minima:
@@ -27,6 +27,6 @@ header_pages:
 
 
 
-Server: https://cantella.nighthawkcodingsociety.com/
+Server: https://bioludica.nighthawkcodingsociety.com/
 Domain: nighthawkcodingsociety.com
-Subdomain: cantella
+Subdomain: bioludica

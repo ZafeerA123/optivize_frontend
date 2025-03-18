@@ -120,7 +120,7 @@ permalink: classes/ap/world/home
 
 <script>
   function goToIndex() {
-    window.location.href = '/cantella_frontend/';
+    window.location.href = '/bioludica_frontend/';
   }
 
   // Create floating historical dates

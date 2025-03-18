@@ -14,7 +14,7 @@ author: Xavier, Nolan, Zafeer, Armaghan, Jackson, Arush
 
 ## Intro
 
-What time is it? Time for deployment! This blog will serve as reference on how we plan to setup and proceed with the deployment of Cantella.
+What time is it? Time for deployment! This blog will serve as reference on how we plan to setup and proceed with the deployment of bioludica.
 
 ## Pre-Deployment Process
 
@@ -35,9 +35,9 @@ We selected the port 8202 and updated our config files accordingly
 #### Frontend Files
 - config.yml
 ```
-Server: https://cantella.nighthawkcodingsociety.com/
+Server: https://bioludica.nighthawkcodingsociety.com/
 Domain: nighthawkcodingsociety.com
-Subdomain: cantella
+Subdomain: bioludica
 ```
 
 - assets/js/api/config.js
@@ -48,7 +48,7 @@ if (location.hostname === "localhost") {
 } else if (location.hostname === "127.0.0.1") {
         pythonURI = "http://127.0.0.1:8202";
 } else {
-        pythonURI =  "https://cantella.stu.nighthawkcodingsociety.com";
+        pythonURI =  "https://bioludica.stu.nighthawkcodingsociety.com";
 }
 ```
 
@@ -90,7 +90,7 @@ if (location.hostname === "localhost") {
       version: '3'
       services:
               web:
-                      image: cantella
+                      image: bioludica
                       build: .
                       env_file:
                               - .env
@@ -107,7 +107,7 @@ if (location.hostname === "localhost") {
 server {
     listen 80;
     listen [::]:80;
-    server_name cantella.stu.nighthawkcodingsociety.com ; # Change server name to the one on R53
+    server_name bioludica.stu.nighthawkcodingsociety.com ; # Change server name to the one on R53
     # Configure CORS Headers
     location / { 
         proxy_pass http://localhost:8202; # Change port to port on docker
@@ -164,7 +164,7 @@ We have made it to the page where we can create a DNS record. Click the button t
 
 When creating a record you need to put in some information. Here is the following information that should be inputted:
 ```
-Record name: name of your project (ex: cantella)
+Record name: name of your project (ex: bioludica)
 Record type: A - Routes traffic to an IPv4 address and some AWS resources
 Value: 3.129.109.200
 TTL (seconds): 300
@@ -235,7 +235,7 @@ This should be the output:
 
 <img src="{{site.baseurl}}/images/deployment-blog/certbot-command-output.png">
 
-Once on this screen, enter the number corresponding to your subdomain. In the case of my own website, cantella, I would pick the number 2 based off the image above.
+Once on this screen, enter the number corresponding to your subdomain. In the case of my own website, bioludica, I would pick the number 2 based off the image above.
 
 Assuming, you did all the steps before correctly, you will be met with output that includes `Successfully deployed certificate for [subdomain].stu.nighthawkcodingsociety.com`
 
@@ -259,7 +259,7 @@ When you edit and commit changes on VSCode, they don't automatically get changed
 ### Update Index Page
 Once, you get your subdomain fully setup, you can access the link online.
 
-Here is our link for [reference](https://cantella.stu.nighthawkcodingsociety.com/)
+Here is our link for [reference](https://bioludica.stu.nighthawkcodingsociety.com/)
 
 However, initially, all our pages will look like this by default.
 
