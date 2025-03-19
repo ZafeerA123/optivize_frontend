@@ -1,16 +1,16 @@
 export var pythonURI;
 if (location.hostname === "localhost") {
-        pythonURI = "http://localhost:8202";
+        pythonURI = "http://localhost:8212";
 } else if (location.hostname === "127.0.0.1") {
-        pythonURI = "http://127.0.0.1:8202";
+        pythonURI = "http://127.0.0.1:8212";
 } else {
         pythonURI =  "https://bioludica.stu.nighthawkcodingsociety.com";
 }
 export var javaURI;
 if (location.hostname === "localhost") {
-        javaURI = "http://localhost:8202";
+        javaURI = "http://localhost:8212";
 } else if (location.hostname === "127.0.0.1") {
-        javaURI = "http://127.0.0.1:8202"; //rey
+        javaURI = "http://127.0.0.1:8212"; //rey
 } else {
         javaURI = "https://flocker-j.nighthawkcodingsociety.com";
 }

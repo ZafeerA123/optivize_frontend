@@ -30,7 +30,7 @@ Before deploying, all features should work! If it doesn't work locally, it won't
 The checklist includes tasks to do before, during, and after deployment and additionally team roles.
 
 ### (3) Prepare Config Files
-We selected the port 8202 and updated our config files accordingly
+We selected the port 8212 and updated our config files accordingly
 
 #### Frontend Files
 - config.yml
@@ -44,9 +44,9 @@ Subdomain: bioludica
 ```
 export var pythonURI;
 if (location.hostname === "localhost") {
-        pythonURI = "http://localhost:8202";
+        pythonURI = "http://localhost:8212";
 } else if (location.hostname === "127.0.0.1") {
-        pythonURI = "http://127.0.0.1:8202";
+        pythonURI = "http://127.0.0.1:8212";
 } else {
         pythonURI =  "https://bioludica.stu.nighthawkcodingsociety.com";
 }
@@ -58,7 +58,7 @@ if (location.hostname === "localhost") {
   # this runs the flask application on the development server
   if __name__ == "__main__":
       # change name for testing
-      app.run(debug=True, host="0.0.0.0", port="8202")
+      app.run(debug=True, host="0.0.0.0", port="8212")
 ```
 
 - Dockerfile
@@ -75,9 +75,9 @@ if (location.hostname === "localhost") {
   RUN pip install --no-cache-dir -r requirements.txt
   RUN pip install gunicorn
 
-  ENV GUNICORN_CMD_ARGS="--workers=1 --bind=0.0.0.0:8202"
+  ENV GUNICORN_CMD_ARGS="--workers=1 --bind=0.0.0.0:8212"
 
-  EXPOSE 8202
+  EXPOSE 8212
 
   # Define environment variable
   ENV FLASK_ENV=production
@@ -95,7 +95,7 @@ if (location.hostname === "localhost") {
                       env_file:
                               - .env
                       ports:
-                              - "8202:8202"
+                              - "8212:8212"
                       volumes:
                               - ./instance:/instance
                       restart: unless-stopped
@@ -110,7 +110,7 @@ server {
     server_name bioludica.stu.nighthawkcodingsociety.com ; # Change server name to the one on R53
     # Configure CORS Headers
     location / { 
-        proxy_pass http://localhost:8202; # Change port to port on docker
+        proxy_pass http://localhost:8212; # Change port to port on docker
         # Simple requests
         if ($request_method ~* "(GET|POST|PUT|DELETE)") { # Customize Request methods based on your needs
                 add_header "Access-Control-Allow-Origin"  *;
@@ -131,7 +131,7 @@ server {
 
 ```
 # Allowed servers for cross-origin resource sharing (CORS), these are GitHub Pages and localhost for GitHub Pages testing
-cors = CORS(app, supports_credentials=True, origins=['http://localhost:8202', 'http://127.0.0.1:8202', 'https://xaviertho.github.io'])
+cors = CORS(app, supports_credentials=True, origins=['http://localhost:8212', 'http://127.0.0.1:8212', 'https://xaviertho.github.io'])
 ```
 
 
