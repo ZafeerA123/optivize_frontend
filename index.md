@@ -255,7 +255,7 @@ menu: nav/home.html
 
 <div class="bioludica-title">
     <h1>
-        <span>C</span><span>a</span><span>n</span><span>t</span><span>e</span><span>l</span><span>l</span><span>a</span>
+        <span>Bioludica</span>
     </h1>
 </div>
 
