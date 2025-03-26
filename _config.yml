@@ -1,9 +1,9 @@
-title: Bioludica
+title: optivize
 description: "Study Site for DNHS"
 owner_name: Zafeer
 github_username: ZafeerA123
-github_repo: "bioludica_frontend" 
-baseurl: "/bioludica_frontend"
+github_repo: "optivize_frontend" 
+baseurl: "/optivize_frontend"
 future: true
 remote_theme: jekyll/minima
 minima:
@@ -26,6 +26,6 @@ header_pages:
 
 
 
-Server: https://bioludica.stu.nighthawkcodingsociety.com/
+Server: https://optivize.stu.nighthawkcodingsociety.com/
 Domain: nighthawkcodingsociety.com
-Subdomain: bioludica
+Subdomain: optivize

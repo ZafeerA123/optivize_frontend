@@ -4,7 +4,7 @@ if (location.hostname === "localhost") {
 } else if (location.hostname === "127.0.0.1") {
         pythonURI = "http://127.0.0.1:8212";
 } else {
-        pythonURI =  "https://bioludica.stu.nighthawkcodingsociety.com";
+        pythonURI =  "https://optivize.stu.nighthawkcodingsociety.com";
 }
 export var javaURI;
 if (location.hostname === "localhost") {

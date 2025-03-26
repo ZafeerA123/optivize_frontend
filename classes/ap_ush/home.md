@@ -97,7 +97,7 @@ permalink: classes/ap/ush/home
 
 <script>
   function goToIndex() {
-    window.location.href = '/bioludica_frontend/';
+    window.location.href = '/optivize_frontend/';
   }
 
   function navigateToQuiz() {

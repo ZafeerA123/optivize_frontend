@@ -212,13 +212,13 @@ menu: nav/home.html
 
     @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
-    .bioludica-title {
+    .optivize-title {
         text-align: center;
         margin: 20px 0;
         position: relative;
     }
 
-    .bioludica-title h1 {
+    .optivize-title h1 {
         font-size: 5rem;
         color: #FF8A5B;
         font-family: 'Arial', sans-serif;
@@ -227,16 +227,16 @@ menu: nav/home.html
         margin: 20px 0;
     }
 
-    .bioludica-title h1 span {
+    .optivize-title h1 span {
         display: inline-block;
         animation: bounce 1.5s infinite alternate;
     }
 
-    .bioludica-title h1 span:nth-child(odd) {
+    .optivize-title h1 span:nth-child(odd) {
         animation-delay: 0.1s;
     }
 
-    .bioludica-title h1 span:nth-child(even) {
+    .optivize-title h1 span:nth-child(even) {
         animation-delay: 0.2s;
     }
 
@@ -253,9 +253,9 @@ menu: nav/home.html
 <div class="floating-shape shape2"></div>
 <div class="floating-shape shape3"></div>
 
-<div class="bioludica-title">
+<div class="optivize-title">
     <h1>
-        <span>Bioludica</span>
+        <span>optivize</span>
     </h1>
 </div>
 

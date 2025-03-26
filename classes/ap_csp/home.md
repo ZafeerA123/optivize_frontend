@@ -114,7 +114,7 @@ permalink: classes/ap/csp/home
 
 <script>
   function goToIndex() {
-    window.location.href = '/bioludica_frontend/';
+    window.location.href = '/optivize_frontend/';
   }
 
   // Create Matrix rain effect
