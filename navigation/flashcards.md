@@ -128,7 +128,7 @@ button:hover {
 
 
 <div class="container">
-  <h1>Flashcards</h1>
+  <h1>Manager</h1>
   <div class="top-container">
     <div class="box" id="add-deck-box">
       <h2>Create a New Product Group</h2>
