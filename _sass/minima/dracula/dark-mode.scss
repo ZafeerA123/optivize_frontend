@@ -1,109 +1,90 @@
-:root {
-    --default-canvas-filter: invert(0%);
+/* Colors */
+$background-color-start: #3a2a5a !default; // Dark Purple
+$background-color-end: #1e3d58 !default; // Deep Blue
+$text-color: #eaeaea !default;  // Light text color
+$primary-color: #6a4c9c !default;  // Purple for highlights
+$secondary-color: #00adb5 !default;  // Aqua Blue for accents
+
+/* Gradient Background */
+html, body {
+  background: linear-gradient(135deg, $background-color-start, $background-color-end) !important;  // Gradient mix of blue and purple
+  color: $text-color !important;  // Ensuring text color is light
 }
 
-$high-emph: rgba(white, 0.87);
-$med-emph: rgba(white, 0.69); 
-$low-emph: rgba(white, 0.38);
-$dark-grey : #9c9998; 
-// $dark-grey : #1F1B24;
-$overlay: mix($dark-grey, white, 95%);
-$overlay-light: mix($dark-grey, white, 86%);
-
-html, body, input, textarea, select, button {   
-  color: $high-emph !important;
-  background-color: $dark-grey !important;
-}
-
+/* Links and hover states */
 a {
-    color: rgb(75, 186, 255) !important;
+  color: $primary-color !important;
 }
 
 a:hover {
-    color:$high-emph !important;
+  color: $secondary-color !important;
 }
 
+/* Header, site navigation, and footer */
 .site-title, .site-title:visited, .site-nav, .page-link {
-    color: $high-emph !important;
+  color: $text-color !important;
 }
 
 .site-nav {
-    background-color: $dark-grey;
-    border-color: $overlay-light;
+  background-color: $background-color-start !important;
 }
 
-* {
-    scrollbar-color: $dark-grey $overlay-light;
+.page__footer-follow .social-icons i,
+.page__footer-follow .social-icons .svg-inline--fa {
+  color: $text-color !important;
 }
 
-pre, code {
-    // BVas a lighter colour to better highlight short code words
-    border-color: $overlay-light;
-    background-color: $overlay;
-}
-
-.page-description {
-    color: $med-emph;
-}
-
-.post-meta {
-    color: $low-emph;
-}
-
-.post-content p, .post-content li {
-    color: $med-emph;
-}
-
+/* Buttons */
 .btn {
-    background-color: $overlay !important;
-    color: $high-emph !important;
-    border-color: $overlay-light !important;
+  background-color: $secondary-color !important;
+  color: $text-color !important;
+  border-color: $primary-color !important;
 }
 
 .btn:hover {
-    background-color: $dark-grey !important;
+  background-color: $primary-color !important;
 }
 
-table th{
-    background-color: $overlay;
-    border-color: $overlay-light;
-    color: $high-emph;
+/* Table colors */
+table th, table td {
+  background-color: $background-color-start !important;
+  color: $text-color !important;
+  border-color: $primary-color !important;
 }
 
-table td{
-    background-color: $dark-grey;
-    border-color: $overlay-light;
-    color: $med-emph;
+/* Other areas */
+.post-meta {
+  color: $text-color !important;
+}
+.post-content p, .post-content li {
+  color: $text-color !important;
 }
 
-.flash {
-    color: $dark-grey !important;
-    filter: brightness(80%);
-}
-
-canvas {
-    filter: var(--default-canvas-filter);
-}
-
-.post-list > li > div {
-    box-shadow: none !important;
-    background-color: $overlay;
-    border: none !important;
+/* Custom backgrounds */
+pre, code {
+  background-color: $background-color-start !important;
+  color: $text-color !important;
 }
 
 li .post-meta-description {
-    color: $med-emph !important;
+  color: $text-color !important;
 }
 
-.search-result-preview{
-    color: lightgray !important; 
+/* Search Result */
+.search-result-title {
+  color: $primary-color !important;
 }
 
 .search-result-highlight {
-    color:yellow !important;
-    font-weight:bold !important;
+  color: yellow !important;
+  font-weight: bold !important;
 }
 
-.search-results-list-item .search-result-title {
-    color: cornflowerblue !important;
+.flash {
+  color: $text-color !important;
+  filter: brightness(80%) !important;
+}
+
+canvas {
+  filter: var(--default-canvas-filter);
 }

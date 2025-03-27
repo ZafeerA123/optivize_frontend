@@ -5,18 +5,7 @@ search_exclude: true
 hide: true
 menu: nav/home.html
 ---
-<style>
-    body {
-        background-color: #fff3e6;
-        background-image: 
-            radial-gradient(#ffe4cc 15%, transparent 16%),
-            radial-gradient(#ffe4cc 15%, transparent 16%);
-        background-size: 60px 60px;
-        background-position: 0 0, 30px 30px;
-        position: relative;
-        overflow-x: hidden;
-    }
-
+<style> 
     /* Decorative elements */
     .decorative-corner {
         position: fixed;
@@ -255,7 +244,7 @@ menu: nav/home.html
 
 <div class="optivize-title">
     <h1>
-        <span>optivize</span>
+        <span>Optivize</span>
     </h1>
 </div>
 
@@ -263,21 +252,6 @@ menu: nav/home.html
     <p>Please <a href="{{site.baseurl}}/login">login/sign up</a> to continue.</p>
 </div>
 
-<div id="classes-container" class="classes-container">
-    <!-- Class Cards -->
-    <div class="class-card world">
-        <a href="{{site.baseurl}}/classes/ap/world/home">📜 AP World History</a>
-    </div>
-    <div class="class-card csp">
-        <a href="{{site.baseurl}}/classes/ap/csp/home">💻 AP CSP</a>
-    </div>
-    <div class="class-card chem">
-        <a href="{{site.baseurl}}/classes/ap/chem/home">⚗️ AP Chemistry</a>
-    </div>
-    <div class="class-card ush">
-        <a href="{{site.baseurl}}/classes/ap/ush/home">🦅 AP US History</a>
-    </div>
-</div>
 
 <div class="motivational-bar" onclick="cycleQuotes()">
     <span>💡</span> <span id="motivational-quote">"The best way to predict the future is to create it!"</span>

@@ -6,6 +6,125 @@ hide: false
 menu: nav/index.md
 permalink: /nolanbot/
 ---
+
+<!-- Updated CSS Styles -->
+<style>
+  /* General Styles */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #1a1a2e; /* Dark blue/purple background */
+    margin: 0;
+    padding: 0;
+    color: white;
+  }
+
+  #cantteach-bot-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #121212; /* Dark background for the container */
+    border-radius: 12px; /* Rounded corners for the container */
+  }
+
+  /* Header */
+  .header {
+    background-color: #6a4c93; /* Dark purple */
+    padding: 20px;
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    border-radius: 12px 12px 0 0; /* Rounded top corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  }
+
+  /* Chat Section */
+  .chat-box {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #333; /* Dark grey background for chat */
+    color: #eee; /* Light text for better contrast */
+    border-radius: 0 0 12px 12px; /* Rounded bottom corners */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Inset shadow for depth */
+  }
+
+  /* Input Section */
+  .input-section {
+    display: flex;
+    padding: 10px;
+    background-color: #1a1a2e; /* Dark blue background */
+    border-radius: 0 0 12px 12px; /* Rounded bottom corners */
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3); /* Shadow on top */
+  }
+
+  /* Input Field */
+  .input-field {
+    flex-grow: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    margin-right: 10px;
+    font-size: 1rem;
+    color: #333; /* Dark text */
+    background-color: #fff; /* White background */
+  }
+
+  /* Send Button */
+  .send-button {
+    padding: 12px 25px;
+    background-color: #6a4c93; /* Dark purple */
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px; /* Rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Button Hover Effect */
+  .send-button:hover {
+    background-color: #9b7cd6; /* Lighter purple for hover */
+    color: white;
+  }
+
+  /* Chat Bubbles */
+  div[data-q] {
+    margin-bottom: 20px;
+    background: rgba(100, 100, 255, 0.15); /* Soft blue background for user messages */
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  div[data-q] .question-text {
+    color: #4a90e2; /* Blue text for user questions */
+  }
+
+  div[data-r] {
+    margin-bottom: 20px;
+    background: #6a4c93; /* Purple background for bot responses */
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+  }
+
+  div[data-r] .response-text {
+    color: white;
+  }
+
+  /* Chatbox Scrollbar Styling */
+  #chat-box::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  #chat-box::-webkit-scrollbar-thumb {
+    background: #6a4c93; /* Match the header and footer */
+    border-radius: 5px;
+  }
+</style>
+
+
+
 <div
   id="cantteach-bot-container"
   style="
@@ -202,7 +321,7 @@ permalink: /nolanbot/
     const aiResponse = data.response || "Error: Unable to fetch response.";
     chatBox.innerHTML += `
       <div data-r="${question}" style="margin-bottom: 20px; background: black; padding: 15px; border-radius: 8px; color: white;">
-        <strong>CanTeach:</strong>
+        <strong>OptiBot:</strong>
         <span class="response-text">${aiResponse}</span>
       </div>`;
     document.getElementById("question").value = ""; // Clear input
@@ -236,7 +355,7 @@ async function fetchAllLogs() {
           // Add response to the chat box
           chatBox.innerHTML += `
               <div data-r="${question}" style="margin-bottom: 20px; background: #0077BE; padding: 15px; border-radius: 8px; color: white;">
-                  <strong>CanTeach:</strong>
+                  <strong>Optibot:</strong>
                   <span class="response-text">${response}</span>
               </div>`;
       });
