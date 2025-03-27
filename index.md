@@ -23,10 +23,10 @@ html, body {
 .split-container {
     display: flex;
     width: 100vw; /* Full width of the viewport */
-    height: calc(100vh - 90px); /* Subtract header height to fit content below */
+    height: calc(100vh - 80px); /* Subtract header height to fit content below */
     overflow: hidden; /* Hides any unwanted overflow */
     position: absolute; /* Position container relative to the page */
-    top: 90px; /* Push content below header */
+    top: 80px; /* Push content below header */
     left: 0;
 }
 
