@@ -1,7 +1,7 @@
 ---
 layout: base
 title: Inventory Management
-description: Flashcards
+description: Inventory Management Tool
 hide: true
 permalink: /flashcards
 ---
@@ -128,7 +128,7 @@ button:hover {
 
 
 <div class="container">
-  <h1>Flashcards</h1>
+  <h1>Inventory Management</h1>
   <div class="top-container">
     <div class="box" id="add-deck-box">
       <h2>Add new Product Group</h2>
