@@ -788,35 +788,43 @@ document.addEventListener('DOMContentLoaded', fetchDecks);
 
 
 <script>
-document.getElementById('import-form').addEventListener('submit', async (event) => {
+document.addEventListener('DOMContentLoaded', () => {
+  const importForm = document.getElementById('import-form');
+  if (!importForm) {
+    console.warn('No element with id "import-form" found. Skipping import handler.');
+    return;
+  }
+
+  importForm.addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent form from reloading the page
 
-    const amount = document.getElementById('amount').value || 10;
-    const category = document.getElementById('category').value;
+    const amount = document.getElementById('amount')?.value || 10;
+    const category = document.getElementById('category')?.value;
 
     let apiUrl = `${pythonURI}/api/import-flashcards?amount=${amount}&difficulty=medium`;
     if (category) {
-        apiUrl += `&category=${category}`;
+      apiUrl += `&category=${category}`;
     }
 
     try {
-        const response = await fetch(apiUrl, {
-            ...fetchOptions,
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-        });
+      const response = await fetch(apiUrl, {
+        ...fetchOptions,
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
 
-        if (response.ok) {
-            const data = await response.json();
-            alert(`Successfully imported ${data.flashcards.length} flashcards!`);
-            await fetchDecks(); // Refresh deck list after import
-        } else {
-            const error = await response.json();
-            alert(`Error: ${error.error}`);
-        }
+      if (response.ok) {
+        const data = await response.json();
+        alert(`Successfully imported ${data.flashcards.length} flashcards!`);
+        await fetchDecks(); // Refresh deck list after import
+      } else {
+        const error = await response.json();
+        alert(`Error: ${error.error}`);
+      }
     } catch (error) {
-        console.error("Error importing flashcards:", error);
-        alert("An error occurred while importing flashcards.");
+      console.error("Error importing flashcards:", error);
+      alert("An error occurred while importing flashcards.");
     }
+  });
 });
 </script>
