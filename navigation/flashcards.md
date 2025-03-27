@@ -156,8 +156,8 @@ button:hover {
       <h2>Add an Item</h2>
       <div id="add-flashcard-form" class="hidden">
         <h3 id="current-deck-name">Add Item to Group: <span id="deck-name-placeholder"></span></h3>
-        <input type="text" id="question" placeholder="Enter question" />
-        <input type="text" id="answer" placeholder="Enter answer" />
+        <input type="text" id="question" placeholder="Enter Overview" />
+        <input type="text" id="answer" placeholder="Enter Description" />
         <button id="add-card-btn">Add Item</button>
       </div>
     </div>
@@ -692,7 +692,7 @@ async function openDeck(deck) {
             if (currentDeck.cards.length > 0) {
                 displayFlashcards(currentDeck.cards);
             } else {
-                document.getElementById('flashcard-container').innerHTML = '<p>No flashcards yet. Add one!</p>';
+                document.getElementById('flashcard-container').innerHTML = '<p>No Items yet. Add one!</p>';
             }
 
             document.getElementById('add-flashcard-form').classList.remove('hidden');
