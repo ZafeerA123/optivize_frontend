@@ -1,76 +1,124 @@
 /* Colors */
-$background-color-start: #3a2a5a !default; // Dark Purple
-$background-color-end: #1e3d58 !default; // Deep Blue
+$background-color-start: #132068 !default;  // Dark Purple
+$background-color-end: #024a57 !default;  // Deep Blue
 $text-color: #eaeaea !default;  // Light text color
 $primary-color: #6a4c9c !default;  // Purple for highlights
 $secondary-color: #00adb5 !default;  // Aqua Blue for accents
 
 /* Gradient Background */
 html, body {
-  background: linear-gradient(135deg, $background-color-start, $background-color-end) !important;  // Gradient mix of blue and purple
-  color: $text-color !important;  // Ensuring text color is light
-}
-
-/* Links and hover states */
-a {
-  color: $primary-color !important;
-}
-
-a:hover {
-  color: $secondary-color !important;
-}
-
-/* Header, site navigation, and footer */
-.site-title, .site-title:visited, .site-nav, .page-link {
+  background: linear-gradient(135deg, $background-color-start, $background-color-end) !important;
   color: $text-color !important;
+  font-family: 'Segoe UI', Tahoma !important;
 }
+  
+/* Header Styles */
+header {
+    background-color: #ffffff !important;  /* Ensure the entire header has a white background */
+    color: black !important;  /* Black text */
+    padding: 10px 0;  /* Add padding for spacing */
+    border-radius: 10px;  /* Smooth corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow for depth */
+  }
+  
+  /* Header Styles */
+  .site-title {
+    color: #000000; /* Text color - black or dark gray */
+    font-weight: bold;
+    font-family: 'Segoe UI', sans-serif !important;
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 10px; /* Smooth corners */
+    background-color: #ffffff; /* White background */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .site-title:hover {
+    background-color: #f0f0f0; /* Light gray when hovered */
+    transform: scale(1.05);
+  }
+  
 
+/* Navigation Bar */
 .site-nav {
-  background-color: $background-color-start !important;
+    background-color: #ffffff !important; /* White background */
+    padding: 8px 0;  /* Reduced padding for a smaller height */
+    border-radius: 8px;  /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.2);  /* Soft shadow for depth */
+    display: flex;  /* Use flexbox to align items */
+    justify-content: center;  /* Center the links horizontally */
+    gap: 20px;  /* Add space between each link */
 }
 
-.page__footer-follow .social-icons i,
-.page__footer-follow .social-icons .svg-inline--fa {
-  color: $text-color !important;
+/* Links in Navigation */
+.site-nav a {
+    color: black !important;  /* Black text for links */
+    text-decoration: none;
+    font-size: 1.2rem;  /* Increased font size */
+    font-weight: bold;  /* Make the text bold */
+    padding: 8px 15px;  /* Adjust padding for proper space */
+    border-radius: 5px;  /* Smooth corners for links */
+    transition: color 0.3s ease, background-color 0.3s ease;  /* Smooth transition */
 }
 
-/* Buttons */
+/* Navigation Links Hover Effect */
+.site-nav a:hover {
+    color: $secondary-color !important;  /* Change link color on hover */
+    background-color: #f0f0f0;  /* Light gray background on hover */
+}
+
+
+/* Responsive Adjustment for Smaller Screens */
+@media (max-width: 768px) {
+  .site-nav {
+    flex-direction: column;  /* Stack links vertically on small screens */
+    align-items: center;  /* Center the links vertically */
+    gap: 10px;  /* Reduce space between links */
+  }
+  
+  .site-nav a {
+    font-size: 1rem;  /* Adjust font size for smaller screens */
+    padding: 8px 12px;  /* Adjust padding for smaller screens */
+  }
+}
+
+/* Button Styling with Animation */
 .btn {
   background-color: $secondary-color !important;
   color: $text-color !important;
+  border-radius: 8px;  /* Rounded corners */
+  padding: 10px 20px;
   border-color: $primary-color !important;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .btn:hover {
   background-color: $primary-color !important;
+  transform: scale(1.05);  /* Slightly enlarge the button on hover */
 }
 
-/* Table colors */
+/* Table Styling */
 table th, table td {
   background-color: $background-color-start !important;
   color: $text-color !important;
   border-color: $primary-color !important;
 }
 
-/* Other areas */
-.post-meta {
-  color: $text-color !important;
-}
-.post-content p, .post-content li {
-  color: $text-color !important;
+table th {
+  font-weight: bold;  /* Bold headers */
 }
 
-/* Custom backgrounds */
+/* Pre, Code Block Styling */
 pre, code {
   background-color: $background-color-start !important;
   color: $text-color !important;
+  border-radius: 8px;  /* Rounded corners for code blocks */
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Soft shadow */
 }
 
-li .post-meta-description {
-  color: $text-color !important;
-}
-
-/* Search Result */
+/* Search Results */
 .search-result-title {
   color: $primary-color !important;
 }

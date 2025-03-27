@@ -1,7 +1,7 @@
 ---
 layout: base
-title: Study Log
-description: Log your study hours
+title: Sales Analysis
+description: Sales Analysis Tool
 permalink: naviagtion/log
 ---
 <html lang="en">

@@ -1,13 +1,13 @@
 ---
 layout: base
-title: Flashcards
+title: Inventory Management
 description: Flashcards
 hide: true
 permalink: /flashcards
 ---
 
 
-# Welcome to The Flashcards Page !
+# Welcome to The Inventory Management Page !
 
 
 <style>
