@@ -3,12 +3,11 @@ layout: base
 title: Inventory Management
 description: Flashcards
 hide: true
-permalink: /InventoryManagement
+permalink: /flashcards
 ---
 
 
 # Welcome to The Inventory Management Page !
-
 
 
 <style>
@@ -705,3 +704,127 @@ async function openDeck(deck) {
         console.error('Error fetching deck details:', error);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+function showFlashcard(card) {
+    const flashcard = document.getElementById('flashcard'); // Re-fetch the flashcard element
+    if (!flashcard) {
+        console.error('Flashcard element not found in the DOM.');
+        return;
+    }
+
+
+    console.log('Displaying flashcard:', card);
+
+
+    flashcard.textContent = card.title; // Set the question as the default content
+    flashcard.classList.remove('hidden');
+    flashcard.classList.remove('answer');
+
+
+    // Toggle between question and answer
+    flashcard.onclick = () => {
+        if (flashcard.textContent === card.title) {
+            flashcard.textContent = card.content;
+            flashcard.classList.add('answer');
+        } else {
+            flashcard.textContent = card.title;
+            flashcard.classList.remove('answer');
+        }
+    };
+}
+
+
+
+
+// Event listener for showing the next card
+nextCardBtn.addEventListener('click', () => {
+    if (currentDeck.cards.length > 0) {
+        currentCardIndex = (currentCardIndex + 1) % currentDeck.cards.length;
+        showFlashcard(currentDeck.cards[currentCardIndex]);
+    }
+});
+
+
+// Event listener for closing the deck
+closeDeckBtn.addEventListener('click', () => {
+    flashcardContainer.classList.add('hidden');
+    deckContainer.classList.remove('hidden');
+    nextCardBtn.classList.add('hidden');
+    closeDeckBtn.classList.add('hidden');
+});
+
+
+// Fetch and display flashcards when the page loads
+document.addEventListener('DOMContentLoaded', fetchDecks);
+
+
+
+
+
+
+
+
+  // Close the deck and return to deck view
+  closeDeckBtn.addEventListener('click', () => {
+    flashcardContainer.classList.add('hidden');
+    deckContainer.classList.remove('hidden');
+    nextCardBtn.classList.add('hidden');
+    closeDeckBtn.classList.add('hidden');
+  });
+</script>
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const importForm = document.getElementById('import-form');
+  if (!importForm) {
+    console.warn('No element with id "import-form" found. Skipping import handler.');
+    return;
+  }
+
+  importForm.addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent form from reloading the page
+
+    const amount = document.getElementById('amount')?.value || 10;
+    const category = document.getElementById('category')?.value;
+
+    let apiUrl = `${pythonURI}/api/import-flashcards?amount=${amount}&difficulty=medium`;
+    if (category) {
+      apiUrl += `&category=${category}`;
+    }
+
+    try {
+      const response = await fetch(apiUrl, {
+        ...fetchOptions,
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(`Successfully imported ${data.flashcards.length} flashcards!`);
+        await fetchDecks(); // Refresh deck list after import
+      } else {
+        const error = await response.json();
+        alert(`Error: ${error.error}`);
+      }
+    } catch (error) {
+      console.error("Error importing flashcards:", error);
+      alert("An error occurred while importing flashcards.");
+    }
+  });
+});
+</script>
