@@ -10,6 +10,7 @@ permalink: /InventoryManagement
 # Welcome to The Inventory Management Page !
 
 
+
 <style>
   body {
     font-family: 'Inter', sans-serif;
@@ -76,14 +77,14 @@ button:hover {
     background: #d97706;
 }
 
-.deck-container, .InventoryItem-container {
+.deck-container, .flashcard-container {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
 }
 
-.deck, .InventoryItem {
+.deck, .flashcard {
     width: 200px;
     height: 120px;
     border-radius: 10px;
@@ -101,23 +102,23 @@ button:hover {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
 }
 
-.deck:hover, .InventoryItem:hover {
+.deck:hover, .flashcard:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
 }
 
-.InventoryItem {
+.flashcard {
     height: 220px;
 }
 
-.InventoryItem-content {
+.flashcard-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.InventoryItem-content span {
+.flashcard-content span {
     margin: 5px 0;
 }
 
@@ -128,37 +129,37 @@ button:hover {
 
 
 <div class="container">
-  <h1>Inventory Items</h1>
+  <h1>Flashcards</h1>
   <div class="top-container">
     <div class="box" id="add-deck-box">
-      <h2>Create a New Inventory</h2>
-      <button id="create-deck-btn">+ Create Inventory</button>
+      <h2>Create a New Deck</h2>
+      <button id="create-deck-btn">+ Create Deck</button>
       <div id="add-deck-form" class="hidden">
-        <input type="text" id="deck-title" placeholder="Enter Inventory title" />
+        <input type="text" id="deck-title" placeholder="Enter deck title" />
       </div>
     </div>
     <div class="box" id="open-deck-box">
-      <h2>Your Inventories</h2>
+      <h2>Your Decks</h2>
       <div class="deck-container" id="deck-container"></div>
     </div>
   </div>
 
   <div class="bottom-container hidden" id="deck-interaction">
-    <div class="box" id="InventoryItems-box">
-      <h2>Inventory Items</h2>
-      <div class="InventoryItem-container" id="InventoryItem-container">
-        <div class="InventoryItem hidden" id="InventoryItem"></div>
+    <div class="box" id="flashcard-box">
+      <h2>Flashcards</h2>
+      <div class="flashcard-container" id="flashcard-container">
+        <div class="flashcard hidden" id="flashcard"></div>
         <button id="next-card-btn" class="hidden">Next Card</button>
         <button id="close-deck-btn" class="hidden">Close Deck</button>
       </div>
     </div>
-    <div class="box" id="add-InventoryItem-box">
-      <h2>Add a Inventory Item</h2>
-      <div id="add-InventoryItem-form" class="hidden">
-        <h3 id="current-deck-name">Add Inventory Item to Inventory: <span id="deck-name-placeholder"></span></h3>
-        <input type="text" id="question" placeholder="Enter Item Name" />
-        <input type="text" id="answer" placeholder="Enter Item Description" />
-        <button id="add-card-btn">Add Inventory Item</button>
+    <div class="box" id="add-flashcard-box">
+      <h2>Add a Flashcard</h2>
+      <div id="add-flashcard-form" class="hidden">
+        <h3 id="current-deck-name">Add Flashcard to Deck: <span id="deck-name-placeholder"></span></h3>
+        <input type="text" id="question" placeholder="Enter question" />
+        <input type="text" id="answer" placeholder="Enter answer" />
+        <button id="add-card-btn">Add Flashcard</button>
       </div>
     </div>
   </div>
@@ -186,8 +187,8 @@ button:hover {
   const deckInfoPhase = document.getElementById('deck-info-phase');
   const questionPhase = document.getElementById('question-phase');
   const deckContainer = document.getElementById('deck-container');
-  const InventoryItemContainer = document.getElementById('InventoryItem-container');
-  const InventoryItem = document.getElementById('InventoryItem');
+  const flashcardContainer = document.getElementById('flashcard-container');
+  const flashcard = document.getElementById('flashcard');
   const nextCardBtn = document.getElementById('next-card-btn');
   const closeDeckBtn = document.getElementById('close-deck-btn');
 
@@ -209,7 +210,7 @@ button:hover {
 document.getElementById('create-deck-btn').addEventListener('click', async () => {
     const deckTitle = document.getElementById('deck-title').value.trim();
     if (!deckTitle) {
-        alert('Please provide an inventory title.');
+        alert('Please provide a deck title.');
         return;
     }
 
@@ -231,11 +232,11 @@ document.getElementById('create-deck-btn').addEventListener('click', async () =>
             document.getElementById('deck-title').value = ''; // Clear the input
             displayDeck(newDeck); // Show the new deck
         } else {
-            alert('Failed to create Inventory. Please try again.');
+            alert('Failed to create deck. Please try again.');
         }
     } catch (error) {
-        console.error('Error creating Inventory:', error);
-        alert('An error occurred while creating the Inventory.');
+        console.error('Error creating deck:', error);
+        alert('An error occurred while creating the deck.');
     }
 });
 
@@ -271,17 +272,17 @@ document.getElementById('add-card-btn').addEventListener('click', async () => {
             }),
         });
 
-        if (!response.ok) throw new Error("Failed to add Inventory Item.");
+        if (!response.ok) throw new Error("Failed to add flashcard.");
 
         const newCard = await response.json();
         currentDeck.cards.push(newCard);
-        alert(`Inventory Item added to ${currentDeck.title}!`);
+        alert(`Flashcard added to ${currentDeck.title}!`);
         document.getElementById('question').value = '';
         document.getElementById('answer').value = '';
-        displayInventoryItems(currentDeck.cards);
+        displayFlashcards(currentDeck.cards);
     } catch (error) {
-        console.error('Error adding InventoryItem:', error);
-        alert('An error occurred while adding the InventoryItem.');
+        console.error('Error adding flashcard:', error);
+        alert('An error occurred while adding the flashcard.');
     }
 });
 
@@ -290,15 +291,15 @@ document.getElementById('add-card-btn').addEventListener('click', async () => {
 
 
 
-function displayInventoryItems(cards) {
-    const container = document.getElementById('InventoryItem-container');
-    container.innerHTML = ''; // Clear existing InventoryItems
+function displayFlashcards(cards) {
+    const container = document.getElementById('flashcard-container');
+    container.innerHTML = ''; // Clear existing flashcards
 
     cards.forEach(card => {
         const cardElement = document.createElement('div');
-        cardElement.classList.add('InventoryItem');
+        cardElement.classList.add('flashcard');
         cardElement.innerHTML = `
-            <div class="InventoryItem-content">
+            <div class="flashcard-content">
                 <span class="question-text">${card.title}</span>
                 <span class="edit-icon" style="cursor: pointer; font-size: 16px; margin-left: 8px;">✏️</span>
                 <span class="delete-icon" style="cursor: pointer; font-size: 16px; margin-left: 8px;">❌</span>
@@ -308,7 +309,7 @@ function displayInventoryItems(cards) {
         // Ensure the element exists before adding event listeners
         const questionElement = cardElement.querySelector('.question-text');
         if (!questionElement) {
-            console.error("InventoryItem question text not found!");
+            console.error("Flashcard question text not found!");
             return;
         }
 
@@ -325,16 +326,16 @@ function displayInventoryItems(cards) {
             }
         };
 
-        // Enable Editing a InventoryItem
+        // Enable Editing a Flashcard
         const editIcon = cardElement.querySelector('.edit-icon');
-        editIcon.addEventListener('click', () => editInventoryItem(card, cardElement));
+        editIcon.addEventListener('click', () => editFlashcard(card, cardElement));
 
-        // Enable Deleting a InventoryItem
+        // Enable Deleting a Flashcard
         const deleteIcon = cardElement.querySelector('.delete-icon');
         deleteIcon.addEventListener('click', async () => {
-            const confirmDelete = confirm(`Are you sure you want to delete this InventoryItem?`);
+            const confirmDelete = confirm(`Are you sure you want to delete this flashcard?`);
             if (confirmDelete) {
-                await deleteInventoryItem(card.id, cardElement);
+                await deleteFlashcard(card.id, cardElement);
             }
         });
 
@@ -342,14 +343,14 @@ function displayInventoryItems(cards) {
     });
 
     if (cards.length === 0) {
-        container.innerHTML = '<p>No Inventory Items available. Add one to get started!</p>';
+        container.innerHTML = '<p>No flashcards available. Add one to get started!</p>';
     }
 }
 
 
-// Function to Edit InventoryItem
-function editInventoryItem(card, cardElement) {
-    console.log('Editing InventoryItem:', card);
+// Function to Edit Flashcard
+function editFlashcard(card, cardElement) {
+    console.log('Editing flashcard:', card);
 
     const editForm = document.createElement('div');
     editForm.innerHTML = `
@@ -373,13 +374,13 @@ function editInventoryItem(card, cardElement) {
             return;
         }
 
-        await updateInventoryItem(card.id, updatedTitle, updatedContent, cardElement);
+        await updateFlashcard(card.id, updatedTitle, updatedContent, cardElement);
     });
 }
 
-async function updateInventoryItem(InventoryItemId, newTitle, newContent, cardElement) {
+async function updateFlashcard(flashcardId, newTitle, newContent, cardElement) {
     try {
-        const response = await fetch(`${pythonURI}/api/flashcard/${InventoryItemId}`, {
+        const response = await fetch(`${pythonURI}/api/flashcard/${flashcardId}`, {
             method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',
@@ -389,58 +390,58 @@ async function updateInventoryItem(InventoryItemId, newTitle, newContent, cardEl
             body: JSON.stringify({ title: newTitle, content: newContent }),
         });
 
-        if (!response.ok) throw new Error(`Failed to update Inventory Item: ${response.statusText}`);
+        if (!response.ok) throw new Error(`Failed to update flashcard: ${response.statusText}`);
 
-        const updatedInventoryItem = await response.json();
-        alert(`Inventory Item Name updated successfully!`);
+        const updatedFlashcard = await response.json();
+        alert(`Flashcard updated successfully!`);
 
         cardElement.innerHTML = `
-            <div class="InventoryItem-content">
-                <span class="question-text">${updatedInventoryItem.title}</span>
+            <div class="flashcard-content">
+                <span class="question-text">${updatedFlashcard.title}</span>
                 <span class="edit-icon" style="cursor: pointer;">✏️</span>
                 <span class="delete-icon" style="cursor: pointer;">❌</span>
             </div>
         `;
 
-        cardElement.dataset.answer = updatedInventoryItem.content;
+        cardElement.dataset.answer = updatedFlashcard.content;
 
         const questionElement = cardElement.querySelector('.question-text');
 
         cardElement.onclick = (event) => {
             if (!event.target.classList.contains("edit-icon") && !event.target.classList.contains("delete-icon")) {
-                const isQuestion = questionElement.textContent === updatedInventoryItem.title;
-                questionElement.textContent = isQuestion ? cardElement.dataset.answer : updatedInventoryItem.title;
+                const isQuestion = questionElement.textContent === updatedFlashcard.title;
+                questionElement.textContent = isQuestion ? cardElement.dataset.answer : updatedFlashcard.title;
                 cardElement.classList.toggle('answer', isQuestion);
             }
         };
 
-        cardElement.querySelector('.edit-icon').addEventListener('click', () => editInventoryItem(updatedInventoryItem, cardElement));
-        cardElement.querySelector('.delete-icon').addEventListener('click', () => deleteInventoryItem(updatedInventoryItem.id, cardElement));
+        cardElement.querySelector('.edit-icon').addEventListener('click', () => editFlashcard(updatedFlashcard, cardElement));
+        cardElement.querySelector('.delete-icon').addEventListener('click', () => deleteFlashcard(updatedFlashcard.id, cardElement));
 
     } catch (error) {
-        console.error('Error updating Inventory Item:', error);
-        alert('An error occurred while updating the Inventory Item.');
+        console.error('Error updating flashcard:', error);
+        alert('An error occurred while updating the flashcard.');
     }
 }
 
 
 
 
-async function deleteInventoryItem(InventoryItemId, cardElement) {
+async function deleteFlashcard(flashcardId, cardElement) {
     try {
-        const response = await fetch(`${pythonURI}/api/flashcard/${InventoryItemId}`, {
+        const response = await fetch(`${pythonURI}/api/flashcard/${flashcardId}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
         });
 
-        if (!response.ok) throw new Error(`Failed to delete Inventory Item: ${response.statusText}`);
+        if (!response.ok) throw new Error(`Failed to delete flashcard: ${response.statusText}`);
 
-        alert('Inventory Item deleted successfully!');
+        alert('Flashcard deleted successfully!');
         cardElement.remove();
     } catch (error) {
-        console.error('Error deleting Inventory Item:', error);
-        alert('An error occurred while deleting the Inventory Item.');
+        console.error('Error deleting flashcard:', error);
+        alert('An error occurred while deleting the flashcard.');
     }
 }
 
@@ -479,10 +480,10 @@ async function fetchDecks() {
             window.location.href = '/optivize_frontend/login';
         } else {
             const error = await response.json();
-            console.error('Failed to fetch Inventories:', error);
+            console.error('Failed to fetch decks:', error);
         }
     } catch (error) {
-        console.error('Error fetching Inventories:', error);
+        console.error('Error fetching decks:', error);
     }
 }
 
@@ -495,8 +496,8 @@ async function fetchDecks() {
 
 
 
-// Fetch all InventoryItems from the backend
-async function fetchInventoryItems() {
+// Fetch all flashcards from the backend
+async function fetchFlashcards() {
     try {
 
         // Send a GET request to the backend
@@ -512,16 +513,16 @@ async function fetchInventoryItems() {
 
         if (response.ok) {
             // Parse the response as JSON
-            const InventoryItems = await response.json();
-            console.log('Fetched InventoryItems:', InventoryItems);
+            const flashcards = await response.json();
+            console.log('Fetched flashcards:', flashcards);
 
 
-            // Group InventoryItems by deck title (if applicable) or display as one deck
-            const groupedDeck = { title: "Created InventoryItems", cards: [] };
-            InventoryItems.forEach((InventoryItem) => {
+            // Group flashcards by deck title (if applicable) or display as one deck
+            const groupedDeck = { title: "Created Flashcards", cards: [] };
+            flashcards.forEach((flashcard) => {
                 groupedDeck.cards.push({
-                    question: InventoryItem.title,
-                    answer: InventoryItem.content,
+                    question: flashcard.title,
+                    answer: flashcard.content,
                 });
             });
 
@@ -529,10 +530,10 @@ async function fetchInventoryItems() {
             // Display the deck in the deck container
             displayDeck(groupedDeck);
         } else {
-            console.error('Failed to fetch Inventory Items:', await response.text());
+            console.error('Failed to fetch flashcards:', await response.text());
         }
     } catch (error) {
-        console.error('Error fetching Inventory Items:', error);
+        console.error('Error fetching flashcards:', error);
     }
 }
 
@@ -622,15 +623,15 @@ function displayDeck(deck) {
                 });
 
                 if (response.ok) {
-                    alert('Inventory deleted successfully!');
+                    alert('Deck deleted successfully!');
                     await fetchDecks(); // Refresh the decks list
                 } else {
                     const error = await response.json();
-                    alert(`Failed to delete Inventories: ${error.error}`);
+                    alert(`Failed to delete deck: ${error.error}`);
                 }
             } catch (error) {
-                console.error('Error deleting Inventory:', error);
-                alert('An error occurred while deleting the Inventory.');
+                console.error('Error deleting deck:', error);
+                alert('An error occurred while deleting the deck.');
             }
         }
     });
@@ -652,15 +653,15 @@ async function editDeckTitle(deckId, newTitle, inputElement, titleElement) {
             const updatedDeck = await response.json();
             titleElement.textContent = updatedDeck.title; 
             inputElement.replaceWith(titleElement);
-            alert(`Inventory Name updated successfully to: ${updatedDeck.title}`);
+            alert(`Deck updated successfully to: ${updatedDeck.title}`);
         } else {
             const error = await response.json();
-            alert(`Error updating Inventory: ${error.error}`);
+            alert(`Error updating deck: ${error.error}`);
             inputElement.replaceWith(titleElement);
         }
     } catch (error) {
-        console.error('Error updating Inventory Name:', error);
-        alert('An error occurred while updating the Inventory.');
+        console.error('Error updating deck:', error);
+        alert('An error occurred while updating the deck.');
         inputElement.replaceWith(titleElement);
     }
 }
@@ -690,141 +691,17 @@ async function openDeck(deck) {
             document.getElementById('deck-name-placeholder').textContent = currentDeck.title;
 
             if (currentDeck.cards.length > 0) {
-                displayInventoryItems(currentDeck.cards);
+                displayFlashcards(currentDeck.cards);
             } else {
-                document.getElementById('InventoryItem-container').innerHTML = '<p>No Inventory Items yet. Add one!</p>';
+                document.getElementById('flashcard-container').innerHTML = '<p>No flashcards yet. Add one!</p>';
             }
 
-            document.getElementById('add-InventoryItem-form').classList.remove('hidden');
+            document.getElementById('add-flashcard-form').classList.remove('hidden');
             document.getElementById('deck-interaction').classList.remove('hidden');
         } else {
-            console.error('Failed to fetch Inventory details:', await response.text());
+            console.error('Failed to fetch deck details:', await response.text());
         }
     } catch (error) {
-        console.error('Error fetching Inventory details:', error);
+        console.error('Error fetching deck details:', error);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-function showInventoryItem(card) {
-    const InventoryItem = document.getElementById('InventoryItem'); // Re-fetch the InventoryItem element
-    if (!InventoryItem) {
-        console.error('Inventory Item element not found in the DOM.');
-        return;
-    }
-
-
-    console.log('Displaying Inventory Item:', card);
-
-
-    InventoryItem.textContent = card.title; // Set the question as the default content
-    InventoryItem.classList.remove('hidden');
-    InventoryItem.classList.remove('answer');
-
-
-    // Toggle between question and answer
-    InventoryItem.onclick = () => {
-        if (InventoryItem.textContent === card.title) {
-            InventoryItem.textContent = card.content;
-            InventoryItem.classList.add('answer');
-        } else {
-            InventoryItem.textContent = card.title;
-            InventoryItem.classList.remove('answer');
-        }
-    };
-}
-
-
-
-
-// Event listener for showing the next card
-nextCardBtn.addEventListener('click', () => {
-    if (currentDeck.cards.length > 0) {
-        currentCardIndex = (currentCardIndex + 1) % currentDeck.cards.length;
-        showInventoryItem(currentDeck.cards[currentCardIndex]);
-    }
-});
-
-
-// Event listener for closing the deck
-closeDeckBtn.addEventListener('click', () => {
-    InventoryItemContainer.classList.add('hidden');
-    deckContainer.classList.remove('hidden');
-    nextCardBtn.classList.add('hidden');
-    closeDeckBtn.classList.add('hidden');
-});
-
-
-// Fetch and display InventoryItems when the page loads
-document.addEventListener('DOMContentLoaded', fetchDecks);
-
-
-
-
-
-
-
-
-  // Close the deck and return to deck view
-  closeDeckBtn.addEventListener('click', () => {
-    InventoryItemContainer.classList.add('hidden');
-    deckContainer.classList.remove('hidden');
-    nextCardBtn.classList.add('hidden');
-    closeDeckBtn.classList.add('hidden');
-  });
-</script>
-
-
-
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const importForm = document.getElementById('import-form');
-  if (!importForm) {
-    console.warn('No element with id "import-form" found. Skipping import handler.');
-    return;
-  }
-
-  importForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent form from reloading the page
-
-    const amount = document.getElementById('amount')?.value || 10;
-    const category = document.getElementById('category')?.value;
-
-    let apiUrl = `${pythonURI}/api/import-flashcards?amount=${amount}&difficulty=medium`;
-    if (category) {
-      apiUrl += `&category=${category}`;
-    }
-
-    try {
-      const response = await fetch(apiUrl, {
-        ...fetchOptions,
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        alert(`Successfully imported ${data.InventoryItems.length} Inventory Items!`);
-        await fetchDecks(); // Refresh deck list after import
-      } else {
-        const error = await response.json();
-        alert(`Error: ${error.error}`);
-      }
-    } catch (error) {
-      console.error("Error importing Inventory Items:", error);
-      alert("An error occurred while importing Inventory Items.");
-    }
-  });
-});
-</script>
