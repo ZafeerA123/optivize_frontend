@@ -131,34 +131,34 @@ button:hover {
   <h1>Flashcards</h1>
   <div class="top-container">
     <div class="box" id="add-deck-box">
-      <h2>Create a New Deck</h2>
-      <button id="create-deck-btn">+ Create Deck</button>
+      <h2>Add new Product Group</h2>
+      <button id="create-deck-btn">+ Create Group</button>
       <div id="add-deck-form" class="hidden">
-        <input type="text" id="deck-title" placeholder="Enter deck title" />
+        <input type="text" id="deck-title" placeholder="Enter Group Title" />
       </div>
     </div>
     <div class="box" id="open-deck-box">
-      <h2>Your Decks</h2>
+      <h2>Your Product Group</h2>
       <div class="deck-container" id="deck-container"></div>
     </div>
   </div>
 
   <div class="bottom-container hidden" id="deck-interaction">
     <div class="box" id="flashcard-box">
-      <h2>Flashcards</h2>
+      <h2>Items/Products</h2>
       <div class="flashcard-container" id="flashcard-container">
         <div class="flashcard hidden" id="flashcard"></div>
-        <button id="next-card-btn" class="hidden">Next Card</button>
-        <button id="close-deck-btn" class="hidden">Close Deck</button>
+        <button id="next-card-btn" class="hidden">Next Item</button>
+        <button id="close-deck-btn" class="hidden">Close Group</button>
       </div>
     </div>
     <div class="box" id="add-flashcard-box">
-      <h2>Add a Flashcard</h2>
+      <h2>Add an Item</h2>
       <div id="add-flashcard-form" class="hidden">
-        <h3 id="current-deck-name">Add Flashcard to Deck: <span id="deck-name-placeholder"></span></h3>
-        <input type="text" id="question" placeholder="Enter question" />
-        <input type="text" id="answer" placeholder="Enter answer" />
-        <button id="add-card-btn">Add Flashcard</button>
+        <h3 id="current-deck-name">Add Product to Group: <span id="deck-name-placeholder"></span></h3>
+        <input type="text" id="question" placeholder="Overview" />
+        <input type="text" id="answer" placeholder="Description" />
+        <button id="add-card-btn">Add Item</button>
       </div>
     </div>
   </div>
