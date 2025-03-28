@@ -230,18 +230,18 @@ permalink: naviagtion/log
     </head>
     <body>
         <div class="container">
-            <h1 style="color:#ff7043;">Your Study Logs</h1>
+            <h1 style="color:#ff7043;">Sales Analysis</h1>
             <div>
             </div>
             <div class="log-container" id="log-container">
                 <ul id="study-log"></ul>
             </div>
             <div class="form-container">
-                <h2>Add New Study Log</h2>
+                <h2>Add Sales</h2>
                 <form id="study-log-form">
-                    <label for="subject">Subject:</label>
+                    <label for="subject">Product</label>
                     <input type="text" id="subject" name="subject" required>
-                    <label for="hours">Hours Studied:</label>
+                    <label for="hours">Amount sold</label>
                     <input type="number" id="hours" name="hours" required>
                     <label for="notes">Notes:</label>
                     <textarea id="notes" name="notes"></textarea>
@@ -251,7 +251,7 @@ permalink: naviagtion/log
             </div>
         </div>
         <footer>
-            <p style="text-align: center;">Made by Armaghan Zarak 🍈</p>
+            <p style="text-align: center;">Made by Hithin 🍈</p>
         </footer>
 <script type="module">
     import { pythonURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
