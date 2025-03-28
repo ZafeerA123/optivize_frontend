@@ -247,15 +247,14 @@ permalink: /gradelog
 
 
 <div id="grade-log-app">
-  <h2 style="color:#ff7043;">Grade Log Tracker</h2>
-  <button id="create-log-btn">Add Grade Log</button>
+  <h2 style="color:#ff7043;">Reviews</h2>
 
   <div id="grade-log-form-container" class="hidden">
     <form id="grade-log-form">
-      <input type="text" id="subject" placeholder="Subject" required>
-      <input type="text" id="grade" placeholder="Grade" required>
-      <textarea id="notes" placeholder="Notes (Optional)"></textarea>
-      <button type="submit">Submit Grade Log</button>
+      <input type="text" id="subject" placeholder="Name" required>
+      <input type="text" id="grade" placeholder="Review 1-10" required>
+      <textarea id="notes" placeholder="Comments"></textarea>
+      <button type="submit">Submit Review</button>
     </form>
   </div>
 
@@ -404,8 +403,8 @@ permalink: /gradelog
         logElement.style.backdropFilter = 'blur(5px)';
 
         logElement.innerHTML = `
-          <p><strong style="color: #ff7043;">Grade:</strong> <span class="grade" data-field="grade">${log.grade}</span></p>
-          <p style="color: #ffffff;"><span data-field="notes">${log.notes || 'No notes'}</span></p>
+          <p><strong style="color: #ff7043;">Score:</strong> <span class="grade" data-field="grade">${log.grade}</span></p>
+          <p style="color: #ffffff;"><span data-field="notes">${log.notes || 'No reviews'}</span></p>
           <p style="color: #a8d0ff; font-size: 0.9em;">${new Date(log.date).toLocaleString()}</p>
           <div class="button-group">
             <button class="edit-btn" data-id="${log.id}"><i class="fas fa-pencil-alt"></i></button>
@@ -425,7 +424,7 @@ permalink: /gradelog
       averageElement.style.background = 'rgba(255, 255, 255, 0.15)';
       averageElement.style.textAlign = 'center';
       averageElement.innerHTML = `
-        <p><strong style="color: #ff7043;">Average Grade:</strong> <span class="grade">${averageGrade}</span></p>
+        <p><strong style="color: #ff7043;">Average Score:</strong> <span class="grade">${averageGrade}</span></p>
       `;
       subjectElement.appendChild(averageElement);
 
@@ -465,7 +464,7 @@ permalink: /gradelog
       const averageGrade = (totalGrades / gradeCount).toFixed(2);
       const averageGradeElement = document.createElement('p');
       averageGradeElement.className = 'average-grade';
-      averageGradeElement.innerHTML = `<strong>All Users Average Grade for ${subject}:</strong> <span class="grade">${averageGrade}</span>`;
+      averageGradeElement.innerHTML = `<strong>All Users Score for ${subject}:</strong> <span class="grade">${averageGrade}</span>`;
       gradeLogContainer.appendChild(averageGradeElement);
     });
   }
@@ -505,7 +504,7 @@ permalink: /gradelog
             }
           }, 300);
 
-          alert('Grade log deleted successfully!');
+          alert('Review deleted successfully!');
         } else {
           throw new Error('Failed to delete');
         }

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: About Us
+title: About
 search_exclude: true
 permalink: /about/
 ---
@@ -8,12 +8,6 @@ permalink: /about/
 <div id="about-page-container">
     <h1>About Us</h1>
     <p>Learn more about our team and our mission below.</p>
-
-    <!-- Dynamic Data Container -->
-    <div id="about-container">
-        <h2>Team Members</h2>
-        <p>Fetching data...</p>
-    </div>
 </div>
 
 <style>
@@ -59,58 +53,3 @@ permalink: /about/
     }
 </style>
 
-
-<script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            // API URL
-            const apiUrl = 'http://127.0.0.1:5001/api/zafeer';
-
-            // Fetch data from the API
-            const response = await fetch(apiUrl, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include', // Optional, depending on backend configuration
-            });
-
-            // Check if the response is successful
-            if (!response.ok) {
-                throw new Error('Failed to fetch data from the API');
-            }
-
-            // Parse the JSON response
-            const data = await response.json();
-            console.log('Fetched API Data:', data);
-
-            // Get the container where data will be displayed
-            const aboutContainer = document.getElementById('about-container');
-
-            // Clear the "Fetching data..." placeholder
-            aboutContainer.innerHTML = '';
-
-            // Add data dynamically
-            data.forEach((info) => {
-                const infoBlock = `
-                    <div class="info-block">
-                        <h3>${info.FirstName} ${info.LastName}</h3>
-                        <p><strong>Date of Birth:</strong> ${info.DOB}</p>
-                        <p><strong>Residence:</strong> ${info.Residence}</p>
-                        <p><strong>Email:</strong> ${info.Email}</p>
-                    </div>
-                `;
-
-                aboutContainer.innerHTML += infoBlock;
-            });
-        } catch (error) {
-            console.error('Error fetching API data:', error);
-
-            // Display an error message to the user
-            const aboutContainer = document.getElementById('about-container');
-            aboutContainer.innerHTML = `
-                <p class="error-message">Unable to fetch data at this time. Please try again later.</p>
-            `;
-        }
-    });
-</script>
