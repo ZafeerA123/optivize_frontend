@@ -228,203 +228,222 @@ permalink: naviagtion/log
             }
         </style>
     </head>
-    <body>
-        <div class="container">
-            <h1 style="color:#ff7043;">Sales Analysis</h1>
-            <div>
-            </div>
-            <div class="log-container" id="log-container">
-                <ul id="study-log"></ul>
-            </div>
-            <div class="form-container">
-                <h2>Add Sales</h2>
-                <form id="study-log-form">
-                    <label for="subject">Product</label>
-                    <input type="text" id="subject" name="subject" required>
-                    <label for="hours">Amount sold</label>
-                    <input type="number" id="hours" name="hours" required>
-                    <label for="notes">Notes:</label>
-                    <textarea id="notes" name="notes"></textarea>
-                    <button type="submit">Add Log</button>
-                    <p id="form-messages" class="hidden"></p>
-                </form>
-            </div>
-        </div>
-        <footer>
-            <p style="text-align: center;">Made by Hithin 🍈</p>
-        </footer>
-<script type="module">
-    import { pythonURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
-    // Add this at the top of your script section
-    const deleteSound = new Audio('{{site.baseurl}}/images/sounds/delete.mp3');
-    // Make functions globally available
-    window.deleteLog = async function(logId) {
-        const result = await Swal.fire({
-            title: 'Delete this log?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, keep it'
-        });
-        if (result.isConfirmed) {
-            try {
-                const response = await fetch(`${pythonURI}/api/studylognew`, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: logId }),
-                    credentials: 'include',
-                });
-                if (response.ok) {
-                    deleteSound.play();
-                    await Swal.fire('Deleted!', 'Your log has been deleted.', 'success');
-                    loadStudyLogs();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Analysis Tool</title>    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #ffffff;
+            min-height: 100vh;
         }
-    }
-    window.editLog = async function(logId) {
-        // Get the existing log element to edit
-        const logElement = document.querySelector(`li[data-id="${logId}"]`);
-        const subjectSpan = logElement.querySelector('[data-field="subject"]');
-        const hoursSpan = logElement.querySelector('[data-field="hours"]');
-        const notesSpan = logElement.querySelector('[data-field="notes"]');
-        // Create input fields
-        const subjectInput = document.createElement('input');
-        subjectInput.type = 'text';
-        subjectInput.value = subjectSpan.textContent;
-        subjectInput.className = 'edit-input';
-        const hoursInput = document.createElement('input');
-        hoursInput.type = 'number';
-        hoursInput.step = '0.1';
-        hoursInput.value = hoursSpan.textContent;
-        hoursInput.className = 'edit-input';
-        const notesInput = document.createElement('textarea');
-        notesInput.value = notesSpan.textContent;
-        notesInput.className = 'edit-input';
-        // Replace spans with inputs
-        subjectSpan.replaceWith(subjectInput);
-        hoursSpan.replaceWith(hoursInput);
-        notesSpan.replaceWith(notesInput);
-        // Create save button with icon
-        const saveButton = document.createElement('button');
-        saveButton.innerHTML = '<i class="fas fa-save"></i>';
-        saveButton.className = 'save-btn';
-        // Replace edit button with save button
-        const editButton = logElement.querySelector('.edit-btn');
-        editButton.replaceWith(saveButton);
-        // Add save functionality
-        saveButton.onclick = async function() {
-            const data = {
-                id: logId,
-                subject: subjectInput.value,
-                hours_studied: parseFloat(hoursInput.value),
-                notes: notesInput.value
-            };
-            try {
-                const response = await fetch(`${pythonURI}/api/studylognew`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                    credentials: 'include',
-                });
-                if (response.ok) {
-                    await Swal.fire({
-                        title: 'Success!',
-                        text: 'Study log updated successfully!',
-                        icon: 'success',
-                        timer: 1500,
-                        showConfirmButton: false
-                    });
-                    loadStudyLogs();
-                }
-            } catch (error) {
-                console.error('Error updating study log:', error);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Failed to update study log.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        };
-    }
-    document.getElementById('study-log-form').addEventListener('submit', async function(event) {
-        event.preventDefault();
-        const formMessages = document.getElementById('form-messages');
-        const subject = document.getElementById('subject').value.trim();
-        const hours = document.getElementById('hours').value.trim();
-        const notes = document.getElementById('notes').value.trim();
-        if (!subject || !hours) {
-            formMessages.textContent = 'Subject and hours are required!';
-            formMessages.className = 'error';
-            formMessages.classList.remove('hidden');
-            return;
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         }
-        const data = {
-            user_id: 1,
-            subject,
-            hours_studied: parseFloat(hours),
-            notes
-        };
-        try {
-            const response = await fetch(`${pythonURI}/api/studylognew`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-                credentials: 'include',
-            });
-            if (response.ok) {
-                formMessages.textContent = 'Study log added successfully!';
-                formMessages.className = '';
-                formMessages.classList.remove('hidden');
-                loadStudyLogs();
-            } else {
-                formMessages.textContent = 'Failed to add study log.';
-                formMessages.className = 'error';
-                formMessages.classList.remove('hidden');
-            }
-        } catch (error) {
-            formMessages.textContent = 'Error adding study log.';
-            formMessages.className = 'error';
-            formMessages.classList.remove('hidden');
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        .chart-container, .input-container, .analysis-container {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        select, input, button {
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            margin: 10px;
+            cursor: pointer;
+        }
+        canvas {
+            width: 100% !important;
+            height: 400px !important;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #43a047;
+        }
+        .analysis-container {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffce56;
+        }
+        .summary-container {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: left;
+            margin-top: 20px;
+            color: #ffccbc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Sales Analysis</h1>
+    <!-- Product Input Section -->
+    <div class="input-container">
+        <h2>Add a Product</h2>
+        <input type="text" id="productName" placeholder="Product Name">
+        <input type="number" id="productValue" placeholder="Value">
+        <button onclick="addProduct()">Add Product</button>
+    </div>
+    <!-- Graph Selection Controls -->
+    <div class="chart-container">
+        <label for="dataType">Choose Data:</label>
+        <select id="dataType">
+            <option value="Revenue">Revenue</option>
+            <option value="Units Sold">Units Sold</option>
+            <option value="Profit">Profit</option>
+        </select>
+        <label for="chartType">Choose Chart:</label>
+        <select id="chartType">
+            <option value="bar">Bar Chart</option>
+            <option value="pie">Pie Chart</option>
+            <option value="line">Line Graph</option>
+            <option value="scatter">Scatter Plot</option>
+        </select>
+        <canvas id="salesChart"></canvas>
+    </div>
+    <!-- Sales Analysis -->
+    <div class="analysis-container" id="analysisBox">
+        <p>Most Successful Product: <span id="topProduct">N/A</span></p>
+    </div>
+    <!-- Summary of Analysis -->
+    <div class="summary-container">
+        <h3>Analysis Summary</h3>
+        <p id="summaryText">Data will be analyzed here...</p>
+    </div>
+</div>
+
+<script>
+    // Default Sample Data
+    let data = {
+        labels: ["Product A", "Product B", "Product C", "Product D", "Product E"],
+        datasets: {
+            Revenue: [10000, 15000, 12000, 18000, 14000],
+            "Units Sold": [500, 700, 600, 900, 750],
+            Profit: [3000, 5000, 4000, 6000, 4500]
+        }
+    };
+
+    let selectedData = "Revenue";
+    let chartType = "bar";
+
+    let ctx = document.getElementById("salesChart").getContext("2d");
+    let salesChart = new Chart(ctx, {
+        type: chartType,
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: selectedData,
+                data: data.datasets[selectedData],
+                backgroundColor: ["#ff6384", "#36a2eb", "#ffce56", "#4bc0c0", "#9966ff"],
+                borderColor: "#ffffff",
+                borderWidth: 1
+            }]
         }
     });
-    async function loadStudyLogs() {
-        try {
-            const response = await fetch(`${pythonURI}/api/studylognew`, {
-                credentials: 'include',
-            });
-            if (response.ok) {
-                const data = await response.json();
-                const studyLogList = document.getElementById('study-log');
-                studyLogList.innerHTML = '';
-                data.forEach(log => {
-                    const listItem = document.createElement('li');
-                    listItem.setAttribute('data-id', log.id);
-                    listItem.innerHTML = `
-                        <div><strong>Subject:</strong> <span data-field="subject">${log.subject}</span></div>
-                        <div><strong>Hours Studied:</strong> <span data-field="hours">${log.hours_studied}</span></div>
-                        <div><strong>Notes:</strong> <span data-field="notes">${log.notes || 'No notes'}</span></div>
-                        <div><strong>Time:</strong> ${new Date(new Date(log.date || log.timestamp).getTime() - 8 * 60 * 60 * 1000).toLocaleString()}</div>
-                        <div class="button-group">
-                            <button class="edit-btn" onclick="editLog(${log.id})"><i class="fas fa-pencil-alt"></i></button>
-                            <button class="delete-btn" onclick="deleteLog(${log.id})"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    `;
-                    studyLogList.appendChild(listItem);
-                });
-            } else {
-                console.error('Failed to load study logs:', response.statusText);
+
+    // Function to Update Chart
+    function updateChart() {
+        selectedData = document.getElementById("dataType").value;
+        chartType = document.getElementById("chartType").value;
+
+        salesChart.destroy();
+        salesChart = new Chart(ctx, {
+            type: chartType,
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: selectedData,
+                    data: data.datasets[selectedData],
+                    backgroundColor: ["#ff6384", "#36a2eb", "#ffce56", "#4bc0c0", "#9966ff"],
+                    borderColor: "#ffffff",
+                    borderWidth: 1
+                }]
             }
-        } catch (error) {
-            console.error('Error loading study logs:', error);
-        }
+        });
+
+        updateAnalysis();
     }
-    // Load study logs on page load
-    loadStudyLogs();
+
+    // Function to Add a New Product
+    function addProduct() {
+        let name = document.getElementById("productName").value.trim();
+        let value = parseFloat(document.getElementById("productValue").value);
+
+        if (name === "" || isNaN(value) || value <= 0) {
+            Swal.fire("Error", "Please enter a valid product name and value!", "error");
+            return;
+        }
+
+        if (data.labels.includes(name)) {
+            Swal.fire("Error", "Product already exists!", "warning");
+            return;
+        }
+
+        data.labels.push(name);
+        data.datasets[selectedData].push(value);
+
+        updateChart();
+        document.getElementById("productName").value = "";
+        document.getElementById("productValue").value = "";
+    }
+
+    // Function to Update Analysis
+    function updateAnalysis() {
+        let values = data.datasets[selectedData];
+        let maxIndex = values.indexOf(Math.max(...values));
+        let minIndex = values.indexOf(Math.min(...values));
+        let topProduct = data.labels[maxIndex];
+        let lowestProduct = data.labels[minIndex];
+
+        document.getElementById("topProduct").textContent = topProduct;
+
+        let trend = values[maxIndex] > values[minIndex] * 2 ? "a strong growth trend" : "a balanced trend";
+
+        let summaryText = `The most successful product is **${topProduct}**, leading in **${selectedData}**. 
+            The product **${lowestProduct}** has the lowest performance. 
+            Overall, the sales data suggests ${trend}, indicating areas for potential improvement or investment.`;
+
+        document.getElementById("summaryText").innerHTML = summaryText;
+    }
+
+    document.getElementById("dataType").addEventListener("change", updateChart);
+    document.getElementById("chartType").addEventListener("change", updateChart);
 </script>
+
+</body>
+</html>
+
+
