@@ -9,19 +9,75 @@ permalink: /flashcards
 <style>
   body {
     font-family: 'Inter', sans-serif;
-    background: #f5f7fa;
-    color: #333;
+    background: linear-gradient(135deg, #1a2980, #26d0ce); /* Dark blue gradient */
+    color: #ffffff;
     margin: 0;
     padding: 20px;
+    min-height: 100vh;
   }
 
   .container {
     max-width: 1200px;
-    margin: 20px auto;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+    backdrop-filter: blur(10px); /* Frosted glass effect */
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     padding: 20px;
+    min-height: calc(100vh - 40px);
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    animation: fadeIn 0.5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px; /* Give it some minimum height */
+  }
+
+  .empty-state img {
+    max-width: 200px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); /* Subtle shadow */
+  }
+
+  .empty-state h3 {
+    color: #ffffff; /* White text for better contrast */
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .empty-state p {
+    color: #e0e0e0; /* Light grey for better visibility */
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    max-width: 400px;
+  }
+
+  .empty-state button {
+    background: #ffffff;
+    color: #2c3e50;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .empty-state button:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   h1 {
@@ -77,22 +133,16 @@ permalink: /flashcards
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-  }
-
-  th, td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+    color: #ffffff; /* White text for tables */
   }
 
   th {
-    background-color: #f8f9fa;
+    background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent header */
     font-weight: 600;
-    cursor: pointer;
   }
 
   tr:hover {
-    background-color: #f5f5f5;
+    background-color: rgba(255, 255, 255, 0.05); /* Subtle hover effect */
   }
 
   .edit-input {
@@ -428,9 +478,22 @@ permalink: /flashcards
         groupsToRender.sort((a, b) => (b.card_count || 0) - (a.card_count || 0));
         break;
     }
-    
     if (groupsToRender.length === 0) {
-      groupsTable.innerHTML = '<tr><td colspan="3" style="text-align: center;">No groups found</td></tr>';
+      groupsTable.innerHTML = `
+        <tr>
+          <td colspan="3">
+            <div class="empty-state">
+              <img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png" alt="No groups">
+              <h3>Your Inventory is Empty</h3>
+              <p>Organize your products by creating your first group</p>
+              <button id="create-first-group" class="primary-btn">+ Create First Group</button>
+            </div>
+          </td>
+        </tr>
+      `;
+      document.getElementById('create-first-group').addEventListener('click', () => {
+        document.getElementById('create-deck-btn').click();
+      });
       return;
     }
     
@@ -481,7 +544,21 @@ permalink: /flashcards
     }
     
     if (itemsToRender.length === 0) {
-      itemsTable.innerHTML = '<tr><td colspan="3" style="text-align: center;">No items found</td></tr>';
+      itemsTable.innerHTML = `
+        <tr>
+          <td colspan="3">
+            <div class="empty-state">
+              <img src="https://cdn-icons-png.flaticon.com/512/4076/4076472.png" alt="No items">
+              <h3>No Items Found</h3>
+              <p>This group is empty. Add your first item to get started</p>
+              <button id="create-first-item">+ Add Item</button>
+            </div>
+          </td>
+        </tr>
+      `;
+      document.getElementById('create-first-item').addEventListener('click', () => {
+        document.getElementById('add-item-btn').click();
+      });
       return;
     }
     
@@ -844,6 +921,12 @@ permalink: /flashcards
       }
       if (e.target.classList.contains('delete-item')) {
         deleteItem(e.target.dataset.id);
+      }
+      if (e.target.id === 'create-first-group') {
+        document.getElementById('create-deck-btn').click();
+      }
+      if (e.target.id === 'create-first-item') {
+        document.getElementById('add-item-btn').click();
       }
     });
 
