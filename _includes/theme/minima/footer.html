@@ -1,12 +1,123 @@
 <footer class="site-footer h-card">
-    <data class="u-url" href="{{ '/'' | relative_url }}"></data>
-  
-    <div class="wrapper">
-  
-      <div class="social-links">
-        {%- include social.html -%}
-      </div>
-  
+  <data class="u-url" href="{{ '/' | relative_url }}"></data>
+
+  <div class="wrapper">
+    <div class="social-links">
+      {%- include social.html -%}
     </div>
-  
+  </div>
 </footer>
+
+{% if page.url == "/" or page.url == "/login" or page.url == "/profile" %}
+<div id="loader">
+  <div class="loading-circle-container">
+      <div class="loading-circle"></div>
+      <div class="circle-waves"></div>
+  </div>
+  <p class="loader-text">Optimizing Your Experience...</p>
+</div>
+{% endif %}
+
+<script>
+  window.addEventListener("load", function () {
+      const loader = document.getElementById("loader");
+      if (loader) {
+          loader.classList.add("loaded");
+          setTimeout(() => {
+              loader.style.display = "none";
+          }, 500);
+      }
+  });
+</script>
+
+<style>
+  /* Fullscreen loader */
+  #loader {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom right, #024a57, #132068);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+      font-family: Arial, sans-serif;
+      transition: opacity 0.5s ease-out;
+      z-index: 9999;
+      overflow: hidden;
+  }
+
+  .loaded {
+      opacity: 0;
+      pointer-events: none;
+  }
+
+  /* Loading circle container */
+  .loading-circle-container {
+      position: relative;
+      width: 250px; /* Increased size */
+      height: 250px; /* Increased size */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px; /* Added space below the circle */
+  }
+
+  .loading-circle {
+      width: 150px; /* Increased size */
+      height: 150px; /* Increased size */
+      border: 8px solid white; /* Thicker border */
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 2s linear infinite; /* Slower spin */
+  }
+
+  /* Circular waves animation */
+  .circle-waves {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 5px solid white; /* Thicker border for waves */
+      animation: wave 3s infinite ease-in-out; /* Slower wave */
+      opacity: 0.6;
+      z-index: -1;
+  }
+
+  @keyframes spin {
+      0% {
+          transform: rotate(0deg);
+      }
+      100% {
+          transform: rotate(360deg);
+      }
+  }
+
+  @keyframes wave {
+      0% {
+          transform: scale(1);
+          opacity: 0.5;
+      }
+      50% {
+          transform: scale(2);
+          opacity: 0.3;
+      }
+      100% {
+          transform: scale(3);
+          opacity: 0.5;
+      }
+  }
+
+  /* Loading text */
+  .loader-text {
+      font-size: 2rem; /* Bigger text */
+      font-weight: bold;
+      text-align: center;
+  }
+
+
+</style>

@@ -1,25 +1,151 @@
 ---
+layout: default
+title: 404 - Page Not Found
 permalink: /404.html
-layout: base
-search_exclude: true
 ---
 
-<style type="text/css" media="screen">
-  .container {
-    margin: 10px auto;
-    max-width: 600px;
+<div id="error-page">
+  <div class="error-container">
+    <div class="error-message">
+      <h1>Oops! Page Not Found</h1>
+      <p>It seems like the page you're looking for doesn't exist or has been moved.</p>
+      <p>Go back to the <a href="{{ '/' | relative_url }}" class="home-link">home page</a> or try another link!</p>
+    </div>
+  </div>
+</div>
+
+<!-- Matrix Style Background Animation -->
+<div id="matrix-background"></div>
+
+<style>
+  /* Fullscreen 404 Page */
+  #error-page {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    font-family: Arial, sans-serif;
+    z-index: 10;
     text-align: center;
   }
-  h1 {
-    margin: 30px 0;
-    font-size: 4em;
-    line-height: 1;
-    letter-spacing: -1px;
+
+  .error-container {
+    z-index: 100;
+    position: relative;
+    background: rgba(106, 13, 173, 0.7); /* Semi-transparent purple */
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .error-message h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    text-decoration: underline;
+  }
+
+  .error-message p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+
+  /* Custom Home Page Link Style */
+  .home-link {
+    color: #fff;
+    text-decoration: underline;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+  }
+
+  .home-link:hover {
+    color: #f5a623;
+  }
+
+  /* Matrix Background Animation */
+  #matrix-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom right, #6a0dad, #00aaff);
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  /* Matrix falling text */
+  .matrix-column {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.3); /* Semi-transparent white */
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    animation: matrix-fall linear infinite;
+    user-select: none;
+  }
+
+  @keyframes matrix-fall {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100vh);
+    }
   }
 </style>
 
-<div class="container">
-  <h1>404</h1>
-  <p><strong>Page not found :(</strong></p>
-  <p>The requested page could not be found.</p>
-</div>
+<script>
+  // Matrix effect: Create falling text
+  function createMatrix() {
+    const matrixContainer = document.getElementById("matrix-background");
+    const characterSet = "404";
+    const columns = Math.floor(window.innerWidth / 20);
+    
+    // Clear any existing columns
+    matrixContainer.innerHTML = '';
+    
+    // Create columns of falling characters
+    for (let i = 0; i < columns; i++) {
+      const column = document.createElement("div");
+      column.classList.add("matrix-column");
+      
+      // Random left position
+      const leftPos = Math.random() * window.innerWidth;
+      column.style.left = `${leftPos}px`;
+      
+      // Random animation duration (5-15 seconds)
+      const duration = 5 + Math.random() * 10;
+      column.style.animationDuration = `${duration}s`;
+      
+      // Random animation delay
+      column.style.animationDelay = `${Math.random() * 2}s`;
+      
+      // Create characters for this column
+      let characters = '';
+      const charCount = 20 + Math.floor(Math.random() * 30);
+      for (let j = 0; j < charCount; j++) {
+        characters += characterSet.charAt(Math.floor(Math.random() * characterSet.length));
+      }
+      
+      column.textContent = characters;
+      matrixContainer.appendChild(column);
+    }
+  }
+
+  // Initialize and handle window resize
+  window.addEventListener('load', () => {
+    createMatrix();
+    window.addEventListener('resize', () => {
+      createMatrix();
+    });
+  });
+</script>
