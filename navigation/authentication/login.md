@@ -7,92 +7,148 @@ show_reading_time: false
 ---
 
 <style>
-.login-container {
+/* General Page Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 40px; /* Ensures space from the top */
+}
+
+/* Main Container */
+.main-container {
+    width: 90%;
+    max-width: 1400px; /* Increased max-width for a more horizontal container */
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap; /* allows the cards to wrap onto the next line if the screen is too small */
+    flex-wrap: wrap;
+    margin-top: 40px; /* Creates better spacing */
 }
 
-.login-card {
-    margin-top: 0; /* remove the top margin */
-    width: 45%;
+/* Enlarged Login & Signup Cards */
+.login-card, .signup-card {
+    width: 48%;
+    padding: 40px; /* Increased padding for more space inside */
     border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 20px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    margin-bottom: 20px;
-    overflow-x: auto; /* Enable horizontal scrolling */
+    border-radius: 12px;
+    box-shadow: 6px 8px 14px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.login-card h1 {
-    margin-bottom: 20px;
-}
-
-.signup-card {
-    margin-top: 0; /* remove the top margin */
-    width: 45%;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 20px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    margin-bottom: 20px;
-    overflow-x: auto; /* Enable horizontal scrolling */
-}
-
-.signup-card h1 {
+/* Headings */
+h1 {
+    font-size: 28px;
+    color: #333;
+    text-align: center;
     margin-bottom: 20px;
 }
 
+/* Buttons */
+button {
+    width: 100%;
+    padding: 18px; /* Increased padding for wider buttons */
+    background: linear-gradient(to right, #007bff, #0056b3);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    font-weight: bold;
+    box-shadow: 3px 5px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background: linear-gradient(to right, #0056b3, #003d80);
+    transform: scale(1.07);
+}
+
+/* Input Fields */
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin: 12px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 18px;
+}
+
+/* Messages */
+#message, #signupMessage {
+    text-align: center;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+#message {
+    color: red;
+}
+
+#signupMessage {
+    color: green;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .login-card, .signup-card {
+        width: 100%;
+    }
+}
 </style>
 
-<div class="login-container">
-    <!-- Python Login Form -->
+<!-- Main Container for Login & Signup -->
+<div class="main-container">
     <div class="login-card">
-        <h1 id="pythonTitle">User Login (Python/Flask)</h1>
+        <h1>Login</h1>
         <form id="pythonForm" onsubmit="pythonLogin(); return false;">
-            <p>
-                <label>
-                    GitHub ID:
-                    <input type="text" name="uid" id="uid" required>
-                </label>
-            </p>
-            <p>
-                <label>
-                    Password:
-                    <input type="password" name="password" id="password" required>
-                </label>
-            </p>
-            <p>
-                <button type="submit">Login</button>
-            </p>
-            <p id="message" style="color: red;"></p>
+            <label>GitHub ID:</label>
+            <input type="text" name="uid" id="uid" required>
+
+            <label>Password:</label>
+            <input type="password" name="password" id="password" required>
+
+            <button type="submit">Login</button>
+            <p id="message"></p>
         </form>
     </div>
+
     <div class="signup-card">
-        <h1 id="signupTitle">Sign Up</h1>
+        <h1>Sign Up</h1>
         <form id="signupForm" onsubmit="signup(); return false;">
-            <p>
-                <label>
-                    Name:
-                    <input type="text" name="name" id="name" required>
-                </label>
-            </p>
-            <p>
-                <label>
-                    GitHub ID:
-                    <input type="text" name="signupUid" id="signupUid" required>
-                </label>
-            </p>
-            <p>
-                <label>
-                    Password:
-                    <input type="password" name="signupPassword" id="signupPassword" required>
-                </label>
-            </p>
-            <p>
-                <button type="submit">Sign Up</button>
-            </p>
-            <p id="signupMessage" style="color: green;"></p>
+            <label>Name:</label>
+            <input type="text" name="name" id="name" required>
+
+            <label>GitHub ID:</label>
+            <input type="text" name="signupUid" id="signupUid" required>
+
+            <label>Password:</label>
+            <input type="password" name="signupPassword" id="signupPassword" required>
+
+            <button type="submit">Sign Up</button>
+            <p id="signupMessage"></p>
         </form>
     </div>
 </div>
@@ -118,52 +174,45 @@ show_reading_time: false
 
     // Function to handle signup
     window.signup = function() {
-    const signupButton = document.querySelector(".signup-card button");
+        const signupButton = document.querySelector(".signup-card button");
+        signupButton.disabled = true;
+        signupButton.style.backgroundColor = '#d3d3d3';
 
-    // Disable the button and change its color
-    signupButton.disabled = true;
-    signupButton.style.backgroundColor = '#d3d3d3'; // Light gray to indicate disabled state
+        const signupOptions = {
+            URL: `${pythonURI}/api/user`,
+            method: "POST",
+            cache: "no-cache",
+            body: {
+                name: document.getElementById("name").value,
+                uid: document.getElementById("signupUid").value,
+                password: document.getElementById("signupPassword").value,
+            }
+        };
 
-    const signupOptions = {
-        URL: `${pythonURI}/api/user`,
-        method: "POST",
-        cache: "no-cache",
-        body: {
-            name: document.getElementById("name").value,
-            uid: document.getElementById("signupUid").value,
-            password: document.getElementById("signupPassword").value,
-        }
-    };
+        fetch(signupOptions.URL, {
+            method: signupOptions.method,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(signupOptions.body)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Signup failed: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("signupMessage").textContent = "Signup successful!";
+        })
+        .catch(error => {
+            console.error("Signup Error:", error);
+            document.getElementById("signupMessage").textContent = `Signup Error: ${error.message}`;
+            signupButton.disabled = false;
+            signupButton.style.backgroundColor = '';
+        });
+    }
 
-    fetch(signupOptions.URL, {
-        method: signupOptions.method,
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(signupOptions.body)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Signup failed: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        document.getElementById("signupMessage").textContent = "Signup successful!";
-        // Optionally redirect to login page or handle as needed
-        // window.location.href = '{{site.baseurl}}/profile';
-    })
-    .catch(error => {
-        console.error("Signup Error:", error);
-        document.getElementById("signupMessage").textContent = `Signup Error: ${error.message}`;
-        // Re-enable the button if there is an error
-        signupButton.disabled = false;
-        signupButton.style.backgroundColor = ''; // Reset to default color
-    });
-}
-
-
-    // Function to fetch and display Python data
     function pythonDatabase() {
         const URL = `${pythonURI}/api/id`;
 
@@ -179,12 +228,10 @@ show_reading_time: false
             })
             .catch(error => {
                 console.error("Python Database Error:", error);
-                const errorMsg = `Python Database Error: ${error.message}`;
             });
     }
 
-    // Call relevant database functions on the page load
     window.onload = function() {
-         pythonDatabase();
+        pythonDatabase();
     };
 </script>
