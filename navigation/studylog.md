@@ -216,7 +216,7 @@ permalink: navigation/log
         <input type="number" id="marketing" required>
         <button type="submit">📊 Predict Success</button>
     </form>
-    <div class="loading" id="loading">🔄 Predicting...</div>
+    <div class="loading" id="loading" style="display: none;">🔄 Predicting...</div>
     <h3>Success Probability</h3>
     <p id="predictionResult">Enter details to see prediction</p>
     <h3>Projected Profit Over Time</h3>
@@ -243,7 +243,11 @@ permalink: navigation/log
 
         loading.style.display = "block";
 
-        const payload = { cookie_flavor: flavor, price: price, marketing: marketing price };
+        const payload = { 
+            cookie_flavor: flavor, 
+            price: price, 
+            marketing: marketing 
+        };
 
         try {
             let response = await fetch(API_URL, {
@@ -257,8 +261,10 @@ permalink: navigation/log
 
             Swal.fire("Success", "Prediction generated!", "success");
 
+            // Display the prediction result
             document.getElementById("predictionResult").textContent = `📊 Success Probability: ${result.success_probability}%`;
 
+            // Update the profit chart
             updateChart([50, 60, 80, 100, 150, 200, 300]);  // Example profit trend
             document.getElementById("marketingAdvice").textContent = generateMarketingAdvice(result.success_probability);
 
@@ -294,6 +300,7 @@ permalink: navigation/log
         return "⚠️ Low success chance. Consider adjusting pricing or marketing approach.";
     }
 </script>
+
 
 <style>
     body {
