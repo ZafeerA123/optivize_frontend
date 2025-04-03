@@ -1,3 +1,6 @@
+[User Story](url)
+
+
 # Introduction
 
 Optivize is a forward-thinking initiative designed to enhance business efficiency through AI-driven solutions. Our project supports businesses by offering tools for automation, data analysis, and AI-enhanced decision-making.
