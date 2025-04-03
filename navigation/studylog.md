@@ -204,148 +204,102 @@ permalink: navigation/log
 </head>
 <body>
 
-<div class="container">
-    <h1>Sales Analysis</h1>
-    <div class="analytics">
-        <div>Total Revenue: <span id="totalRevenue">$0</span></div>
-        <div>Total Units Sold: <span id="totalUnits">0</span></div>
-        <div>Avg. Profit: <span id="avgProfit">$0</span></div>
-    </div>
-    <div class="chart-container">
-        <canvas id="salesChart"></canvas>
-    </div>
-    <div class="form-container">
-        <h2>Add a Product</h2>
-        <form id="productForm">
-            <input type="text" id="productName" placeholder="Product Name" required />
-            <input type="number" id="productValue" placeholder="Value" required />
-            <button type="submit">Add Product</button>
-        </form>
-    </div>
-    <h2>Product Logs</h2>
-    <ul id="productList"></ul>
-</div>
+<h2>Predict Cookie Success</h2>
+<form id="productForm">
+    <label>Cookie Flavor: <input type="text" id="cookieFlavor" required></label><br>
+    <label>Price ($): <input type="number" id="price" step="0.01" required></label><br>
+    <label>Marketing Spend ($): <input type="number" id="marketing" required></label><br>
+    <button type="submit">Predict Success</button>
+</form>
+
+<h3>Projected Profit Over Time</h3>
+<canvas id="salesChart"></canvas>
+
+<h3>Marketing Advice</h3>
+<p id="marketingAdvice">Enter data to receive insights...</p>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     const pythonURI = "https://optivize.stu.nighthawkcodingsociety.com";
-    async function fetchData() {
-        let response = await fetch(`${pythonURI}/api/predict`);
-        let data = await response.json();
-        updateUI(data);
-    }
-    function updateUI(data) {
-        let productList = document.getElementById("productList");
-        let totalRevenue = 0, totalUnits = 0, totalProfit = 0;
-        productList.innerHTML = '';
-        data.forEach(item => {
-            totalRevenue += item.revenue;
-            totalUnits += item.units;
-            totalProfit += item.profit;
-            let listItem = document.createElement("li");
-            listItem.textContent = `${item.name} - Revenue: $${item.revenue}, Units: ${item.units}, Profit: $${item.profit}`;
-            productList.appendChild(listItem);
-        });            
-        document.getElementById("totalRevenue").textContent = `$${totalRevenue}`;
-        document.getElementById("totalUnits").textContent = totalUnits;
-        document.getElementById("avgProfit").textContent = `$${(totalProfit / data.length).toFixed(2)}`;            
-        updateChart(data);
-    }
-    function updateChart(data) {
+
+    document.getElementById("productForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        
+        let cookieFlavor = document.getElementById("cookieFlavor").value.trim();
+        let price = parseFloat(document.getElementById("price").value);
+        let marketing = parseFloat(document.getElementById("marketing").value);
+
+        if (!cookieFlavor || isNaN(price) || isNaN(marketing)) {
+            Swal.fire("Error", "Please fill all fields correctly!", "error");
+            return;
+        }
+
+        try {
+            let response = await fetch(`${pythonURI}/api/predict`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    cookie_flavor: cookieFlavor,
+                    price: price,
+                    marketing: marketing
+                })
+            });
+
+            let result = await response.json();
+            console.log("Prediction result:", result);
+
+            if (!response.ok) {
+                throw new Error(result.message || "Prediction failed.");
+            }
+
+            Swal.fire("Success", "Prediction generated!", "success");
+            
+            // Extract profit projections
+            let profitProjections = result.profit_over_time;  // Expected array of profits
+            updateChart(profitProjections);
+
+            // Generate marketing advice
+            let advice = generateMarketingAdvice(result);
+            document.getElementById("marketingAdvice").textContent = advice;
+
+        } catch (error) {
+            console.error("Error:", error);
+            Swal.fire("Error", error.message, "error");
+        }
+    });
+
+    function updateChart(profitData) {
         let ctx = document.getElementById("salesChart").getContext("2d");
-        let labels = data.map(item => item.name);
-        let revenues = data.map(item => item.revenue);
-        let units = data.map(item => item.units);
-        let profits = data.map(item => item.profit);            
+        let labels = profitData.map((_, index) => `Month ${index + 1}`);
+
         new Chart(ctx, {
-            type: 'bar',
+            type: "line",
             data: {
                 labels: labels,
-                datasets: [
-                    { label: 'Revenue', data: revenues, backgroundColor: 'rgba(255, 99, 132, 0.5)' },
-                    { label: 'Units Sold', data: units, backgroundColor: 'rgba(54, 162, 235, 0.5)' },
-                    { label: 'Profit', data: profits, backgroundColor: 'rgba(75, 192, 192, 0.5)' }
-                ]
+                datasets: [{
+                    label: "Projected Profit ($)",
+                    data: profitData,
+                    backgroundColor: "rgba(75, 192, 192, 0.5)",
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    fill: true
+                }]
             },
             options: { responsive: true, scales: { y: { beginAtZero: true } } }
         });
     }
-    document.getElementById("productForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
-    let name = document.getElementById("productName").value.trim();
-    let value = parseFloat(document.getElementById("productValue").value);
-    if (name === "" || isNaN(value) || value <= 0) {
-        Swal.fire("Error", "Please enter a valid product name and value!", "error");
-        return;
-    }
-    try {
-        let response = await fetch(`${pythonURI}/api/predict`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: name, revenue: value, units: 0, profit: 0 })
-        });
-        let result = await response.json();
-        if (!response.ok) {
-            throw new Error(result.message || "Failed to add product");
-        }
-        Swal.fire("Success", "Product added successfully!", "success");
-        // Clear input fields
-        document.getElementById("productName").value = "";
-        document.getElementById("productValue").value = "";
-        // Refresh the displayed data
-        fetchData();
-    } catch (error) {
-        Swal.fire("Error", error.message, "error");
-    }
-});
-const pythonURI = "https://optivize.stu.nighthawkcodingsociety.com"; 
-// Fetch and display predictions
-async function fetchData() {
-    try {
-        let response = await fetch(`${pythonURI}/api/predict`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        let data = await response.json();
-        console.log("Fetched Data:", data); // Debugging: Check if data is retrieved
-        if (!Array.isArray(data) || data.length === 0) {
-            console.warn("No data available or invalid format.");
-            document.getElementById("predictionTableBody").innerHTML = "<tr><td colspan='5'>No data available</td></tr>";
-            return;
-        }
-        let tableBody = document.getElementById("predictionTableBody");
-        tableBody.innerHTML = ""; // Clear previous entries
-        data.forEach(item => {
-            let row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${item.cookie_flavor}</td>
-                <td>${item.seasonality}</td>
-                <td>$${item.price.toFixed(2)}</td>
-                <td>${item.marketing}</td>
-                <td>${item.customer_sentiment}</td>
-                <td><span style="color:${item.predicted_success ? 'green' : 'red'}">${item.predicted_success ? 'Successful' : 'Not Successful'}</span></td>
-            `;
-            tableBody.appendChild(row);
-        });
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        document.getElementById("predictionTableBody").innerHTML = `<tr><td colspan='5'>Error loading data</td></tr>`;
-    }
-}
-// Call fetchData on page load
-document.addEventListener("DOMContentLoaded", fetchData);
 
+    function generateMarketingAdvice(result) {
+        let successProbability = result.success_probability;  // Expected to be a percentage
+        let marketingSpend = result.recommended_marketing_spend;
 
+        if (successProbability > 80) {
+            return `Your cookie has a high chance of success! Maintain a marketing spend of $${marketingSpend} and focus on social media engagement.`;
+        } else if (successProbability > 50) {
+            return `Moderate success expected. Consider increasing marketing by 20% and testing promotions.`;
+        } else {
+            return `Low success probability. Improve recipe quality, reduce price slightly, and invest in influencer marketing.`;
+        }
+    }
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-    body { font-family: 'Inter', sans-serif; background: #1e3c72; color: white; padding: 20px; }
-    .container { max-width: 900px; margin: auto; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
-    h1 { text-align: center; }
-    .analytics { display: flex; justify-content: space-between; margin-bottom: 20px; }
-    .analytics div { background: rgba(255, 255, 255, 0.2); padding: 10px; border-radius: 8px; }
-    .chart-container { position: relative; height: 300px; }
-    ul { list-style: none; padding: 0; }
-    li { background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 8px; margin: 5px 0; }
-</style>
-
