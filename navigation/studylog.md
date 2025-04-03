@@ -216,15 +216,11 @@ permalink: navigation/log
         <input type="number" id="marketing" required>
         <button type="submit">📊 Predict Success</button>
     </form>
-
     <div class="loading" id="loading">🔄 Predicting...</div>
-
     <h3>Success Probability</h3>
     <p id="predictionResult">Enter details to see prediction</p>
-
     <h3>Projected Profit Over Time</h3>
     <canvas id="salesChart"></canvas>
-
     <h3>Marketing Strategy</h3>
     <p id="marketingAdvice">Enter data to receive insights...</p>
 </div>
@@ -247,7 +243,7 @@ permalink: navigation/log
 
         loading.style.display = "block";
 
-        const payload = { cookie_flavor: flavor, price: price, marketing: marketing };
+        const payload = { cookie_flavor: flavor, price: price, marketing: marketing price };
 
         try {
             let response = await fetch(API_URL, {
