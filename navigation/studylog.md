@@ -207,42 +207,118 @@ permalink: navigation/log
 <h2 style="text-align: center; color: #333;">🍪 Predict Cookie Success</h2>
 
 <div class="container">
-    <form id="productForm">
-        <label>Cookie Flavor: <input type="text" id="cookieFlavor" required></label>
-        <label>Price ($): <input type="number" id="price" step="0.01" required></label>
-        <label>Marketing Spend ($): <input type="number" id="marketing" required></label>
+    <form id="predictionForm">
+        <label>Cookie Flavor:</label>
+        <input type="text" id="cookieFlavor" required>
+        <label>Price ($):</label>
+        <input type="number" id="price" step="0.01" required>
+        <label>Marketing Spend ($):</label>
+        <input type="number" id="marketing" required>
         <button type="submit">📊 Predict Success</button>
     </form>
 
     <div class="loading" id="loading">🔄 Predicting...</div>
 
+    <h3>Success Probability</h3>
+    <p id="predictionResult">Enter details to see prediction</p>
+
     <h3>Projected Profit Over Time</h3>
     <canvas id="salesChart"></canvas>
 
-    <h3>Marketing Advice</h3>
+    <h3>Marketing Strategy</h3>
     <p id="marketingAdvice">Enter data to receive insights...</p>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    const API_URL = "https://optivize.stu.nighthawkcodingsociety.com/api/predict";
+
+    document.getElementById("predictionForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        let flavor = document.getElementById("cookieFlavor").value.trim();
+        let price = parseFloat(document.getElementById("price").value);
+        let marketing = parseFloat(document.getElementById("marketing").value);
+        let loading = document.getElementById("loading");
+
+        if (!flavor || isNaN(price) || isNaN(marketing)) {
+            Swal.fire("Error", "Please fill all fields correctly!", "error");
+            return;
+        }
+
+        loading.style.display = "block";
+
+        const payload = { cookie_flavor: flavor, price: price, marketing: marketing };
+
+        try {
+            let response = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            let result = await response.json();
+            if (!response.ok) throw new Error(result.message || "Prediction failed.");
+
+            Swal.fire("Success", "Prediction generated!", "success");
+
+            document.getElementById("predictionResult").textContent = `📊 Success Probability: ${result.success_probability}%`;
+
+            updateChart([50, 60, 80, 100, 150, 200, 300]);  // Example profit trend
+            document.getElementById("marketingAdvice").textContent = generateMarketingAdvice(result.success_probability);
+
+        } catch (error) {
+            Swal.fire("Error", error.message, "error");
+        } finally {
+            loading.style.display = "none";
+        }
+    });
+
+    function updateChart(profitData) {
+        let ctx = document.getElementById("salesChart").getContext("2d");
+        let labels = profitData.map((_, index) => `Month ${index + 1}`);
+
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Projected Profit ($)",
+                    data: profitData,
+                    backgroundColor: "rgba(75, 192, 192, 0.2)",
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 2
+                }]
+            }
+        });
+    }
+
+    function generateMarketingAdvice(successRate) {
+        if (successRate > 80) return "🚀 Your product is highly likely to succeed! Consider investing more in marketing.";
+        if (successRate > 50) return "📈 Good potential! Try seasonal promotions or bundling.";
+        return "⚠️ Low success chance. Consider adjusting pricing or marketing approach.";
+    }
+</script>
 
 <style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f4f4f4;
+        padding: 20px;
+    }
     .container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
         max-width: 500px;
         margin: auto;
-        text-align: center;
-        font-family: Arial, sans-serif;
-    }
-    form {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     }
     input, button {
-        padding: 10px;
-        font-size: 16px;
         width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        font-size: 16px;
     }
     button {
         background-color: #28a745;
@@ -258,106 +334,8 @@ permalink: navigation/log
         font-size: 16px;
         margin-top: 10px;
     }
+    canvas {
+        margin-top: 20px;
+        max-width: 100%;
+    }
 </style>
-
-<script>
-    const pythonURI = "https://optivize.stu.nighthawkcodingsociety.com";
-
-    document.getElementById("productForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        let cookieFlavor = document.getElementById("cookieFlavor").value.trim();
-        let price = parseFloat(document.getElementById("price").value);
-        let marketing = parseFloat(document.getElementById("marketing").value);
-        let loading = document.getElementById("loading");
-
-        // Basic Validation
-        if (!cookieFlavor || isNaN(price) || isNaN(marketing)) {
-            Swal.fire("Error", "Please fill all fields correctly!", "error");
-            return;
-        }
-
-        loading.style.display = "block";  // Show loading indicator
-
-        // Ensure numbers are sent as strings to avoid potential parsing issues
-        const payload = {
-            cookie_flavor: cookieFlavor,
-            price: price.toString(),  // Ensure it’s sent as a string
-            marketing: marketing.toString()
-        };
-        console.log("Sending payload:", payload);
-
-        try {
-            let response = await fetchWithTimeout(`${pythonURI}/api/predict`, {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "Accept": "application/json" 
-                },
-                body: JSON.stringify(payload)
-            });
-
-            let result = await response.json();
-            console.log("Prediction result:", result);
-
-            if (!response.ok) {
-                throw new Error(result.message || `Error ${response.status}: Bad Request`);
-            }
-
-            Swal.fire("Success", "Prediction generated!", "success");
-
-            // Update UI
-            updateChart(result.profit_over_time);
-            document.getElementById("marketingAdvice").textContent = generateMarketingAdvice(result);
-
-        } catch (error) {
-            console.error("Fetch Error:", error);
-            Swal.fire("Error", error.message, "error");
-        } finally {
-            loading.style.display = "none";  // Hide loading indicator
-        }
-    });
-
-    function updateChart(profitData) {
-        let ctx = document.getElementById("salesChart").getContext("2d");
-        let labels = profitData.map((_, index) => `Month ${index + 1}`);
-
-        new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: "Projected Profit ($)",
-                    data: profitData,
-                    backgroundColor: "rgba(75, 192, 192, 0.5)",
-                    borderColor: "rgba(75, 192, 192, 1)",
-                    fill: true
-                }]
-            },
-            options: { responsive: true, scales: { y: { beginAtZero: true } } }
-        });
-    }
-
-    function generateMarketingAdvice(result) {
-        let successProbability = result.success_probability;
-        let marketingSpend = result.recommended_marketing_spend;
-
-        if (successProbability > 80) {
-            return `🎉 Your cookie has a high chance of success! Maintain a marketing spend of $${marketingSpend} and focus on social media engagement.`;
-        } else if (successProbability > 50) {
-            return `📈 Moderate success expected. Consider increasing marketing by 20% and testing promotions.`;
-        } else {
-            return `⚠️ Low success probability. Improve recipe quality, reduce price slightly, and invest in influencer marketing.`;
-        }
-    }
-
-    async function fetchWithTimeout(url, options, timeout = 5000) {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), timeout);
-        try {
-            return await fetch(url, { ...options, signal: controller.signal });
-        } finally {
-            clearTimeout(timeoutId);
-        }
-    }
-</script>
