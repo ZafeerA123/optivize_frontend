@@ -2,7 +2,7 @@
 layout: base
 title: Sales Analysis
 description: Sales Analysis Tool
-permalink: naviagtion/log
+permalink: navigation/log
 ---
 <html lang="en">
 <head>
