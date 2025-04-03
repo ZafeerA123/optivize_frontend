@@ -117,7 +117,7 @@ permalink: navigation/log
             color: #a8d0ff;
             margin-bottom: 5px;
         }
-        .form-container input, 
+        .form-container input,
         .form-container textarea {
             width: 100%;
             padding: 12px;
@@ -128,7 +128,7 @@ permalink: navigation/log
             font-size: 1rem;
             transition: all 0.3s ease;
         }
-        .form-container input:focus, 
+        .form-container input:focus,
         .form-container textarea:focus {
             outline: none;
             border-color: #4CAF50;
@@ -243,10 +243,10 @@ permalink: navigation/log
 
         loading.style.display = "block";
 
-        const payload = { 
-            cookie_flavor: flavor, 
-            price: price, 
-            marketing: marketing 
+        const payload = {
+            cookie_flavor: flavor,
+            price: price,
+            marketing: marketing  // Corrected here, removed extra 'price'
         };
 
         try {
@@ -300,7 +300,6 @@ permalink: navigation/log
         return "⚠️ Low success chance. Consider adjusting pricing or marketing approach.";
     }
 </script>
-
 
 <style>
     body {
