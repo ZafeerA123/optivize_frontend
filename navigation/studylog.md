@@ -204,40 +204,82 @@ permalink: navigation/log
 </head>
 <body>
 
-<h2>Predict Cookie Success</h2>
-<form id="productForm">
-    <label>Cookie Flavor: <input type="text" id="cookieFlavor" required></label><br>
-    <label>Price ($): <input type="number" id="price" step="0.01" required></label><br>
-    <label>Marketing Spend ($): <input type="number" id="marketing" required></label><br>
-    <button type="submit">Predict Success</button>
-</form>
+<h2 style="text-align: center; color: #333;">🍪 Predict Cookie Success</h2>
 
-<h3>Projected Profit Over Time</h3>
-<canvas id="salesChart"></canvas>
+<div class="container">
+    <form id="productForm">
+        <label>Cookie Flavor: <input type="text" id="cookieFlavor" required></label>
+        <label>Price ($): <input type="number" id="price" step="0.01" required></label>
+        <label>Marketing Spend ($): <input type="number" id="marketing" required></label>
+        <button type="submit">📊 Predict Success</button>
+    </form>
 
-<h3>Marketing Advice</h3>
-<p id="marketingAdvice">Enter data to receive insights...</p>
+    <div class="loading" id="loading">🔄 Predicting...</div>
+
+    <h3>Projected Profit Over Time</h3>
+    <canvas id="salesChart"></canvas>
+
+    <h3>Marketing Advice</h3>
+    <p id="marketingAdvice">Enter data to receive insights...</p>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    .container {
+        max-width: 500px;
+        margin: auto;
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    input, button {
+        padding: 10px;
+        font-size: 16px;
+        width: 100%;
+    }
+    button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #218838;
+    }
+    .loading {
+        display: none;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+</style>
 
 <script>
     const pythonURI = "https://optivize.stu.nighthawkcodingsociety.com";
 
     document.getElementById("productForm").addEventListener("submit", async function (e) {
         e.preventDefault();
-        
+
         let cookieFlavor = document.getElementById("cookieFlavor").value.trim();
         let price = parseFloat(document.getElementById("price").value);
         let marketing = parseFloat(document.getElementById("marketing").value);
+        let loading = document.getElementById("loading");
 
         if (!cookieFlavor || isNaN(price) || isNaN(marketing)) {
             Swal.fire("Error", "Please fill all fields correctly!", "error");
             return;
         }
 
+        loading.style.display = "block";  // Show loading indicator
+
         try {
-            let response = await fetch(`${pythonURI}/api/predict`, {
+            let response = await fetchWithTimeout(`${pythonURI}/api/predict`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -247,26 +289,23 @@ permalink: navigation/log
                 })
             });
 
-            let result = await response.json();
-            console.log("Prediction result:", result);
-
             if (!response.ok) {
-                throw new Error(result.message || "Prediction failed.");
+                throw new Error(`Server Error: ${response.status}`);
             }
 
+            let result = await response.json();
+            console.log("Prediction result:", result);
             Swal.fire("Success", "Prediction generated!", "success");
-            
-            // Extract profit projections
-            let profitProjections = result.profit_over_time;  // Expected array of profits
-            updateChart(profitProjections);
 
-            // Generate marketing advice
-            let advice = generateMarketingAdvice(result);
-            document.getElementById("marketingAdvice").textContent = advice;
+            // Update UI
+            updateChart(result.profit_over_time);
+            document.getElementById("marketingAdvice").textContent = generateMarketingAdvice(result);
 
         } catch (error) {
             console.error("Error:", error);
             Swal.fire("Error", error.message, "error");
+        } finally {
+            loading.style.display = "none";  // Hide loading indicator
         }
     });
 
@@ -291,15 +330,25 @@ permalink: navigation/log
     }
 
     function generateMarketingAdvice(result) {
-        let successProbability = result.success_probability;  // Expected to be a percentage
+        let successProbability = result.success_probability;
         let marketingSpend = result.recommended_marketing_spend;
 
         if (successProbability > 80) {
-            return `Your cookie has a high chance of success! Maintain a marketing spend of $${marketingSpend} and focus on social media engagement.`;
+            return `🎉 Your cookie has a high chance of success! Maintain a marketing spend of $${marketingSpend} and focus on social media engagement.`;
         } else if (successProbability > 50) {
-            return `Moderate success expected. Consider increasing marketing by 20% and testing promotions.`;
+            return `📈 Moderate success expected. Consider increasing marketing by 20% and testing promotions.`;
         } else {
-            return `Low success probability. Improve recipe quality, reduce price slightly, and invest in influencer marketing.`;
+            return `⚠️ Low success probability. Improve recipe quality, reduce price slightly, and invest in influencer marketing.`;
+        }
+    }
+
+    async function fetchWithTimeout(url, options, timeout = 5000) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+        try {
+            return await fetch(url, { ...options, signal: controller.signal });
+        } finally {
+            clearTimeout(timeoutId);
         }
     }
 </script>
