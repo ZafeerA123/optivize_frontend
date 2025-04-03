@@ -271,6 +271,7 @@ permalink: navigation/log
         let marketing = parseFloat(document.getElementById("marketing").value);
         let loading = document.getElementById("loading");
 
+        // Basic Validation
         if (!cookieFlavor || isNaN(price) || isNaN(marketing)) {
             Swal.fire("Error", "Please fill all fields correctly!", "error");
             return;
@@ -278,19 +279,25 @@ permalink: navigation/log
 
         loading.style.display = "block";  // Show loading indicator
 
+        // Log the payload for debugging
+        const payload = {
+            cookie_flavor: cookieFlavor,
+            price: price,
+            marketing: marketing
+        };
+        console.log("Sending payload:", payload);
+
         try {
             let response = await fetchWithTimeout(`${pythonURI}/api/predict`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    cookie_flavor: cookieFlavor,
-                    price: price,
-                    marketing: marketing
-                })
+                body: JSON.stringify(payload)
             });
 
+            // Check if response is OK
             if (!response.ok) {
-                throw new Error(`Server Error: ${response.status}`);
+                const result = await response.json();
+                throw new Error(result.message || `Error ${response.status}: Bad Request`);
             }
 
             let result = await response.json();
@@ -352,3 +359,4 @@ permalink: navigation/log
         }
     }
 </script>
+
