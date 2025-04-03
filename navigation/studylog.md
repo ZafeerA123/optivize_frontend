@@ -206,6 +206,14 @@ permalink: navigation/log
 
 <div class="container">
     <h1>Sales Analysis</h1>
+    <div class="analytics">
+        <div>Total Revenue: <span id="totalRevenue">$0</span></div>
+        <div>Total Units Sold: <span id="totalUnits">0</span></div>
+        <div>Avg. Profit: <span id="avgProfit">$0</span></div>
+    </div>
+    <div class="chart-container">
+        <canvas id="salesChart"></canvas>
+    </div>
     <div class="form-container">
         <h2>Add a Product</h2>
         <form id="productForm">
@@ -214,144 +222,130 @@ permalink: navigation/log
             <button type="submit">Add Product</button>
         </form>
     </div>
-    
-    <div class="log-container">
-        <h2>Product Logs</h2>
-        <ul id="productList">
-            <!-- Dynamic Product List Goes Here -->
-        </ul>
-    </div>
+    <h2>Product Logs</h2>
+    <ul id="productList"></ul>
 </div>
-
 <script>
-    let data = {
-        labels: ["Product A", "Product B", "Product C", "Product D", "Product E"],
-        datasets: {
-            Revenue: [10000, 15000, 12000, 18000, 14000],
-            "Units Sold": [500, 700, 600, 900, 750],
-            Profit: [3000, 5000, 4000, 6000, 4500]
-        }
-    };
-
-    // Update UI with current data
-    function updateProductList() {
+    const pythonURI = "https://optivize.stu.nighthawkcodingsociety.com";
+    async function fetchData() {
+        let response = await fetch(`${pythonURI}/api/predict`);
+        let data = await response.json();
+        updateUI(data);
+    }
+    function updateUI(data) {
         let productList = document.getElementById("productList");
-        productList.innerHTML = ''; // Clear existing list
-        data.labels.forEach((product, index) => {
+        let totalRevenue = 0, totalUnits = 0, totalProfit = 0;
+        productList.innerHTML = '';
+        data.forEach(item => {
+            totalRevenue += item.revenue;
+            totalUnits += item.units;
+            totalProfit += item.profit;
             let listItem = document.createElement("li");
-            listItem.innerHTML = `
-                <div><strong>${product}</strong></div>
-                <div>Revenue: ${data.datasets.Revenue[index]}</div>
-                <div>Units Sold: ${data.datasets["Units Sold"][index]}</div>
-                <div>Profit: ${data.datasets.Profit[index]}</div>
-            `;
+            listItem.textContent = `${item.name} - Revenue: $${item.revenue}, Units: ${item.units}, Profit: $${item.profit}`;
             productList.appendChild(listItem);
+        });            
+        document.getElementById("totalRevenue").textContent = `$${totalRevenue}`;
+        document.getElementById("totalUnits").textContent = totalUnits;
+        document.getElementById("avgProfit").textContent = `$${(totalProfit / data.length).toFixed(2)}`;            
+        updateChart(data);
+    }
+    function updateChart(data) {
+        let ctx = document.getElementById("salesChart").getContext("2d");
+        let labels = data.map(item => item.name);
+        let revenues = data.map(item => item.revenue);
+        let units = data.map(item => item.units);
+        let profits = data.map(item => item.profit);            
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'Revenue', data: revenues, backgroundColor: 'rgba(255, 99, 132, 0.5)' },
+                    { label: 'Units Sold', data: units, backgroundColor: 'rgba(54, 162, 235, 0.5)' },
+                    { label: 'Profit', data: profits, backgroundColor: 'rgba(75, 192, 192, 0.5)' }
+                ]
+            },
+            options: { responsive: true, scales: { y: { beginAtZero: true } } }
         });
     }
-
-    // Add product and update list
-    document.getElementById("productForm").addEventListener("submit", function(e) {
-        e.preventDefault();
-        let name = document.getElementById("productName").value.trim();
-        let value = parseFloat(document.getElementById("productValue").value);
-
-        if (name === "" || isNaN(value) || value <= 0) {
-            Swal.fire("Error", "Please enter a valid product name and value!", "error");
-            return;
+    document.getElementById("productForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    let name = document.getElementById("productName").value.trim();
+    let value = parseFloat(document.getElementById("productValue").value);
+    if (name === "" || isNaN(value) || value <= 0) {
+        Swal.fire("Error", "Please enter a valid product name and value!", "error");
+        return;
+    }
+    try {
+        let response = await fetch(`${pythonURI}/api/predict`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: name, revenue: value, units: 0, profit: 0 })
+        });
+        let result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.message || "Failed to add product");
         }
-
-        // Add new product to data
-        data.labels.push(name);
-        data.datasets.Revenue.push(value);  // Default revenue value, customize as needed
-        data.datasets["Units Sold"].push(0); // Placeholder for unit sold
-        data.datasets.Profit.push(0);  // Placeholder for profit
-
-        updateProductList();
+        Swal.fire("Success", "Product added successfully!", "success");
+        // Clear input fields
         document.getElementById("productName").value = "";
         document.getElementById("productValue").value = "";
-    });
-
-    // Initial product list rendering
-    updateProductList();
-</script>
-
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Analysis Tool</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { font-family: 'Inter', sans-serif; background: #1e3c72; color: white; padding: 20px; }
-        .container { max-width: 900px; margin: auto; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
-        h1 { text-align: center; }
-        .analytics { display: flex; justify-content: space-between; margin-bottom: 20px; }
-        .analytics div { background: rgba(255, 255, 255, 0.2); padding: 10px; border-radius: 8px; }
-        .chart-container { position: relative; height: 300px; }
-        ul { list-style: none; padding: 0; }
-        li { background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 8px; margin: 5px 0; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Sales Analysis</h1>
-        <div class="analytics">
-            <div>Total Revenue: <span id="totalRevenue">$0</span></div>
-            <div>Total Units Sold: <span id="totalUnits">0</span></div>
-            <div>Avg. Profit: <span id="avgProfit">$0</span></div>
-        </div>
-        <div class="chart-container">
-            <canvas id="salesChart"></canvas>
-        </div>
-        <h2>Product Logs</h2>
-        <ul id="productList"></ul>
-    </div>
-    <script>
-        async function fetchData() {
-            let response = await fetch('/api/sales-data');
-            let data = await response.json();
-            updateUI(data);
-        }
-        function updateUI(data) {
-            let productList = document.getElementById("productList");
-            let totalRevenue = 0, totalUnits = 0, totalProfit = 0;
-            productList.innerHTML = '';
-            data.forEach(item => {
-                totalRevenue += item.revenue;
-                totalUnits += item.units;
-                totalProfit += item.profit;
-                let listItem = document.createElement("li");
-                listItem.textContent = `${item.name} - Revenue: $${item.revenue}, Units: ${item.units}, Profit: $${item.profit}`;
-                productList.appendChild(listItem);
-            });            
-            document.getElementById("totalRevenue").textContent = `$${totalRevenue}`;
-            document.getElementById("totalUnits").textContent = totalUnits;
-            document.getElementById("avgProfit").textContent = `$${(totalProfit / data.length).toFixed(2)}`;            
-            updateChart(data);
-        }
-        function updateChart(data) {
-            let ctx = document.getElementById("salesChart").getContext("2d");
-            let labels = data.map(item => item.name);
-            let revenues = data.map(item => item.revenue);
-            let units = data.map(item => item.units);
-            let profits = data.map(item => item.profit);            
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: 'Revenue', data: revenues, backgroundColor: 'rgba(255, 99, 132, 0.5)' },
-                        { label: 'Units Sold', data: units, backgroundColor: 'rgba(54, 162, 235, 0.5)' },
-                        { label: 'Profit', data: profits, backgroundColor: 'rgba(75, 192, 192, 0.5)' }
-                    ]
-                },
-                options: { responsive: true, scales: { y: { beginAtZero: true } } }
-            });
-        }
+        // Refresh the displayed data
         fetchData();
-    </script>
+    } catch (error) {
+        Swal.fire("Error", error.message, "error");
+    }
+});
+const pythonURI = "https://optivize.stu.nighthawkcodingsociety.com"; 
+// Fetch and display predictions
+async function fetchData() {
+    try {
+        let response = await fetch(`${pythonURI}/api/predict`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        let data = await response.json();
+        console.log("Fetched Data:", data); // Debugging: Check if data is retrieved
+        if (!Array.isArray(data) || data.length === 0) {
+            console.warn("No data available or invalid format.");
+            document.getElementById("predictionTableBody").innerHTML = "<tr><td colspan='5'>No data available</td></tr>";
+            return;
+        }
+        let tableBody = document.getElementById("predictionTableBody");
+        tableBody.innerHTML = ""; // Clear previous entries
+        data.forEach(item => {
+            let row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${item.cookie_flavor}</td>
+                <td>${item.seasonality}</td>
+                <td>$${item.price.toFixed(2)}</td>
+                <td>${item.marketing}</td>
+                <td>${item.customer_sentiment}</td>
+                <td><span style="color:${item.predicted_success ? 'green' : 'red'}">${item.predicted_success ? 'Successful' : 'Not Successful'}</span></td>
+            `;
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        document.getElementById("predictionTableBody").innerHTML = `<tr><td colspan='5'>Error loading data</td></tr>`;
+    }
+}
+// Call fetchData on page load
+document.addEventListener("DOMContentLoaded", fetchData);
 
-</body>
-</html>
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body { font-family: 'Inter', sans-serif; background: #1e3c72; color: white; padding: 20px; }
+    .container { max-width: 900px; margin: auto; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+    h1 { text-align: center; }
+    .analytics { display: flex; justify-content: space-between; margin-bottom: 20px; }
+    .analytics div { background: rgba(255, 255, 255, 0.2); padding: 10px; border-radius: 8px; }
+    .chart-container { position: relative; height: 300px; }
+    ul { list-style: none; padding: 0; }
+    li { background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 8px; margin: 5px 0; }
+</style>
+
