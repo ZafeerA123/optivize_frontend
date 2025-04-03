@@ -1,4 +1,4 @@
-[User Story](url)
+[User Story]([url](https://github.com/ZafeerA123/optivize_frontend/issues/25))
 
 
 # Introduction
