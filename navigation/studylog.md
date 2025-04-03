@@ -279,29 +279,31 @@ permalink: navigation/log
 
         loading.style.display = "block";  // Show loading indicator
 
-        // Log the payload for debugging
+        // Ensure numbers are sent as strings to avoid potential parsing issues
         const payload = {
             cookie_flavor: cookieFlavor,
-            price: price,
-            marketing: marketing
+            price: price.toString(),  // Ensure it’s sent as a string
+            marketing: marketing.toString()
         };
         console.log("Sending payload:", payload);
 
         try {
             let response = await fetchWithTimeout(`${pythonURI}/api/predict`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Accept": "application/json" 
+                },
                 body: JSON.stringify(payload)
             });
 
-            // Check if response is OK
+            let result = await response.json();
+            console.log("Prediction result:", result);
+
             if (!response.ok) {
-                const result = await response.json();
                 throw new Error(result.message || `Error ${response.status}: Bad Request`);
             }
 
-            let result = await response.json();
-            console.log("Prediction result:", result);
             Swal.fire("Success", "Prediction generated!", "success");
 
             // Update UI
@@ -309,7 +311,7 @@ permalink: navigation/log
             document.getElementById("marketingAdvice").textContent = generateMarketingAdvice(result);
 
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Fetch Error:", error);
             Swal.fire("Error", error.message, "error");
         } finally {
             loading.style.display = "none";  // Hide loading indicator
@@ -359,4 +361,3 @@ permalink: navigation/log
         }
     }
 </script>
-
