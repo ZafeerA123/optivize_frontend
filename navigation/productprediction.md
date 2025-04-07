@@ -1,6 +1,6 @@
 ---
-layout: default  # This will use your existing Jekyll layout
-permalink: /testing
+layout: base
+permalink: /predictions
 ---
 <div class="cookie-prediction-container">
   <!-- Training Section -->
