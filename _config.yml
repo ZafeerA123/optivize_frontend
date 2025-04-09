@@ -14,8 +14,8 @@ minima:
 # remote_theme: pages-themes/cayman@v0.2.0
 # remote_theme: pages-themes/time-machine@v0.2.0
 plugins:
-  # - jekyll-remote-theme
-  # - jekyll-jupyter-notebook
+  - jekyll-remote-theme
+  - jekyll-jupyter-notebook
 header_pages:
   - navigation/calendar.md
   - navigation/tutor.html
@@ -28,6 +28,7 @@ exclude:
   - .git/
   - node_modules/
   - _site/
+  - vendor/bundle/ruby/3.1.0/gems/jekyll-3.10.0/lib/site_template/_posts/0000-00-00-welcome-to-jekyll.markdown.erb
 
 
 
