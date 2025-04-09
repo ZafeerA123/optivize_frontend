@@ -159,7 +159,6 @@ html, body {
             <h2>Business Impact</h2>
             <p>See how Optivize transforms local businesses.</p>
             <a href="/about/" style="text-decoration: none; color: inherit;">Learn More</a>
-            </button>
         </div>
     </div>
 
