@@ -242,7 +242,7 @@ permalink: /predictions
                   </div>
                 </div>
                 <div class="score-details">
-                  <h3>${scoreAnalysis.label} (${result?.score?.toFixed(100) || 'N/A'})</h3>
+                  <h3>${scoreAnalysis.label} (${result?.score?.toFixed(1) || 'N/A'})</h3>
                   <p>${scoreAnalysis.description}</p>
                   ${scoreAnalysis.distribution_analysis ? `
                     <div class="distribution-analysis">
@@ -327,7 +327,7 @@ permalink: /predictions
           
           <div class="distribution-header">
             <div class="distribution-score">
-              <span class="score">${distAnalysis.score}/10</span>
+              <span class="score">${distAnalysis.score}/100</span>
               <span class="rating">${distAnalysis.rating}</span>
             </div>
             <div class="distribution-meter">
