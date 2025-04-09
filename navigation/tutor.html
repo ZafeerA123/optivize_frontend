@@ -121,9 +121,11 @@ permalink: /nolanbot/
     background: #6a4c93; /* Match the header and footer */
     border-radius: 5px;
   }
+
+  
 </style>
 
-
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <div
   id="cantteach-bot-container"
@@ -320,10 +322,10 @@ permalink: /nolanbot/
     const data = await response.json();
     const aiResponse = data.response || "Error: Unable to fetch response.";
     chatBox.innerHTML += `
-      <div data-r="${question}" style="margin-bottom: 20px; background: black; padding: 15px; border-radius: 8px; color: white;">
-        <strong>OptiBot:</strong>
-        <span class="response-text">${aiResponse}</span>
-      </div>`;
+  <div data-r="${question}" style="margin-bottom: 20px; background: black; padding: 15px; border-radius: 8px; color: white;">
+    <strong>OptiBot:</strong>
+    <div class="response-text">${marked.parse(aiResponse)}</div>
+  </div>`;
     document.getElementById("question").value = ""; // Clear input
     chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
   }
@@ -354,10 +356,10 @@ async function fetchAllLogs() {
               </div>`;
           // Add response to the chat box
           chatBox.innerHTML += `
-              <div data-r="${question}" style="margin-bottom: 20px; background: #0077BE; padding: 15px; border-radius: 8px; color: white;">
-                  <strong>Optibot:</strong>
-                  <span class="response-text">${response}</span>
-              </div>`;
+  <div data-r="${question}" style="margin-bottom: 20px; background: #0077BE; padding: 15px; border-radius: 8px; color: white;">
+    <strong>Optibot:</strong>
+    <div class="response-text">${marked.parse(response)}</div>
+  </div>`;
       });
   } catch (error) {
       console.error("Error fetching logs:", error);
