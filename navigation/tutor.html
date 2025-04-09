@@ -366,6 +366,15 @@ async function fetchAllLogs() {
 }
 // Call fetchAllLogs on page load
 window.onload = fetchAllLogs;
+document.getElementById("question").addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    const question = this.value.trim();
+    if (question) {
+      sendQuestion(question);
+    }
+  }
+});
 </script>
 <!-- Optional CSS -->
 <style>
