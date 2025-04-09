@@ -1,0 +1,223 @@
+<!-- Sleek Floating Chatbot -->
+ 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    .chatbot-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+        color: #ffbd70;
+        text-align: center;
+        padding: 6px 16px 8px;
+        font-weight: 400;
+        background-color: #1e1e1e;
+        border-bottom: 1px solid #333;
+    }
+    #chatbot-toggle {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #ffa500, #d87e00);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.6rem;
+        cursor: pointer;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s ease, background 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+  
+    #chatbot-toggle:hover {
+      transform: scale(1.1);
+      background-color: #be6f00;
+    }
+  
+    #chatbot-window {
+      position: fixed;
+      bottom: 100px;
+      right: 24px;
+      width: 360px;
+      max-height: 600px;
+      background: rgba(30, 30, 30, 0.95);
+      backdrop-filter: blur(8px);
+      color: white;
+      border: 1px solid #D87E00;
+      border-radius: 16px;
+      display: none;
+      flex-direction: column;
+      z-index: 9998;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+  
+    #chatbot-window header {
+      background-color: #D87E00;
+      color: white;
+      padding: 14px;
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+  
+    #chat-box {
+      flex-grow: 1;
+      padding: 16px;
+      overflow-y: auto;
+      background: #1e1e1e;
+      font-size: 0.95rem;
+    }
+  
+    #chat-box div {
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+  
+    #chatbot-input {
+      display: flex;
+      padding: 12px;
+      background: #121212;
+      border-top: 1px solid #333;
+    }
+  
+    #chatbot-input input {
+      flex-grow: 1;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      background-color: #fff;
+      color: #000;
+    }
+  
+    #chatbot-input button {
+      background: #D87E00;
+      border: none;
+      color: white;
+      padding: 10px 16px;
+      margin-left: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+  
+    #chatbot-input button:hover {
+      background-color: #be6f00;
+    }
+  
+    #chat-box strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #ffa94d;
+    }
+
+    #chatbot-toggle img {
+        position: relative;
+        top: 5px; 
+        right: -0.5px;
+    }
+
+    #chatbot-label {
+        position: fixed;
+        bottom: 96px;
+        right: 24px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700; /* Bolder */
+        color: #ffbd70;
+        background-color: #111; /* Darker */
+        padding: 6px 14px;
+        border-radius: 8px;
+        z-index: 9999;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Slightly stronger shadow */
+        transition: all 0.2s ease;
+    }
+
+
+
+    </style>
+<!-- Floating Chatbot -->
+<div id="chatbot-label">
+    Need help? Ask me!
+</div>
+
+  <!-- Chatbot Markup -->
+  <button id="chatbot-toggle" aria-label="Open chatbot">
+    <img src="{{ site.baseurl }}/images/favicon.ico" alt="Chatbot Icon" />
+  </button>
+  
+  
+  
+  
+  <div id="chatbot-window">
+    <header>OptiBot - Chat</header>
+    <div id="chat-box"></div>
+    <div id="chatbot-input">
+      <input type="text" id="question" placeholder="Ask me anything..." />
+      <button onclick="sendQuestion(document.getElementById('question').value)">Send</button>
+    </div>
+  </div>
+  
+  <!-- Chatbot Script -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const chatbotToggle = document.getElementById("chatbot-toggle");
+    const chatbotWindow = document.getElementById("chatbot-window");
+    const chatBox = document.getElementById("chat-box");
+  
+    chatbotToggle.addEventListener("click", () => {
+  chatbotWindow.style.display = chatbotWindow.style.display === "flex" ? "none" : "flex";
+  document.getElementById("chatbot-label").style.display = "none";
+    });
+
+  
+    const pythonURI =
+      location.hostname === "localhost" || location.hostname === "127.0.0.1"
+        ? "http://127.0.0.1:8212"
+        : "https://optivize.stu.nighthawkcodingsociety.com";
+  
+    const fetchOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    };
+  
+    async function sendQuestion(question) {
+      if (!question.trim()) return;
+  
+      chatBox.innerHTML += `
+        <div><strong>You:</strong> ${question}</div>
+      `;
+  
+      const response = await fetch(`${pythonURI}/api/ai/help`, {
+        ...fetchOptions,
+        body: JSON.stringify({ question }),
+      });
+  
+      const data = await response.json();
+      const reply = data.response || "Sorry, I couldn’t process that.";
+  
+      chatBox.innerHTML += `
+        <div><strong>OptiBot:</strong> ${marked.parseInline(reply)}</div>
+      `;
+  
+      document.getElementById("question").value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  
+    document.getElementById("question").addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendQuestion(this.value);
+      }
+    });
+  </script>
+  
