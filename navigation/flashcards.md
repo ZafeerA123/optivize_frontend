@@ -1,6 +1,6 @@
 ---
 layout: base
-title: Inventory Management
+title: Inventory
 description: Inventory Management System
 hide: true
 permalink: /flashcards
