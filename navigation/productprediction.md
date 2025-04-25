@@ -1,5 +1,8 @@
 ---
 layout: base
+title: Crumbl
+description: Product Success Prediction
+hide: true
 permalink: /predictions
 ---
 <div class="cookie-prediction-container">
