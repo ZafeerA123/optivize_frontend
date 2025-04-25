@@ -390,7 +390,7 @@ permalink: /predictions
           resultsDiv.innerHTML = `
             <div class="prediction-result ${successClass}">
               <div class="score-display">
-                <span class="score-value">${result.score?.toFixed(1) || 'N/A'}</span>
+                  <span class="score-value">${(result.score || 0).toFixed(1)}%</span>  <!-- Ensuring it's a percentage -->
                 <span class="score-label">Success Score</span>
                 <span class="probability">${result.insights?.success_probability?.range || ''}</span>
               </div>
