@@ -5,6 +5,128 @@ description: Product Success Prediction
 hide: true
 permalink: /predictions
 ---
+<style>
+/* Reset and base styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    font-family: 'Poppins', sans-serif;
+    background: url('https://i.imgur.com/7R0g4Kg.jpg'); /* Cookie pattern background */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    z-index: 0;
+}
+
+/* Sprinkle overlay full-screen */
+.sprinkle-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Sprinkle styles */
+.sprinkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: sprinkleFall linear infinite;
+    z-index: 1;
+}
+
+/* Sprinkle animation keyframes */
+@keyframes sprinkleFall {
+    0% {
+        transform: translateY(-10px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Container over backdrop */
+.main-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.8);
+    margin: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Heading with cookie font style */
+.main-content h1 {
+    font-size: 3rem;
+    color: #5a3e36;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Button styles */
+.button {
+    background: #ffb4a2;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    background: #ffcad4;
+    transform: translateY(-2px);
+}
+
+/* Optional: fade-in animation for main content */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.main-content {
+    animation: fadeIn 1s ease forwards;
+}
+</style>
+
+<div class="sprinkle-overlay" id="sprinkle-overlay"></div>
+
+<script>
+const sprinkleColors = ['#ffafcc', '#ffcba4', '#b5ead7', '#caffbf', '#9bf6ff', '#a0c4ff', '#e0c3fc'];
+const overlay = document.getElementById('sprinkle-overlay');
+
+function createSprinkle() {
+    const sprinkle = document.createElement('div');
+    sprinkle.classList.add('sprinkle');
+    const size = Math.random() * 4 + 6;
+    sprinkle.style.width = `${size}px`;
+    sprinkle.style.height = `${size}px`;
+    sprinkle.style.left = `${Math.random() * window.innerWidth}px`;
+    sprinkle.style.backgroundColor = sprinkleColors[Math.floor(Math.random() * sprinkleColors.length)];
+    sprinkle.style.animationDuration = `${Math.random() * 5 + 5}s`;
+    sprinkle.style.opacity = Math.random() * 0.5 + 0.5;
+
+    overlay.appendChild(sprinkle);
+    setTimeout(() => sprinkle.remove(), 10000);
+}
+
+setInterval(createSprinkle, 100);
+</script>
+
 <div class="cookie-prediction-container">
   <!-- Training Section -->
   <div class="section-card">

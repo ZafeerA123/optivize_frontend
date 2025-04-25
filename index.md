@@ -185,6 +185,7 @@ html, body {
         <div class="carousel">
             <!-- Carousel Slides -->
             <div class="carousel-slide active">
+<<<<<<< HEAD
                 <img src="{{site.baseurl}}/images/chatbot.PNG" alt="Chatbot">
             </div>
             <div class="carousel-slide">
@@ -192,6 +193,15 @@ html, body {
             </div>
             <div class="carousel-slide">
                 <img src="{{site.baseurl}}/images/salesanalysis.jpg" alt="Sales Analysis">
+=======
+                <img src="{{site.baseurl}}/images/download.jpeg" alt="Image 1">
+            </div>
+            <div class="carousel-slide">
+                <img src="{{site.baseurl}}/images/crumbl.png" alt="Image 2">
+            </div>
+            <div class="carousel-slide">
+                <img src="{{site.baseurl}}/images/cookie.png" alt="Image 3">
+>>>>>>> a11f27f (edit style)
             </div>
             <div class="carousel-slide">
                 <div class="carousel-text">
