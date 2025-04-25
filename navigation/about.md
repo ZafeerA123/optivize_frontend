@@ -2,7 +2,7 @@
 layout: post
 title: About
 search_exclude: true
-permalink: /about/
+permalink: /about
 ---
 <html lang="en">
 <head>

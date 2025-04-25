@@ -15,25 +15,24 @@ html, body {
     width: 100%;
     overflow-x: hidden;
     overflow-y: hidden;
-    box-sizing: border-box; /* Ensures padding/border is included in element's width/height */
+    box-sizing: border-box;
 }
-
 
 /* Fullscreen split container */
 .split-container {
     display: flex;
-    width: 100vw; /* Full width of the viewport */
-    height: calc(100vh - 80px); /* Subtract header height to fit content below */
-    overflow: hidden; /* Hides any unwanted overflow */
-    position: absolute; /* Position container relative to the page */
-    top: 80px; /* Push content below header */
+    width: 100vw;
+    height: calc(100vh - 80px);
+    overflow: hidden;
+    position: absolute;
+    top: 80px;
     left: 0;
 }
 
 /* Left and Right Sections (3/4 and 1/4 of the screen) */
 .left-right-container {
     display: flex;
-    width: 75%; /* 75% of the screen width */
+    width: 75%;
     height: 100%;
 }
 
@@ -46,6 +45,7 @@ html, body {
     align-items: center;
     text-align: center;
     transition: flex 0.5s ease;
+    padding: 20px;
 }
 
 /* Left Section */
@@ -77,6 +77,8 @@ html, body {
     cursor: pointer;
     border-radius: 5px;
     transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .button-primary {
@@ -95,7 +97,7 @@ html, body {
 
 /* Carousel Section (1/4 of the screen) */
 .carousel-container {
-    width: 25%; /* Carousel takes 25% of the screen */
+    width: 25%;
     background: #f4f4f4;
     display: flex;
     justify-content: center;
@@ -140,8 +142,18 @@ html, body {
 .carousel-slide {
     animation: fade 10s infinite;
 }
-</style>
 
+/* Content styling */
+.section h2 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.section p {
+    margin-bottom: 20px;
+    max-width: 80%;
+}
+</style>
 
 <!-- Main Split Container -->
 <div class="split-container">
@@ -150,15 +162,21 @@ html, body {
         <!-- Left Section -->
         <div class="section left-section">
             <h2>AI Solutions</h2>
-            <p>Enhancing business efficiency through AI-powered tools.</p>
-            <button class="button button-primary">Explore</button>
+            <p>Our AI-powered tool helps you forecast cookie product success with:</p>
+            <ul style="text-align: left; max-width: 80%; margin: 0 auto 20px;">
+                <li><strong>Smart Prediction Model</strong> - Analyzes multiple factors to calculate success scores</li>
+                <li><strong>Data-Driven Insights</strong> - Visual dashboards show key success factors</li>
+                <li><strong>Actionable Recommendations</strong> - Tailored advice for product launches</li>
+                <li><strong>Historical Analysis</strong> - Track all predictions with searchable history</li>
+            </ul>
+            <a href="/optivize_frontend/predictions" class="button button-primary">Try the Predictor</a>
         </div>
 
         <!-- Right Section -->
         <div class="section right-section">
             <h2>Business Impact</h2>
             <p>See how Optivize transforms local businesses.</p>
-            <a href="/optivize_frontend/about/" style="text-decoration: none; color: inherit;">Learn More</a>
+            <a href="/optivize_frontend/about" class="button button-secondary">Learn More</a>
         </div>
     </div>
 
@@ -167,13 +185,13 @@ html, body {
         <div class="carousel">
             <!-- Carousel Slides -->
             <div class="carousel-slide active">
-                <img src="{{site.baseurl}}/images/chatbot.PNG" alt="Image 1">
+                <img src="{{site.baseurl}}/images/chatbot.PNG" alt="Chatbot">
             </div>
             <div class="carousel-slide">
-                <img src="{{site.baseurl}}/images/inventory.jpg" alt="Image 2">
+                <img src="{{site.baseurl}}/images/inventory.jpg" alt="Inventory Management">
             </div>
             <div class="carousel-slide">
-                <img src="{{site.baseurl}}/images/salesanalysis.jpg" alt="Image 3">
+                <img src="{{site.baseurl}}/images/salesanalysis.jpg" alt="Sales Analysis">
             </div>
             <div class="carousel-slide">
                 <div class="carousel-text">
@@ -205,4 +223,3 @@ setInterval(() => {
     showSlide(currentSlide);
 }, 5000); // Change slide every 5 seconds
 </script>
-
