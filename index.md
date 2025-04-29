@@ -16,6 +16,7 @@ html, body {
     overflow-x: hidden;
     overflow-y: hidden;
     box-sizing: border-box;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* Fullscreen split container */
@@ -48,16 +49,31 @@ html, body {
     padding: 20px;
 }
 
-/* Left Section */
+/* Left Section - Crumbl-inspired colors */
 .left-section {
-    background: linear-gradient(135deg, #024a57, #132068);
+    background: linear-gradient(135deg, #683c11, #8b4513);
     color: white;
+    position: relative;
 }
 
-/* Right Section */
+/* Cookie pattern overlay for left section */
+.left-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(#d4a76a 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+/* Right Section - Crumbl-inspired colors */
 .right-section {
-    background: white;
-    color: #132068;
+    background: #f9f3e9;
+    color: #683c11;
 }
 
 /* Hover Effects */
@@ -79,30 +95,35 @@ html, body {
     transition: 0.3s;
     text-decoration: none;
     display: inline-block;
+    font-weight: bold;
 }
 
 .button-primary {
-    background: white;
-    color: #132068;
+    background: #f9f3e9;
+    color: #683c11;
+    border: 2px solid #683c11;
 }
 
 .button-secondary {
-    background: #132068;
-    color: white;
+    background: #683c11;
+    color: #f9f3e9;
+    border: 2px solid #683c11;
 }
 
 .button:hover {
-    opacity: 0.8;
+    opacity: 0.9;
+    transform: scale(1.05);
 }
 
 /* Carousel Section (1/4 of the screen) */
 .carousel-container {
     width: 25%;
-    background: #f4f4f4;
+    background: #f2e6d9;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
+    border-left: 1px solid rgba(104, 60, 17, 0.2);
 }
 
 .carousel {
@@ -114,6 +135,9 @@ html, body {
 .carousel-slide {
     display: none;
     text-align: center;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .carousel-slide img {
@@ -123,7 +147,7 @@ html, body {
 
 .carousel-text {
     padding: 20px;
-    background-color: #024a57;
+    background-color: #683c11;
     color: white;
 }
 
@@ -147,11 +171,68 @@ html, body {
 .section h2 {
     margin-bottom: 20px;
     font-size: 2rem;
+    position: relative;
+    display: inline-block;
+}
+
+.section h2::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #d4a76a;
+    border-radius: 2px;
 }
 
 .section p {
     margin-bottom: 20px;
     max-width: 80%;
+    line-height: 1.6;
+}
+
+/* List styling */
+.feature-list {
+    text-align: left; 
+    max-width: 80%; 
+    margin: 0 auto 20px;
+    list-style: none;
+    padding-left: 0;
+}
+
+.feature-list li {
+    margin-bottom: 10px;
+    padding-left: 25px;
+    position: relative;
+}
+
+.feature-list li::before {
+    content: "🍪";
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 16px;
+}
+
+.feature-list li strong {
+    color: #d4a76a;
+}
+
+/* Cookie icon */
+.cookie-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+/* Logo container */
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.logo-container img {
+    max-width: 120px;
+    height: auto;
 }
 </style>
 
@@ -161,9 +242,10 @@ html, body {
     <div class="left-right-container">
         <!-- Left Section -->
         <div class="section left-section">
-            <h2>AI Solutions</h2>
+            <div class="cookie-icon">🍪</div>
+            <h2>Cookie Success Predictor</h2>
             <p>Our AI-powered tool helps you forecast cookie product success with:</p>
-            <ul style="text-align: left; max-width: 80%; margin: 0 auto 20px;">
+            <ul class="feature-list">
                 <li><strong>Smart Prediction Model</strong> - Analyzes multiple factors to calculate success scores</li>
                 <li><strong>Data-Driven Insights</strong> - Visual dashboards show key success factors</li>
                 <li><strong>Actionable Recommendations</strong> - Tailored advice for product launches</li>
@@ -174,8 +256,12 @@ html, body {
 
 <!-- Right Section -->
 <div class="section right-section">
+    <div class="logo-container">
+        <!-- This would be where you'd add the Crumbl logo if available -->
+        <span style="font-size: 2rem; font-weight: bold; color: #683c11;">Optivize</span>
+    </div>
     <h2>Business Impact</h2>
-    <p>See how Optivize transforms local businesses.</p>
+    <p>See how Optivize transforms cookie businesses with data-driven decisions.</p>
     <a href="/optivize_frontend/about" class="button button-secondary">Learn More</a>
 </div>
 </div>
