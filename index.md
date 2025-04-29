@@ -172,35 +172,35 @@ html, body {
             <a href="/optivize_frontend/predictions" class="button button-primary">Try the Predictor</a>
         </div>
 
-        <!-- Right Section -->
-        <div class="section right-section">
-            <h2>Business Impact</h2>
-            <p>See how Optivize transforms local businesses.</p>
-            <a href="/optivize_frontend/about" class="button button-secondary">Learn More</a>
-        </div>
-    </div>
+<!-- Right Section -->
+<div class="section right-section">
+    <h2>Business Impact</h2>
+    <p>See how Optivize transforms local businesses.</p>
+    <a href="/optivize_frontend/about" class="button button-secondary">Learn More</a>
+</div>
+</div>
 
-    <!-- Carousel Section (1/4 of the screen) -->
-    <div class="carousel-container">
-        <div class="carousel">
-            <!-- Carousel Slides -->
-            <div class="carousel-slide active">
-                <img src="{{site.baseurl}}/images/chatbot.PNG" alt="Chatbot">
-            </div>
-            <div class="carousel-slide">
-                <img src="{{site.baseurl}}/images/inventory.jpg" alt="Inventory Management">
-            </div>
-            <div class="carousel-slide">
-                <img src="{{site.baseurl}}/images/salesanalysis.jpg" alt="Sales Analysis">
-            </div>
-            <div class="carousel-slide">
-                <div class="carousel-text">
-                    <h2>About Us</h2>
-                    <p>DNHS AP CSP Group: Marti, Nikhil, Keerthan, Zafeer, Hithin, Aarav</p>
-                </div>
+<!-- Carousel Section (1/4 of the screen) -->
+<div class="carousel-container">
+    <div class="carousel">
+        <!-- Carousel Slides -->
+        <div class="carousel-slide active">
+            <img src="{{site.baseurl}}/images/chatbot.PNG" alt="Chatbot">
+        </div>
+        <div class="carousel-slide">
+            <img src="{{site.baseurl}}/images/inventory.jpg" alt="Inventory Management">
+        </div>
+        <div class="carousel-slide">
+            <img src="{{site.baseurl}}/images/salesanalysis.jpg" alt="Sales Analysis">
+        </div>
+        <div class="carousel-slide">
+            <div class="carousel-text">
+                <h2>About Us</h2>
+                <p>DNHS AP CSP Group: Marti, Nikhil, Keerthan, Zafeer, Hithin, Aarav</p>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <script>
