@@ -499,26 +499,10 @@ html, body {
     <p>Our AI-powered analytics platform elevates your cookie business with precision forecasting and data intelligence.</p>
     
 <ul class="feature-list">
-    <li><strong>Precision Intelligence</strong> - Advanced algorithms predict market success with 94% accuracy</li>
+    <li><strong>Precision Intelligence</strong> - Algorithms predict market success</li>
     <li><strong>Visual Analytics</strong> - Interactive dashboards visualize key performance metrics</li>
     <li><strong>Strategic Insights</strong> - AI-generated recommendations for optimized product launches</li>
-    <li><strong>Performance Tracking</strong> - Real-time monitoring and searchable prediction history</li>
 </ul>
-
-<div class="metrics-container">
-    <div class="metric">
-        <span class="metric-value">94%</span>
-        <div class="metric-label">Accuracy</div>
-    </div>
-    <div class="metric">
-        <span class="metric-value">3x</span>
-        <div class="metric-label">ROI</div>
-    </div>
-    <div class="metric">
-        <span class="metric-value">1.2M</span>
-        <div class="metric-label">Data Points</div>
-    </div>
-</div>
 
 <a href="/optivize_frontend/predictions" class="button button-primary">Launch Predictor</a>
 </div>
