@@ -232,27 +232,6 @@ html, body {
     opacity: 1;
 }
 
-/* Cookie decorations for carousel */
-.carousel-container::before {
-    content: "🍪";
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 24px;
-    opacity: 0.5;
-    animation: float 6s ease-in-out infinite;
-}
-
-.carousel-container::after {
-    content: "🍪";
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    font-size: 24px;
-    opacity: 0.5;
-    animation: float 8s ease-in-out infinite;
-}
-
 @keyframes float {
     0%, 100% { transform: translateY(0) rotate(0deg); }
     50% { transform: translateY(-10px) rotate(10deg); }
@@ -513,11 +492,8 @@ html, body {
         <span class="logo">Optivize</span>
     </div>
     <h2>Enterprise Solutions</h2>
-    <p>Experience how Optivize transforms cookie businesses through advanced AI technology and data science.</p>
+    <p>Experience how Optivize transforms small businesses today.</p>
     
-<div class="glass-card">
-    <p style="margin:0; font-size:0.9rem; max-width:100%;">"Optivize revolutionized our product development cycle, reducing time-to-market by 47% while increasing consumer satisfaction ratings."</p>
-</div>
 
 <a href="/optivize_frontend/about" class="button button-secondary">Discover More</a>
 </div>
