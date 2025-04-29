@@ -1,42 +1,42 @@
 /* Colors */
-$background-color-start: #132068 !default;  // Dark Purple
-$background-color-end: #024a57 !default;  // Deep Blue
-$text-color: #eaeaea !default;  // Light text color
-$primary-color: #6a4c9c !default;  // Purple for highlights
-$secondary-color: #00adb5 !default;  // Aqua Blue for accents
+$background-color-start: #472505 !default;  // Dark Brown (from index gradient)
+$background-color-end: #784320 !default;  // Medium Brown (from index gradient)
+$text-color: #fcf9f5 !default;  // Light cream color (from right section)
+$primary-color: #d4a76a !default;  // Gold accent (from various elements)
+$secondary-color: #fcf9f5 !default;  // Cream color for accent elements
 
 /* Gradient Background */
 html, body {
   background: linear-gradient(135deg, $background-color-start, $background-color-end) !important;
   color: $text-color !important;
-  font-family: 'Segoe UI', Tahoma !important;
+  font-family: 'Montserrat', 'Segoe UI', Tahoma !important;
 }
   
 /* Header Styles */
 header {
     background-color: #ffffff !important;  /* Ensure the entire header has a white background */
-    color: black !important;  /* Black text */
+    color: #472505 !important;  /* Dark brown text to match theme */
     border-radius: 10px;  /* Smooth corners */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow for depth */
   }
   
-  /* Header Styles */
-  .site-title {
-    color: #000000; /* Text color - black or dark gray */
-    font-weight: bold;
-    font-family: 'Segoe UI', sans-serif !important;
-    font-size: 2.5rem;
-    text-align: center;
-    padding: 10px 0;
-    border-radius: 10px; /* Smooth corners */
-    background-color: #ffffff; /* White background */
-    transition: background-color 0.3s ease, transform 0.3s ease;
-  }
-  
-  .site-title:hover {
-    background-color: #f0f0f0; /* Light gray when hovered */
-    transform: scale(1.05);
-  }
+/* Header Styles */
+.site-title {
+  color: #472505; /* Changed to dark brown to match theme */
+  font-weight: bold;
+  font-family: 'Playfair Display', 'Segoe UI', sans-serif !important;
+  font-size: 2.5rem;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 10px; /* Smooth corners */
+  background-color: #ffffff; /* White background */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.site-title:hover {
+  background-color: #f0f0f0; /* Light gray when hovered */
+  transform: scale(1.05);
+}
   
 
 /* Navigation Bar */
@@ -52,7 +52,7 @@ header {
 
 /* Links in Navigation */
 .site-nav a {
-    color: black !important;  /* Black text for links */
+    color: #472505 !important;  /* Dark brown text for links */
     text-decoration: none;
     font-size: 1.2rem;  /* Increased font size */
     font-weight: bold;  /* Make the text bold */
@@ -63,7 +63,7 @@ header {
 
 /* Navigation Links Hover Effect */
 .site-nav a:hover {
-    color: $secondary-color !important;  /* Change link color on hover */
+    color: $primary-color !important;  /* Change link color on hover to gold */
     background-color: #f0f0f0;  /* Light gray background on hover */
 }
 
@@ -84,33 +84,39 @@ header {
 
 /* Button Styling with Animation */
 .btn {
-  background-color: $secondary-color !important;
-  color: $text-color !important;
-  border-radius: 8px;  /* Rounded corners */
-  padding: 10px 20px;
-  border-color: $primary-color !important;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  background-color: $primary-color !important;
+  color: $background-color-start !important;
+  border-radius: 30px;  /* Rounder corners to match index.md */
+  padding: 12px 28px;
+  border: none !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .btn:hover {
-  background-color: $primary-color !important;
-  transform: scale(1.05);  /* Slightly enlarge the button on hover */
+  background-color: darken($primary-color, 10%) !important;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
 }
 
 /* Table Styling */
 table th, table td {
-  background-color: $background-color-start !important;
+  background-color: rgba(71, 37, 5, 0.8) !important; /* Semi-transparent dark brown */
   color: $text-color !important;
   border-color: $primary-color !important;
 }
 
 table th {
   font-weight: bold;  /* Bold headers */
+  background-color: rgba(71, 37, 5, 0.9) !important; /* Slightly darker for headers */
 }
 
 /* Pre, Code Block Styling */
 pre, code {
-  background-color: $background-color-start !important;
+  background-color: rgba(71, 37, 5, 0.8) !important; /* Semi-transparent dark brown */
   color: $text-color !important;
   border-radius: 8px;  /* Rounded corners for code blocks */
   padding: 10px;
@@ -123,7 +129,7 @@ pre, code {
 }
 
 .search-result-highlight {
-  color: yellow !important;
+  color: $primary-color !important;
   font-weight: bold !important;
 }
 
@@ -134,4 +140,18 @@ pre, code {
 
 canvas {
   filter: var(--default-canvas-filter);
+}
+
+/* Add some new styles from index.md to enhance consistency */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+
+/* Glass card effect from index.md */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  margin: 20px 0;
 }
