@@ -377,6 +377,10 @@ html, body {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
+.cookie-icon::before {
+    content: "🍪";
+    font-size: 2.5rem;
+}
 
 .cookie-icon::after {
     content: "";
