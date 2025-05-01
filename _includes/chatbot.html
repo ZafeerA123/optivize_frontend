@@ -160,6 +160,16 @@
   <div id="chatbot-window">
     <header>OptiBot - Chat</header>
     <div id="chat-box"></div>
+    <div id="tutorial-carousel" style="padding: 16px; color: white; background: #1e1e1e; border-top: 1px solid #333; font-family: 'Inter', sans-serif;">
+      <div id="tutorial-slide">
+        <strong>Welcome to OptiBot!</strong>
+        <p>Click the arrows below to see what you can ask me.</p>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+        <button onclick="prevTutorial()" style="background: #333; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">⬅️ Prev</button>
+        <button onclick="nextTutorial()" style="background: #D87E00; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">Next ➡️</button>
+      </div>
+    </div>
     <div id="chatbot-input">
       <input type="text" id="question" placeholder="Ask me anything..." />
       <button onclick="sendQuestion(document.getElementById('question').value)">Send</button>
@@ -169,6 +179,77 @@
   <!-- Chatbot Script -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
+      const tutorialPrompts = [
+    {
+      title: "📖 Help",
+      content: "Ask: <code>what can you do</code> to see all available commands."
+    },
+    {
+      title: "📦 List All Items",
+      content: "Ask: <code>list all products</code> or <code>show my flashcards</code>."
+    },
+    {
+      title: "📁 Create a Group",
+      content: "Ask: <code>create group [group name]</code> or <code>add group [group name]</code>."
+    },
+    {
+      title: "🆕 Add Item (Two-Step)",
+      content: "Ask: <code>add new item called [item] with [Description]</code> → Then: <code>[Group Name]</code> when prompted."
+    },
+    {
+      title: "⚡ Add Item to Group (One Line)",
+      content: "Ask: <code>add item [item name] to group [group name]</code>."
+    },
+    {
+      title: "✏️ Update Item",
+      content: "Ask: <code>update item [Existing Item] with new content [New Description]</code>."
+    },
+    {
+      title: "❌ Delete Item",
+      content: "Ask: <code>delete item [Item name]</code> → Then: <code>yes</code> when asked."
+    },
+    {
+      title: "📌 Find Item Group",
+      content: "Ask: <code>what group is [item]} in?</code>"
+    },
+    {
+      title: "🔢 Get 2nd Product",
+      content: "Ask: <code>what is my second product?</code>"
+    },
+    {
+      title: "🔄 Update Group Name",
+      content: "(Work in Progress) Ask: <code>update group [Group name] to [New Group name]</code>."
+    },
+    {
+      title: "🗑️ Delete Group",
+      content: "Ask: <code>delete group [Group name]</code>."
+    },
+    {
+      title: "🎯 AI Help",
+      content: "Ask: <code>what is a derivative?</code> or <code>explain Python loops</code>."
+    }
+  ];
+
+  currentSlide = 0;
+  const tutorialDiv = document.getElementById("tutorial-slide");
+
+  function renderTutorial() {
+    const { title, content } = tutorialPrompts[currentSlide];
+    tutorialDiv.innerHTML = `<strong>${title}</strong><p>${content}</p>`;
+  }
+
+  function nextTutorial() {
+    currentSlide = (currentSlide + 1) % tutorialPrompts.length;
+    renderTutorial();
+  }
+
+  function prevTutorial() {
+    currentSlide = (currentSlide - 1 + tutorialPrompts.length) % tutorialPrompts.length;
+    renderTutorial();
+  }
+
+  // Load first tutorial
+  renderTutorial();
     const chatbotToggle = document.getElementById("chatbot-toggle");
     const chatbotWindow = document.getElementById("chatbot-window");
     const chatBox = document.getElementById("chat-box");
