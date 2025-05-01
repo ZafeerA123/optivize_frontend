@@ -479,7 +479,7 @@ html, body {
     <li><strong>Strategic Insights</strong> - AI-generated recommendations for optimized product launches</li>
 </ul>
 
-<a href="/optivize_frontend/predictions" class="button button-primary">Launch Predictor</a>
+<a href="/optivize_frontend/navigation/predictions" class="button button-primary">Launch Predictor</a>
 </div>
 
 <!-- Right Section -->
