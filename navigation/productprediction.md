@@ -3,7 +3,7 @@ layout: base
 title: Crumbl
 description: Product Success Prediction
 hide: true
-permalink: /predictions
+permalink: /navigation/predictions
 ---
 <style>
 /* Reset and base styles */
@@ -275,6 +275,61 @@ setInterval(createSprinkle, 100);
         `;
       }
     });
+    function renderDistributionAnalysis(distAnalysis) {
+  if (!distAnalysis) return '<div class="no-data">No distribution data available</div>';
+
+  return `
+    <div class="insight-card distribution-analysis">
+      <h4>Channel Distribution Analysis</h4>
+      
+      <div class="distribution-metrics">
+        <div class="metric">
+          <span class="value">${distAnalysis.current_channels}</span>
+          <span class="label">Your Channels</span>
+        </div>
+        <div class="metric">
+          <span class="value">${distAnalysis.category_average}</span>
+          <span class="label">Category Avg</span>
+        </div>
+        <div class="metric">
+          <span class="value">${distAnalysis.rating}</span>
+          <span class="label">Rating</span>
+        </div>
+      </div>
+      
+      <div class="distribution-visual">
+        <div class="range-labels">
+          <span>Min: ${distAnalysis.effective_range.min}</span>
+          <span>Optimal: ${distAnalysis.category_average}</span>
+          <span>Max: ${distAnalysis.effective_range.max}</span>
+        </div>
+        <div class="range-bar">
+          <div class="current-marker" style="left: ${calculateDistributionPosition(distAnalysis)}%">
+            <div class="marker-label">${distAnalysis.current_channels}</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="distribution-insight">
+        <p><strong>${distAnalysis.advice}</strong></p>
+        <p>Difference: ${distAnalysis.difference} (${distAnalysis.percentage_difference}%)</p>
+      </div>
+      
+      <div class="distribution-recommendations">
+        <h5>Recommendations:</h5>
+        <ul>
+          ${distAnalysis.recommendations.map(r => `<li>${r}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+  `;
+}
+
+// Helper function for positioning
+function calculateDistributionPosition(distAnalysis) {
+  const range = distAnalysis.effective_range.max - distAnalysis.effective_range.min;
+  return ((distAnalysis.current_channels - distAnalysis.effective_range.min) / range) * 100;
+}
 
     // Enhanced Insight Rendering with Fallbacks
     function renderInsights(insights, result) {

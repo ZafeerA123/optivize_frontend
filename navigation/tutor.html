@@ -169,6 +169,22 @@ permalink: /bot/
       border-radius: 0; /* Square corners like in the screenshot */
     "
   ></div>
+  <!-- OptiBot Tutorial Hints -->
+<!-- Floating Tutorial Box -->
+<div id="floating-tutorial" style="position: fixed; bottom: 200px; right: 24px; width: 340px; background: #1e1e1e; color: white; font-family: 'Inter', sans-serif; border: 1px solid #444; border-radius: 16px; box-shadow: 0 8px 16px rgba(0,0,0,0.6); z-index: 9999; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <strong style="font-size: 1rem;">💬 OptiBot Tips</strong>
+    <button onclick="document.getElementById('floating-tutorial').style.display='none'" style="background: transparent; color: #ffbd70; border: none; font-size: 1rem; cursor: pointer;">✖</button>
+  </div>
+  <div id="floating-tutorial-slide">
+    <strong>Welcome to OptiBot!</strong>
+    <p style="font-size: 0.9rem; margin-top: 4px;">Click the arrows to learn what you can ask.</p>
+  </div>
+  <div style="display: flex; justify-content: space-between;">
+    <button onclick="prevFloatingTutorial()" style="background: #333; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">⬅️</button>
+    <button onclick="nextFloatingTutorial()" style="background: #D87E00; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">➡️</button>
+  </div>
+</div>
   <!-- Input Section -->
   <div
     style="
@@ -377,6 +393,43 @@ document.getElementById("question").addEventListener("keypress", function(event)
     }
   }
 });
+// Floating Tutorial Logic
+const floatingPrompts = [
+  { title: "📖 Help", content: "Ask: <code>what can you do</code>" },
+  { title: "Explanation", content: "Ask: <code>How does cookie prediction work</code> to see how cookie prediction API works." },
+  { title: "📦 List All Items", content: "Ask: <code>list all products</code>" },
+  { title: "📁 Create a Group", content: "Ask: <code>create group [group name]</code>" },
+  { title: "🆕 Add Item (Two-Step)", content: "Ask: <code>add new item called [item name] with content [description]</code> → then: <code>[group name]</code>" },
+  { title: "⚡ Add Item to Group", content: "Ask: <code>add item [group] to group [Group name]</code>" },
+  { title: "✏️ Update Item (WORK IN PROGRESS)", content: "Ask: <code>update item [item name] with new content [description]</code>" },
+  { title: "❌ Delete Item", content: "Ask: <code>delete item [item name]</code> → then: <code>yes</code>" },
+  { title: "📌 Find Item Group", content: "Ask: <code>what group is [item name] in?</code>" },
+  { title: "🔢 Get 2nd Product", content: "Ask: <code>what is my second product?</code>" },
+  { title: "🗑️ Delete Group", content: "Ask: <code>delete group [Group name]</code>" },
+  { title: "Be Aware", content: "All Group names must be in lowercase for database purposes." }
+];
+
+let floatingSlide = 0;
+const floatingDiv = document.getElementById("floating-tutorial-slide");
+
+function renderFloatingTutorial() {
+  const { title, content } = floatingPrompts[floatingSlide];
+  floatingDiv.innerHTML = `<strong>${title}</strong><p style="margin-top: 4px; font-size: 0.9rem;">${content}</p>`;
+}
+
+function nextFloatingTutorial() {
+  floatingSlide = (floatingSlide + 1) % floatingPrompts.length;
+  renderFloatingTutorial();
+}
+
+function prevFloatingTutorial() {
+  floatingSlide = (floatingSlide - 1 + floatingPrompts.length) % floatingPrompts.length;
+  renderFloatingTutorial();
+}
+
+// Initial load
+renderFloatingTutorial();
+
 </script>
 <!-- Optional CSS -->
 <style>
