@@ -248,42 +248,45 @@ permalink: /navigation/calendar
 <div class="max-w-2xl mx-auto mt-8 p-6 rounded-xl shadow-lg border border-gray-200">
   <h2 class="text-2xl font-semibold mb-4">📅 Calendar Event Manager</h2>
 
-  <form id="eventForm" class="space-y-4">
-    <input type="hidden" id="eventId" />
+ <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 
-    <div>
-      <label class="block font-medium">Title</label>
-      <input type="text" id="title" class="w-full p-2 border rounded" required />
+<div class="max-w-6xl mx-auto mt-10 px-4">
+  <h2 class="text-3xl font-bold mb-6 text-center text-blue-700">📆 Calendar Event Manager</h2>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Event Form -->
+    <div class="p-6 bg-white rounded-xl shadow border border-gray-200">
+      <form id="eventForm" class="space-y-4">
+        <input type="hidden" id="eventId" />
+        <div>
+          <label class="block font-medium">Title</label>
+          <input type="text" id="title" class="w-full p-2 border rounded" required />
+        </div>
+        <div>
+          <label class="block font-medium">Start Time</label>
+          <input type="datetime-local" id="start_time" class="w-full p-2 border rounded" required />
+        </div>
+        <div>
+          <label class="block font-medium">End Time</label>
+          <input type="datetime-local" id="end_time" class="w-full p-2 border rounded" />
+        </div>
+        <div>
+          <label class="block font-medium">Description</label>
+          <textarea id="description" rows="3" class="w-full p-2 border rounded"></textarea>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Save Event</button>
+        <!-- Add these buttons right after the Save button inside the <form> -->
+        <div id="event-actions" class="flex gap-4 mt-4 hidden">
+        <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">Update Event</button>
+        <button type="button" id="delete-event" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700">Delete Event</button>
+        </div>
+    </form>
     </div>
-
-    <div>
-      <label class="block font-medium">Start Time</label>
-      <input type="datetime-local" id="start_time" class="w-full p-2 border rounded" required />
+    <!-- Calendar -->
+    <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
+      <div id="calendar"></div>
     </div>
-
-    <div>
-      <label class="block font-medium">End Time</label>
-      <input type="datetime-local" id="end_time" class="w-full p-2 border rounded" />
-    </div>
-
-    <div>
-      <label class="block font-medium">Description</label>
-      <textarea id="description" rows="3" class="w-full p-2 border rounded"></textarea>
-    </div>
-
-    <div>
-      <label class="block font-medium">User ID</label>
-      <input type="number" id="user_id" class="w-full p-2 border rounded" required />
-    </div>
-
-    <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Save Event</button>
-  </form>
-
-  <hr class="my-6"/>
-
-  <div>
-    <h3 class="text-xl font-semibold mb-2">Your Events</h3>
-    <div id="eventsContainer" class="space-y-4 text-sm"></div>
   </div>
 </div>
 
@@ -292,110 +295,91 @@ permalink: /navigation/calendar
 
   document.addEventListener('DOMContentLoaded', function () {
     const API_BASE = pythonURI + '/calendar';
-
-    const eventForm = document.getElementById('eventForm');
-    const userIdInput = document.getElementById('user_id');
-    const eventsContainer = document.getElementById('eventsContainer');
-
-    const fetchEvents = async () => {
-      const userId = userIdInput.value;
-      if (!userId) return;
-
-      try {
-        const res = await fetch(`${API_BASE}?user_id=${userId}`, { ...fetchOptions });
-        const events = await res.json();
-        eventsContainer.innerHTML = '';
-
-        if (Array.isArray(events)) {
-          events.forEach(event => {
-            const div = document.createElement('div');
-            div.className = "border p-4 rounded bg-gray-50";
-            div.innerHTML = `
-              <h4 class="font-bold text-lg">${event.title}</h4>
-              <p><strong>Start:</strong> ${event.start_time}</p>
-              <p><strong>End:</strong> ${event.end_time || 'N/A'}</p>
-              <p><strong>Description:</strong> ${event.description || 'N/A'}</p>
-              <div class="mt-2 space-x-2">
-                <button class="text-blue-600 underline" onclick="editEvent(${event.id})">Edit</button>
-                <button class="text-red-600 underline" onclick="deleteEvent(${event.id})">Delete</button>
-              </div>
-            `;
-            eventsContainer.appendChild(div);
-          });
-        } else {
-          eventsContainer.innerHTML = '<p>No events found.</p>';
-        }
-      } catch (err) {
-        console.error('Fetch error:', err);
-        eventsContainer.innerHTML = `<p class="text-red-500">Failed to load events.</p>`;
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      events: [],
+      eventClick: function (info) {
+        const event = info.event;
+        document.getElementById('eventId').value = event.id;
+        document.getElementById('title').value = event.title;
+        document.getElementById('start_time').value = event.start;
+        document.getElementById('end_time').value = event.end || '';
+        document.getElementById('description').value = event.extendedProps.description || '';
+        document.getElementById('event-actions').classList.remove('hidden');
       }
-    };
+    });
+    calendar.render();
 
-    window.editEvent = async (id) => {
-      try {
-        const res = await fetch(`${API_BASE}?user_id=${userIdInput.value}`, { ...fetchOptions });
-        const data = await res.json();
-        const event = data.find(ev => ev.id === id);
+    const userId = 1; // TEMP: Replace with dynamic user ID if available
 
-        if (event) {
-          document.getElementById('eventId').value = event.id;
-          document.getElementById('title').value = event.title;
-          document.getElementById('start_time').value = event.start_time;
-          document.getElementById('end_time').value = event.end_time || '';
-          document.getElementById('description').value = event.description || '';
-        }
-      } catch (err) {
-        console.error('Edit fetch error:', err);
-      }
-    };
-
-    window.deleteEvent = async (id) => {
-      if (!confirm('Are you sure you want to delete this event?')) return;
-
-      try {
-        const res = await fetch(`${API_BASE}/${id}`, {
-          ...fetchOptions,
-          method: 'DELETE'
+    // Fetch and load events
+    async function loadEvents() {
+      const res = await fetch(`${API_BASE}?user_id=${userId}`, { ...fetchOptions });
+      const events = await res.json();
+      calendar.removeAllEvents();
+      events.forEach(ev => {
+        calendar.addEvent({
+          id: ev.id,
+          title: ev.title,
+          start: ev.start_time,
+          end: ev.end_time,
+          description: ev.description
         });
+      });
+    }
 
-        if (res.ok) fetchEvents();
-        else alert('Delete failed.');
-      } catch (err) {
-        console.error('Delete error:', err);
-      }
-    };
+    loadEvents();
 
-    eventForm.addEventListener('submit', async function (e) {
+    // Create new event
+    document.getElementById('eventForm').addEventListener('submit', async function (e) {
       e.preventDefault();
-      const id = document.getElementById('eventId').value;
 
-      const eventData = {
-        title: document.getElementById('title').value,
-        start_time: document.getElementById('start_time').value,
-        end_time: document.getElementById('end_time').value,
-        description: document.getElementById('description').value,
-        user_id: parseInt(userIdInput.value)
+      const id = document.getElementById('eventId').value;
+      const title = document.getElementById('title').value;
+      const start_time = document.getElementById('start_time').value;
+      const end_time = document.getElementById('end_time').value;
+      const description = document.getElementById('description').value;
+
+      const payload = {
+        title,
+        start_time,
+        end_time,
+        description,
+        user_id: userId
       };
 
-      try {
-        const res = await fetch(`${API_BASE}${id ? '/' + id : ''}`, {
-          ...fetchOptions,
-          method: id ? 'PUT' : 'POST',
-          body: JSON.stringify(eventData)
-        });
+      const url = id ? `${API_BASE}/${id}` : API_BASE;
+      const method = id ? 'PUT' : 'POST';
 
-        if (res.ok) {
-          eventForm.reset();
-          document.getElementById('eventId').value = '';
-          fetchEvents();
-        } else {
-          alert('Save failed.');
-        }
-      } catch (err) {
-        console.error('Save error:', err);
+      const res = await fetch(url, {
+        ...fetchOptions,
+        method,
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        loadEvents();
+        document.getElementById('eventForm').reset();
+        document.getElementById('event-actions').classList.add('hidden');
       }
     });
 
-    userIdInput.addEventListener('change', fetchEvents);
+    // Delete event
+    document.getElementById('delete-event').addEventListener('click', async function () {
+      const id = document.getElementById('eventId').value;
+      if (!id) return;
+
+      const res = await fetch(`${API_BASE}/${id}`, {
+        ...fetchOptions,
+        method: 'DELETE'
+      });
+
+      if (res.ok) {
+        loadEvents();
+        document.getElementById('eventForm').reset();
+        document.getElementById('event-actions').classList.add('hidden');
+      }
+    });
   });
 </script>
