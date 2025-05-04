@@ -330,28 +330,28 @@ permalink: /navigation/calendar
     }
 
     loadEvents();
+  // Create or Update Event
+  document.getElementById('eventForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-    // Create new event
-    document.getElementById('eventForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
+    const id = document.getElementById('eventId').value;
+    const title = document.getElementById('title').value;
+    const start_time = document.getElementById('start_time').value;
+    const end_time = document.getElementById('end_time').value;
+    const description = document.getElementById('description').value;
 
-      const id = document.getElementById('eventId').value;
-      const title = document.getElementById('title').value;
-      const start_time = document.getElementById('start_time').value;
-      const end_time = document.getElementById('end_time').value;
-      const description = document.getElementById('description').value;
+    const payload = {
+      title,
+      start_time,
+      end_time,
+      description,
+      user_id: userId // Make sure userId is defined in your context
+    };
 
-      const payload = {
-        title,
-        start_time,
-        end_time,
-        description,
-        user_id: userId
-      };
+    const url = id ? `${pythonURI}/calendar/${id}` : `${pythonURI}/calendar`;
+    const method = id ? 'PUT' : 'POST';
 
-      const url = id ? `${API_BASE}/${id}` : API_BASE;
-      const method = id ? 'PUT' : 'POST';
-
+    try {
       const res = await fetch(url, {
         ...fetchOptions,
         method,
@@ -362,8 +362,16 @@ permalink: /navigation/calendar
         loadEvents();
         document.getElementById('eventForm').reset();
         document.getElementById('event-actions').classList.add('hidden');
+      } else {
+        const error = await res.json();
+        console.error('Error:', error);
       }
-    });
+    } catch (err) {
+      console.error('Fetch failed:', err);
+    }
+  });
+});
+
 
     // Delete event
     document.getElementById('delete-event').addEventListener('click', async function () {
