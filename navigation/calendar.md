@@ -283,12 +283,58 @@ permalink: /navigation/calendar
         </div>
     </form>
     </div>
-    <!-- Calendar -->
-    <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
-      <div id="calendar"></div>
-    </div>
-  </div>
+   
+   <!-- Calendar Container -->
+<div class="p-4 bg-white rounded-xl shadow border border-gray-200">
+  <div id="calendar" class="min-h-[600px]"></div>
 </div>
+
+<!-- FullCalendar CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+
+<script type="module">
+  import { pythonURI, fetchOptions } from '/assets/js/api/config.js';
+
+  const userId = 1; // Replace with logic to get the current user's ID
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      height: 'auto',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      events: async function (info, successCallback, failureCallback) {
+        try {
+          const res = await fetch(`${pythonURI}/calendar?user_id=${userId}`, fetchOptions);
+          const data = await res.json();
+          const events = data.map(event => ({
+            id: event.id,
+            title: event.title,
+            start: event.start_time,
+            end: event.end_time,
+            description: event.description
+          }));
+          successCallback(events);
+        } catch (error) {
+          console.error('Failed to load events:', error);
+          failureCallback(error);
+        }
+      },
+      eventClick: function (info) {
+        alert(`Event: ${info.event.title}\nDescription: ${info.event.extendedProps.description}`);
+      }
+    });
+
+    calendar.render();
+  });
+</script>
+
 
 <script type="module">
   import { pythonURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
