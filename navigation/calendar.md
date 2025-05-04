@@ -245,195 +245,120 @@ permalink: /navigation/calendar
   }
 </style>
 
-<div class="max-w-2xl mx-auto mt-8 p-6 rounded-xl shadow-lg border border-gray-200">
-  <h2 class="text-2xl font-semibold mb-4">📅 Calendar Event Manager</h2>
+<!-- Tailwind & FullCalendar UI for Calendar App -->
+<div class="flex h-screen">
+  <!-- Sidebar -->
+  <div class="w-64 bg-gray-800 text-white p-4 space-y-4">
+    <h2 class="text-2xl font-bold mb-4">Calendar Actions</h2>
+    <button id="addEventBtn" class="w-full bg-green-500 hover:bg-green-600 py-2 rounded">Add Event</button>
+    <button id="updateEventBtn" class="w-full bg-yellow-500 hover:bg-yellow-600 py-2 rounded">Update Event</button>
+    <button id="deleteEventBtn" class="w-full bg-red-500 hover:bg-red-600 py-2 rounded">Delete Event</button>
+  </div>
 
- <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
-
-<div class="max-w-6xl mx-auto mt-10 px-4">
-  <h2 class="text-3xl font-bold mb-6 text-center text-blue-700">📆 Calendar Event Manager</h2>
-
-  <div class="grid md:grid-cols-2 gap-6">
-    <!-- Event Form -->
-    <div class="p-6 bg-white rounded-xl shadow border border-gray-200">
-      <form id="eventForm" class="space-y-4">
-        <input type="hidden" id="eventId" />
-        <div>
-          <label class="block font-medium">Title</label>
-          <input type="text" id="title" class="w-full p-2 border rounded" required />
-        </div>
-        <div>
-          <label class="block font-medium">Start Time</label>
-          <input type="datetime-local" id="start_time" class="w-full p-2 border rounded" required />
-        </div>
-        <div>
-          <label class="block font-medium">End Time</label>
-          <input type="datetime-local" id="end_time" class="w-full p-2 border rounded" />
-        </div>
-        <div>
-          <label class="block font-medium">Description</label>
-          <textarea id="description" rows="3" class="w-full p-2 border rounded"></textarea>
-        </div>
-        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Save Event</button>
-        <!-- Add these buttons right after the Save button inside the <form> -->
-        <div id="event-actions" class="flex gap-4 mt-4 hidden">
-        <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">Update Event</button>
-        <button type="button" id="delete-event" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700">Delete Event</button>
-        </div>
-    </form>
-    </div>
-   
-   <!-- Calendar Container -->
-<div class="p-4 bg-white rounded-xl shadow border border-gray-200">
-  <div id="calendar" class="min-h-[600px]"></div>
+  <!-- Calendar Content -->
+  <div class="flex-1 p-6">
+    <div id="calendar" class="shadow-lg rounded-xl bg-white p-4"></div>
+  </div>
 </div>
 
-<!-- FullCalendar CSS & JS -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+<!-- Modal for Event Form -->
+<div id="eventModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <h3 class="text-xl font-semibold mb-4">Event Details</h3>
+    <form id="eventForm" class="space-y-3">
+      <input type="hidden" id="eventId">
+      <input id="title" type="text" placeholder="Title" class="w-full border p-2 rounded" required>
+      <input id="start_time" type="datetime-local" class="w-full border p-2 rounded" required>
+      <input id="end_time" type="datetime-local" class="w-full border p-2 rounded">
+      <textarea id="description" placeholder="Description" class="w-full border p-2 rounded"></textarea>
+      <select id="eventType" class="w-full border p-2 rounded">
+        <option value="meeting">Meeting</option>
+        <option value="task">Task</option>
+        <option value="reminder">Reminder</option>
+      </select>
+      <div class="flex justify-end gap-2">
+        <button type="button" id="cancelBtn" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-<script type="module">
-  import { pythonURI, fetchOptions } from '/assets/js/api/config.js';
-
-  const userId = 1; // Replace with logic to get the current user's ID
-
-  document.addEventListener('DOMContentLoaded', function () {
-    const calendarEl = document.getElementById('calendar');
-
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      height: 'auto',
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
-      },
-      events: async function (info, successCallback, failureCallback) {
-        try {
-          const res = await fetch(`${pythonURI}/calendar?user_id=${userId}`, fetchOptions);
-          const data = await res.json();
-          const events = data.map(event => ({
-            id: event.id,
-            title: event.title,
-            start: event.start_time,
-            end: event.end_time,
-            description: event.description
-          }));
-          successCallback(events);
-        } catch (error) {
-          console.error('Failed to load events:', error);
-          failureCallback(error);
-        }
-      },
-      eventClick: function (info) {
-        alert(`Event: ${info.event.title}\nDescription: ${info.event.extendedProps.description}`);
-      }
-    });
-
-    calendar.render();
-  });
-</script>
-
-
+<!-- JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script type="module">
   import { pythonURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
-
-  document.addEventListener('DOMContentLoaded', function () {
-    const API_BASE = pythonURI + '/calendar';
-    const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      events: [],
-      eventClick: function (info) {
-        const event = info.event;
-        document.getElementById('eventId').value = event.id;
-        document.getElementById('title').value = event.title;
-        document.getElementById('start_time').value = event.start;
-        document.getElementById('end_time').value = event.end || '';
-        document.getElementById('description').value = event.extendedProps.description || '';
-        document.getElementById('event-actions').classList.remove('hidden');
-      }
-    });
-    calendar.render();
-
-    const userId = 1; // TEMP: Replace with dynamic user ID if available
-
-    // Fetch and load events
-    async function loadEvents() {
-      const res = await fetch(`${API_BASE}?user_id=${userId}`, { ...fetchOptions });
-      const events = await res.json();
-      calendar.removeAllEvents();
-      events.forEach(ev => {
-        calendar.addEvent({
-          id: ev.id,
-          title: ev.title,
-          start: ev.start_time,
-          end: ev.end_time,
-          description: ev.description
-        });
-      });
-    }
-
-    loadEvents();
-  // Create or Update Event
-  document.getElementById('eventForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const id = document.getElementById('eventId').value;
-    const title = document.getElementById('title').value;
-    const start_time = document.getElementById('start_time').value;
-    const end_time = document.getElementById('end_time').value;
-    const description = document.getElementById('description').value;
-
-    const payload = {
-      title,
-      start_time,
-      end_time,
-      description,
-      user_id: userId // Make sure userId is defined in your context
-    };
-
-    const url = id ? `${pythonURI}/calendar/${id}` : `${pythonURI}/calendar`;
-    const method = id ? 'PUT' : 'POST';
-
-    try {
-      const res = await fetch(url, {
-        ...fetchOptions,
-        method,
-        body: JSON.stringify(payload)
-      });
-
-      if (res.ok) {
-        loadEvents();
-        document.getElementById('eventForm').reset();
-        document.getElementById('event-actions').classList.add('hidden');
-      } else {
-        const error = await res.json();
-        console.error('Error:', error);
-      }
-    } catch (err) {
-      console.error('Fetch failed:', err);
+  const API_BASE = `${pythonURI}/calendar`;
+  const calendarEl = document.getElementById('calendar');
+  const modal = document.getElementById('eventModal');
+  const eventForm = document.getElementById('eventForm');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const userId = 1; // Replace with actual user ID from session/auth
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    selectable: true,
+    events: async function (info, successCallback, failureCallback) {
+      const res = await fetch(`${API_BASE}?user_id=${userId}`);
+      const data = await res.json();
+      const formatted = data.map(ev => ({
+        id: ev.id,
+        title: ev.title,
+        start: ev.start_time,
+        end: ev.end_time,
+        extendedProps: { description: ev.description, user_id: ev.user_id }
+      }));
+      successCallback(formatted);
+    },
+    eventClick: function (info) {
+      const event = info.event;
+      document.getElementById('eventId').value = event.id;
+      document.getElementById('title').value = event.title;
+      document.getElementById('start_time').value = event.startStr;
+      document.getElementById('end_time').value = event.endStr || '';
+      document.getElementById('description').value = event.extendedProps.description || '';
+      modal.classList.remove('hidden');
     }
   });
-});
-
-
-    // Delete event
-    document.getElementById('delete-event').addEventListener('click', async function () {
-      const id = document.getElementById('eventId').value;
-      if (!id) return;
-
-      const res = await fetch(`${API_BASE}/${id}`, {
-        ...fetchOptions,
-        method: 'DELETE'
-      });
-
-      if (res.ok) {
-        loadEvents();
-        document.getElementById('eventForm').reset();
-        document.getElementById('event-actions').classList.add('hidden');
-      }
+  calendar.render();
+  document.getElementById('addEventBtn').addEventListener('click', () => {
+    eventForm.reset();
+    document.getElementById('eventId').value = '';
+    modal.classList.remove('hidden');
+  });
+  document.getElementById('updateEventBtn').addEventListener('click', () => {
+    const selectedId = document.getElementById('eventId').value;
+    if (!selectedId) return alert('Select an event to update.');
+    modal.classList.remove('hidden');
+  });
+  document.getElementById('deleteEventBtn').addEventListener('click', async () => {
+    const selectedId = document.getElementById('eventId').value;
+    if (!selectedId) return alert('Select an event to delete.');
+    await fetch(`${API_BASE}/${selectedId}`, { ...fetchOptions, method: 'DELETE' });
+    calendar.refetchEvents();
+    eventForm.reset();
+  });
+  cancelBtn.addEventListener('click', () => modal.classList.add('hidden'));
+  eventForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+  const id = document.getElementById('eventId').value;
+    const payload = {
+      title: document.getElementById('title').value,
+      start_time: document.getElementById('start_time').value,
+      end_time: document.getElementById('end_time').value,
+      description: `${document.getElementById('eventType').value.toUpperCase()}: ${document.getElementById('description').value}`,
+      user_id: userId
+    };
+  const url = id ? `${API_BASE}/${id}` : API_BASE;
+    const method = id ? 'PUT' : 'POST';
+  const res = await fetch(url, {
+      ...fetchOptions,
+      method,
+      body: JSON.stringify(payload)
     });
+  if (res.ok) {
+      calendar.refetchEvents();
+      eventForm.reset();
+      modal.classList.add('hidden');
+    }
   });
 </script>
