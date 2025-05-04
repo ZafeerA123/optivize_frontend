@@ -245,42 +245,32 @@ permalink: /navigation/calendar
   }
 </style>
 
-<!-- Tailwind & FullCalendar UI for Calendar App -->
-<div class="flex h-screen">
-  <!-- Sidebar -->
-  <div class="w-64 bg-gray-800 text-white p-4 space-y-4">
-    <h2 class="text-2xl font-bold mb-4">Calendar Actions</h2>
-    <button id="addEventBtn" class="w-full bg-green-500 hover:bg-green-600 py-2 rounded">Add Event</button>
-    <button id="updateEventBtn" class="w-full bg-yellow-500 hover:bg-yellow-600 py-2 rounded">Update Event</button>
-    <button id="deleteEventBtn" class="w-full bg-red-500 hover:bg-red-600 py-2 rounded">Delete Event</button>
-  </div>
-
-  <!-- Calendar Content -->
-  <div class="flex-1 p-6">
-    <div id="calendar" class="shadow-lg rounded-xl bg-white p-4"></div>
-  </div>
-</div>
-
-<!-- Modal for Event Form -->
-<div id="eventModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-    <h3 class="text-xl font-semibold mb-4">Event Details</h3>
-    <form id="eventForm" class="space-y-3">
-      <input type="hidden" id="eventId">
-      <input id="title" type="text" placeholder="Title" class="w-full border p-2 rounded" required>
-      <input id="start_time" type="datetime-local" class="w-full border p-2 rounded" required>
-      <input id="end_time" type="datetime-local" class="w-full border p-2 rounded">
-      <textarea id="description" placeholder="Description" class="w-full border p-2 rounded"></textarea>
-      <select id="eventType" class="w-full border p-2 rounded">
-        <option value="meeting">Meeting</option>
-        <option value="task">Task</option>
-        <option value="reminder">Reminder</option>
-      </select>
-      <div class="flex justify-end gap-2">
-        <button type="button" id="cancelBtn" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
-        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Save</button>
-      </div>
-    </form>
+<div class="calendar-container" style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+  <div class="calendar-wrapper" style="width: 80%; max-width: 800px; text-align: center;">
+    <h1>Calendar</h1>
+    <!-- Full Calendar -->
+    <div id="calendar"></div>
+<!-- Buttons for actions -->
+    <div class="button-container" style="margin-top: 20px;">
+      <button id="addEventBtn">Add Event</button>
+      <button id="updateEventBtn" style="display: none;">Update Event</button>
+      <button id="deleteEventBtn" style="display: none;">Delete Event</button>
+    </div>
+<!-- Form for adding/updating events -->
+    <div id="eventForm" style="display: none; margin-top: 20px;">
+      <h2>Event Details</h2>
+      <form id="eventDetailsForm">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" required><br><br>
+        <label for="start_time">Start Time:</label><br>
+        <input type="datetime-local" id="start_time" required><br><br>
+        <label for="end_time">End Time:</label><br>
+        <input type="datetime-local" id="end_time"><br><br>
+        <label for="description">Description:</label><br>
+        <textarea id="description"></textarea><br><br>
+        <button type="submit">Save Event</button>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -343,16 +333,93 @@ permalink: /navigation/calendar
     return await response.json();
   }
 
-  // Example: Load events on page load (optional)
-  document.addEventListener('DOMContentLoaded', async () => {
-    const userId = 1; // Replace with dynamic user ID
+  // Display events on the calendar
+  function displayEvents(events) {
+    const calendarElement = document.getElementById('calendar');
+    // Clear existing events on the calendar (to be implemented depending on your calendar library)
+    calendarElement.innerHTML = '';
+    events.forEach(event => {
+      // Add events to your calendar UI (use FullCalendar or any other calendar library)
+      // Example: FullCalendar's `addEvent` method
+      // calendar.addEvent({
+      //   title: event.title,
+      //   start: event.start_time,
+      //   end: event.end_time,
+      //   description: event.description,
+      //   id: event.id,
+      // });
+    });
+  }
+
+  // Handle the form submission for adding/updating an event
+  document.getElementById('eventDetailsForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const title = document.getElementById('title').value;
+    const start_time = document.getElementById('start_time').value;
+    const end_time = document.getElementById('end_time').value;
+    const description = document.getElementById('description').value;
+    const eventData = { title, start_time, end_time, description, user_id: 1 }; // Adjust user_id dynamically
+
     try {
-      const events = await getEvents(userId);
-      console.log('Fetched Events:', events);
-      // You can now use this data to render events on the calendar UI
-    } catch (err) {
-      console.error('Error loading events:', err.message);
+      if (document.getElementById('updateEventBtn').style.display === 'block') {
+        const eventId = document.getElementById('updateEventBtn').dataset.eventId;
+        await updateEvent(eventId, eventData);
+        alert('Event updated successfully');
+      } else {
+        await createEvent(eventData);
+        alert('Event created successfully');
+      }
+
+      // Reload the events after update or create
+      const events = await getEvents(1); // Replace with dynamic user ID
+      displayEvents(events);
+      resetForm();
+    } catch (error) {
+      alert(`Error: ${error.message}`);
     }
   });
+
+  // Add event handler for Add Event button
+  document.getElementById('addEventBtn').addEventListener('click', function () {
+    resetForm();
+    document.getElementById('eventForm').style.display = 'block';
+    document.getElementById('updateEventBtn').style.display = 'none';
+    document.getElementById('addEventBtn').style.display = 'none';
+  });
+
+  // Add event handler for Update Event button
+  document.getElementById('updateEventBtn').addEventListener('click', function () {
+    document.getElementById('eventForm').style.display = 'block';
+    document.getElementById('addEventBtn').style.display = 'none';
+  });
+
+  // Add event handler for Delete Event button
+  document.getElementById('deleteEventBtn').addEventListener('click', async function () {
+    const eventId = document.getElementById('deleteEventBtn').dataset.eventId;
+    try {
+      await deleteEvent(eventId);
+      alert('Event deleted successfully');
+      const events = await getEvents(1); // Replace with dynamic user ID
+      displayEvents(events);
+      resetForm();
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
+  });
+
+  // Function to reset the form
+  function resetForm() {
+    document.getElementById('eventForm').reset();
+    document.getElementById('eventForm').style.display = 'none';
+    document.getElementById('updateEventBtn').style.display = 'none';
+    document.getElementById('deleteEventBtn').style.display = 'none';
+    document.getElementById('addEventBtn').style.display = 'block';
+  }
+
+  // Load events when the page loads
+  document.addEventListener('DOMContentLoaded', async function () {
+    const events = await getEvents(1); // Replace with dynamic user ID
+    displayEvents(events);
+  });
 </script>
->
