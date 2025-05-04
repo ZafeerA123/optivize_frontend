@@ -284,81 +284,75 @@ permalink: /navigation/calendar
   </div>
 </div>
 
-<!-- JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script type="module">
   import { pythonURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
-  const API_BASE = `${pythonURI}/calendar`;
-  const calendarEl = document.getElementById('calendar');
-  const modal = document.getElementById('eventModal');
-  const eventForm = document.getElementById('eventForm');
-  const cancelBtn = document.getElementById('cancelBtn');
-  const userId = 1; // Replace with actual user ID from session/auth
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    selectable: true,
-    events: async function (info, successCallback, failureCallback) {
-      const res = await fetch(`${API_BASE}?user_id=${userId}`);
-      const data = await res.json();
-      const formatted = data.map(ev => ({
-        id: ev.id,
-        title: ev.title,
-        start: ev.start_time,
-        end: ev.end_time,
-        extendedProps: { description: ev.description, user_id: ev.user_id }
-      }));
-      successCallback(formatted);
-    },
-    eventClick: function (info) {
-      const event = info.event;
-      document.getElementById('eventId').value = event.id;
-      document.getElementById('title').value = event.title;
-      document.getElementById('start_time').value = event.startStr;
-      document.getElementById('end_time').value = event.endStr || '';
-      document.getElementById('description').value = event.extendedProps.description || '';
-      modal.classList.remove('hidden');
-    }
-  });
-  calendar.render();
-  document.getElementById('addEventBtn').addEventListener('click', () => {
-    eventForm.reset();
-    document.getElementById('eventId').value = '';
-    modal.classList.remove('hidden');
-  });
-  document.getElementById('updateEventBtn').addEventListener('click', () => {
-    const selectedId = document.getElementById('eventId').value;
-    if (!selectedId) return alert('Select an event to update.');
-    modal.classList.remove('hidden');
-  });
-  document.getElementById('deleteEventBtn').addEventListener('click', async () => {
-    const selectedId = document.getElementById('eventId').value;
-    if (!selectedId) return alert('Select an event to delete.');
-    await fetch(`${API_BASE}/${selectedId}`, { ...fetchOptions, method: 'DELETE' });
-    calendar.refetchEvents();
-    eventForm.reset();
-  });
-  cancelBtn.addEventListener('click', () => modal.classList.add('hidden'));
-  eventForm.addEventListener('submit', async function (e) {
-    e.preventDefault();
-  const id = document.getElementById('eventId').value;
-    const payload = {
-      title: document.getElementById('title').value,
-      start_time: document.getElementById('start_time').value,
-      end_time: document.getElementById('end_time').value,
-      description: `${document.getElementById('eventType').value.toUpperCase()}: ${document.getElementById('description').value}`,
-      user_id: userId
-    };
-  const url = id ? `${API_BASE}/${id}` : API_BASE;
-    const method = id ? 'PUT' : 'POST';
-  const res = await fetch(url, {
+
+  const CALENDAR_API = `${pythonURI}/calendar`;
+
+  // POST: Create a new calendar event
+  async function createEvent(eventData) {
+    const response = await fetch(CALENDAR_API, {
       ...fetchOptions,
-      method,
-      body: JSON.stringify(payload)
+      method: 'POST',
+      body: JSON.stringify(eventData)
     });
-  if (res.ok) {
-      calendar.refetchEvents();
-      eventForm.reset();
-      modal.classList.add('hidden');
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to create event');
+    }
+    return await response.json();
+  }
+
+  // GET: Fetch all calendar events for a user
+  async function getEvents(userId) {
+    const response = await fetch(`${CALENDAR_API}?user_id=${userId}`, {
+      ...fetchOptions,
+      method: 'GET'
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to fetch events');
+    }
+    return await response.json();
+  }
+
+  // PUT: Update an existing event by ID
+  async function updateEvent(eventId, updatedData) {
+    const response = await fetch(`${CALENDAR_API}/${eventId}`, {
+      ...fetchOptions,
+      method: 'PUT',
+      body: JSON.stringify(updatedData)
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to update event');
+    }
+    return await response.json();
+  }
+
+  // DELETE: Delete an event by ID
+  async function deleteEvent(eventId) {
+    const response = await fetch(`${CALENDAR_API}/${eventId}`, {
+      ...fetchOptions,
+      method: 'DELETE'
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to delete event');
+    }
+    return await response.json();
+  }
+
+  // Example: Load events on page load (optional)
+  document.addEventListener('DOMContentLoaded', async () => {
+    const userId = 1; // Replace with dynamic user ID
+    try {
+      const events = await getEvents(userId);
+      console.log('Fetched Events:', events);
+      // You can now use this data to render events on the calendar UI
+    } catch (err) {
+      console.error('Error loading events:', err.message);
     }
   });
 </script>
+>
