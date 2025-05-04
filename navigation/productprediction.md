@@ -275,7 +275,7 @@ setInterval(createSprinkle, 100);
         `;
       }
     });
-    function renderDistributionAnalysis(distAnalysis) {
+  function renderDistributionAnalysis(distAnalysis) {
   if (!distAnalysis) return '<div class="no-data">No distribution data available</div>';
 
   return `
