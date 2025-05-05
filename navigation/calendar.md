@@ -325,6 +325,9 @@ permalink: /navigation/calendar
         const response = await fetch(CALENDAR_API, {
             ...fetchOptions,
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(eventData)
         });
         if (!response.ok) {
@@ -339,6 +342,9 @@ permalink: /navigation/calendar
         const response = await fetch(`${CALENDAR_API}/${eventId}`, {
             ...fetchOptions,
             method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(updatedData)
         });
         if (!response.ok) {
@@ -458,10 +464,10 @@ permalink: /navigation/calendar
 
             try {
                 if (currentEventId) {
-                    await updateEvent(currentEventId, eventData);
+                    const updatedEvent = await updateEvent(currentEventId, eventData);
                     alert('Event updated successfully!');
                 } else {
-                    await createEvent(eventData);
+                    const newEvent = await createEvent(eventData);
                     alert('Event created successfully!');
                 }
                 $('#eventModal').fadeOut();
