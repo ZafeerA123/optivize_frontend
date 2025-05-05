@@ -279,7 +279,7 @@ permalink: /navigation/calendar
 <!-- FullCalendar + Script -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script>
-  const API_URL = "https://https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/";  // change to your actual domain
+  const API_URL = "https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/";  // change to your actual domain
     document.addEventListener("DOMContentLoaded", function () {
     const calendarEl = document.getElementById("calendar");
      const calendar = new FullCalendar.Calendar(calendarEl, {
