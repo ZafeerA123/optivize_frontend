@@ -245,181 +245,374 @@ permalink: /navigation/calendar
   }
 </style>
 
-<div class="calendar-container" style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-  <div class="calendar-wrapper" style="width: 80%; max-width: 800px; text-align: center;">
-    <h1>Calendar</h1>
-    <!-- Full Calendar -->
-    <div id="calendar"></div>
-<!-- Buttons for actions -->
-    <div class="button-container" style="margin-top: 20px;">
-      <button id="addEventBtn">Add Event</button>
-      <button id="updateEventBtn" style="display: none;">Update Event</button>
-      <button id="deleteEventBtn" style="display: none;">Delete Event</button>
+<div class="calendar-container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f8f9fa; padding: 20px;">
+    <div class="calendar-wrapper" style="width: 95%; max-width: 1200px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow: hidden;">
+        <div style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+            <h1>Calendar</h1>
+            <button id="addEventBtn" style="background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 16px;">Add Event</button>
+        </div>
+        <div id="calendar" style="padding: 20px;">
+            </div>
     </div>
-<!-- Form for adding/updating events -->
-    <div id="eventForm" style="display: none; margin-top: 20px;">
-      <h2>Event Details</h2>
-      <form id="eventDetailsForm">
-        <label for="title">Title:</label><br>
-        <input type="text" id="title" required><br><br>
-        <label for="start_time">Start Time:</label><br>
-        <input type="datetime-local" id="start_time" required><br><br>
-        <label for="end_time">End Time:</label><br>
-        <input type="datetime-local" id="end_time"><br><br>
-        <label for="description">Description:</label><br>
-        <textarea id="description"></textarea><br><br>
-        <button type="submit">Save Event</button>
-      </form>
+    <div id="eventModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
+        <div class="modal-content" style="background-color: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 600px;">
+            <h2 id="modalTitle">Add New Event</h2>
+            <form id="eventDetailsForm">
+                <div style="margin-bottom: 15px;">
+                    <label for="title" style="display: block; margin-bottom: 5px; font-weight: bold;">Title:</label>
+                    <input type="text" id="title" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="start_time" style="display: block; margin-bottom: 5px; font-weight: bold;">Start Time:</label>
+                    <input type="datetime-local" id="start_time" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="end_time" style="display: block; margin-bottom: 5px; font-weight: bold;">End Time:</label>
+                    <input type="datetime-local" id="end_time" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label for="description" style="display: block; margin-bottom: 5px; font-weight: bold;">Description:</label>
+                    <textarea id="description" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; min-height: 80px;"></textarea>
+                </div>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button type="button" id="closeModalBtn" style="background-color: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 16px; margin-left: 10px;">Cancel</button>
+                    <button type="submit" id="saveEventBtn" style="background-color: #28a745; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 16px;">Save Event</button>
+                    <button type="button" id="deleteEventBtn" style="background-color: #dc3545; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 16px; margin-left: 10px; display: none;">Delete Event</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+
 <script type="module">
-  import { pythonURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+    import { pythonURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
 
-  const CALENDAR_API = `${pythonURI}/calendar`;
+    const CALENDAR_API = `${pythonURI}/calendar`;
+    let calendar;
+    let currentEventId = null;
 
-  // POST: Create a new calendar event
-  async function createEvent(eventData) {
-    const response = await fetch(CALENDAR_API, {
-      ...fetchOptions,
-      method: 'POST',
-      body: JSON.stringify(eventData)
+    // Function to fetch and display events
+    async function loadEvents() {
+        try {
+            const events = await getEvents(1); // Replace with dynamic user ID
+            calendar.fullCalendar('removeEvents');
+            calendar.fullCalendar('addEventSource', events);
+        } catch (error) {
+            alert(`Error loading events: ${error.message}`);
+        }
+    }
+
+    // GET: Fetch all calendar events for a user
+    async function getEvents(userId) {
+        const response = await fetch(`${CALENDAR_API}?user_id=${userId}`, {
+            ...fetchOptions,
+            method: 'GET'
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to fetch events');
+        }
+        return await response.json();
+    }
+
+    // POST: Create a new calendar event
+    async function createEvent(eventData) {
+        const response = await fetch(CALENDAR_API, {
+            ...fetchOptions,
+            method: 'POST',
+            body: JSON.stringify(eventData)
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to create event');
+        }
+        return await response.json();
+    }
+
+    // PUT: Update an existing event by ID
+    async function updateEvent(eventId, updatedData) {
+        const response = await fetch(`${CALENDAR_API}/${eventId}`, {
+            ...fetchOptions,
+            method: 'PUT',
+            body: JSON.stringify(updatedData)
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to update event');
+        }
+        return await response.json();
+    }
+
+    // DELETE: Delete an event by ID
+    async function deleteEvent(eventId) {
+        const response = await fetch(`${CALENDAR_API}/${eventId}`, {
+            ...fetchOptions,
+            method: 'DELETE'
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to delete event');
+        }
+        return await response.json();
+    }
+
+    // Initialize FullCalendar
+    $(document).ready(function() {
+        const calendarElement = $('#calendar');
+        calendar = calendarElement.fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            },
+            selectable: true,
+            select: function(start, end) {
+                currentEventId = null;
+                $('#modalTitle').text('Add New Event');
+                $('#deleteEventBtn').hide();
+                $('#eventForm').show();
+                $('#start_time').val(moment(start).format('YYYY-MM-DDTHH:mm'));
+                $('#end_time').val(moment(end).format('YYYY-MM-DDTHH:mm'));
+                $('#eventModal').fadeIn();
+            },
+            eventClick: function(calEvent) {
+                currentEventId = calEvent.id;
+                $('#modalTitle').text('Edit Event');
+                $('#deleteEventBtn').show();
+                $('#eventForm').show();
+                $('#title').val(calEvent.title);
+                $('#start_time').val(moment(calEvent.start).format('YYYY-MM-DDTHH:mm'));
+                $('#end_time').val(calEvent.end ? moment(calEvent.end).format('YYYY-MM-DDTHH:mm') : '');
+                $('#description').val(calEvent.description);
+                $('#eventModal').fadeIn();
+            },
+            events: async (fetchInfo, successCallback, failureCallback) => {
+                try {
+                    const events = await getEvents(1); // Replace with dynamic user ID
+                    successCallback(events);
+                } catch (error) {
+                    failureCallback(error);
+                }
+            },
+            editable: true,
+            eventDrop: async function(event, delta, revertFunc) {
+                try {
+                    await updateEvent(event.id, {
+                        start_time: moment(event.start).format('YYYY-MM-DDTHH:mm'),
+                        end_time: event.end ? moment(event.end).format('YYYY-MM-DDTHH:mm') : ''
+                    });
+                    alert('Event moved successfully!');
+                } catch (error) {
+                    alert(`Error moving event: ${error.message}`);
+                    revertFunc();
+                }
+            },
+            eventResize: async function(event, delta, revertFunc) {
+                try {
+                    await updateEvent(event.id, {
+                        start_time: moment(event.start).format('YYYY-MM-DDTHH:mm'),
+                        end_time: moment(event.end).format('YYYY-MM-DDTHH:mm')
+                    });
+                    alert('Event resized successfully!');
+                } catch (error) {
+                    alert(`Error resizing event: ${error.message}`);
+                    revertFunc();
+                }
+            }
+        });
+
+        // Load events on page load
+        loadEvents();
+
+        // Handle Add Event button click
+        $('#addEventBtn').on('click', function() {
+            currentEventId = null;
+            $('#modalTitle').text('Add New Event');
+            $('#deleteEventBtn').hide();
+            $('#eventForm').show();
+            $('#eventModal').fadeIn();
+            $('#eventDetailsForm')[0].reset();
+        });
+
+        // Handle Close Modal button click
+        $('#closeModalBtn').on('click', function() {
+            $('#eventModal').fadeOut();
+            $('#eventDetailsForm')[0].reset();
+            currentEventId = null;
+        });
+
+        // Handle form submission for saving/updating event
+        $('#eventDetailsForm').on('submit', async function(e) {
+            e.preventDefault();
+
+            const title = $('#title').val();
+            const start_time = $('#start_time').val();
+            const end_time = $('#end_time').val();
+            const description = $('#description').val();
+            const eventData = { title, start_time, end_time, description, user_id: 1 }; // Adjust user_id dynamically
+
+            try {
+                if (currentEventId) {
+                    await updateEvent(currentEventId, eventData);
+                    alert('Event updated successfully!');
+                } else {
+                    await createEvent(eventData);
+                    alert('Event created successfully!');
+                }
+                $('#eventModal').fadeOut();
+                $('#eventDetailsForm')[0].reset();
+                loadEvents(); // Reload events to update the calendar
+                currentEventId = null;
+            } catch (error) {
+                alert(`Error saving event: ${error.message}`);
+            }
+        });
+
+        // Handle Delete Event button click
+        $('#deleteEventBtn').on('click', async function() {
+            if (currentEventId) {
+                if (confirm('Are you sure you want to delete this event?')) {
+                    try {
+                        await deleteEvent(currentEventId);
+                        alert('Event deleted successfully!');
+                        $('#eventModal').fadeOut();
+                        $('#eventDetailsForm')[0].reset();
+                        loadEvents(); // Reload events to update the calendar
+                        currentEventId = null;
+                    } catch (error) {
+                        alert(`Error deleting event: ${error.message}`);
+                    }
+                }
+            }
+        });
     });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to create event');
-    }
-    return await response.json();
-  }
-
-  // GET: Fetch all calendar events for a user
-  async function getEvents(userId) {
-    const response = await fetch(`${CALENDAR_API}?user_id=${userId}`, {
-      ...fetchOptions,
-      method: 'GET'
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to fetch events');
-    }
-    return await response.json();
-  }
-
-  // PUT: Update an existing event by ID
-  async function updateEvent(eventId, updatedData) {
-    const response = await fetch(`${CALENDAR_API}/${eventId}`, {
-      ...fetchOptions,
-      method: 'PUT',
-      body: JSON.stringify(updatedData)
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to update event');
-    }
-    return await response.json();
-  }
-
-  // DELETE: Delete an event by ID
-  async function deleteEvent(eventId) {
-    const response = await fetch(`${CALENDAR_API}/${eventId}`, {
-      ...fetchOptions,
-      method: 'DELETE'
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to delete event');
-    }
-    return await response.json();
-  }
-
-  // Display events on the calendar
-  function displayEvents(events) {
-    const calendarElement = document.getElementById('calendar');
-    // Clear existing events on the calendar (to be implemented depending on your calendar library)
-    calendarElement.innerHTML = '';
-    events.forEach(event => {
-      // Add events to your calendar UI (use FullCalendar or any other calendar library)
-      // Example: FullCalendar's `addEvent` method
-      // calendar.addEvent({
-      //   title: event.title,
-      //   start: event.start_time,
-      //   end: event.end_time,
-      //   description: event.description,
-      //   id: event.id,
-      // });
-    });
-  }
-
-  // Handle the form submission for adding/updating an event
-  document.getElementById('eventDetailsForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const title = document.getElementById('title').value;
-    const start_time = document.getElementById('start_time').value;
-    const end_time = document.getElementById('end_time').value;
-    const description = document.getElementById('description').value;
-    const eventData = { title, start_time, end_time, description, user_id: 1 }; // Adjust user_id dynamically
-
-    try {
-      if (document.getElementById('updateEventBtn').style.display === 'block') {
-        const eventId = document.getElementById('updateEventBtn').dataset.eventId;
-        await updateEvent(eventId, eventData);
-        alert('Event updated successfully');
-      } else {
-        await createEvent(eventData);
-        alert('Event created successfully');
-      }
-
-      // Reload the events after update or create
-      const events = await getEvents(1); // Replace with dynamic user ID
-      displayEvents(events);
-      resetForm();
-    } catch (error) {
-      alert(`Error: ${error.message}`);
-    }
-  });
-
-  // Add event handler for Add Event button
-  document.getElementById('addEventBtn').addEventListener('click', function () {
-    resetForm();
-    document.getElementById('eventForm').style.display = 'block';
-    document.getElementById('updateEventBtn').style.display = 'none';
-    document.getElementById('addEventBtn').style.display = 'none';
-  });
-
-  // Add event handler for Update Event button
-  document.getElementById('updateEventBtn').addEventListener('click', function () {
-    document.getElementById('eventForm').style.display = 'block';
-    document.getElementById('addEventBtn').style.display = 'none';
-  });
-
-  // Add event handler for Delete Event button
-  document.getElementById('deleteEventBtn').addEventListener('click', async function () {
-    const eventId = document.getElementById('deleteEventBtn').dataset.eventId;
-    try {
-      await deleteEvent(eventId);
-      alert('Event deleted successfully');
-      const events = await getEvents(1); // Replace with dynamic user ID
-      displayEvents(events);
-      resetForm();
-    } catch (error) {
-      alert(`Error: ${error.message}`);
-    }
-  });
-
-  // Function to reset the form
-  function resetForm() {
-    document.getElementById('eventForm').reset();
-    document.getElementById('eventForm').style.display = 'none';
-    document.getElementById('updateEventBtn').style.display = 'none';
-    document.getElementById('deleteEventBtn').style.display = 'none';
-    document.getElementById('addEventBtn').style.display = 'block';
-  }
-
-  // Load events when the page loads
-  document.addEventListener('DOMContentLoaded', async function () {
-    const events = await getEvents(1); // Replace with dynamic user ID
-    displayEvents(events);
-  });
 </script>
+
+<style>
+    /* Basic styling for the container and wrapper */
+    .calendar-container {
+        background-color: #f8f9fa;
+        padding: 20px;
+    }
+
+    .calendar-wrapper {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    /* Style for the header */
+    .calendar-wrapper h1 {
+        margin: 0;
+        font-size: 24px;
+        color: #333;
+    }
+
+    /* Style for buttons */
+    .button-container button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-right: 10px;
+    }
+
+    .button-container button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Style for the modal */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 600px;
+    }
+
+    .modal-content h2 {
+        margin-top: 0;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .modal-content label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .modal-content input[type="text"],
+    .modal-content input[type="datetime-local"],
+    .modal-content textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        font-size: 16px;
+    }
+
+    .modal-content textarea {
+        min-height: 100px;
+    }
+
+    .modal-content button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-right: 10px;
+    }
+
+    .modal-content button:last-child {
+        margin-right: 0;
+    }
+
+    .modal-content button:hover {
+        opacity: 0.9;
+    }
+
+    .modal-content #closeModalBtn {
+        background-color: #6c757d;
+    }
+
+    .modal-content #deleteEventBtn {
+        background-color: #dc3545;
+    }
+
+    /* FullCalendar Styles (you might need to adjust based on the theme) */
+    .fc-header-toolbar {
+        margin-bottom: 1em;
+    }
+
+    .fc-day-grid-event .fc-content {
+        white-space: normal;
+    }
+</style>
