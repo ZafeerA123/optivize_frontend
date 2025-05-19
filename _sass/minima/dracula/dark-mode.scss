@@ -1,135 +1,226 @@
-/* Colors */
-$background-color-start: #472505 !default;  // Dark Brown (from index gradient)
-$background-color-end: #784320 !default;  // Medium Brown (from index gradient)
-$text-color: #fcf9f5 !default;  // Light cream color (from right section)
-$primary-color: #d4a76a !default;  // Gold accent (from various elements)
-$secondary-color: #fcf9f5 !default;  // Cream color for accent elements
+/* Colors - Updated to match Optivize theme */
+$background-color-start: #0b1e3b !default;  // Dark blue (from Optivize background)
+$background-color-end: #162b4d !default;  // Medium blue (from Optivize gradient)
+$text-color: #ffffff !default;  // White for text
+$primary-color: #fbb034 !default;  // Gold/yellow accent (from Optivize elements)
+$secondary-color: #ffdd00 !default;  // Lighter gold for accent elements
+$translucent-bg: rgba(255, 255, 255, 0.05) !default; // For glass effects
 
-/* Gradient Background */
+/* Remove the gray bar at the top */
+body::before {
+  display: none !important;
+}
+
+/* Hide any default browser header/toolbar elements */
+nav.navbar-top, 
+.toolbar, 
+.header-bar,
+.chrome-header,
+.navigation-bar,
+.address-bar {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Ensure no unwanted spacing at the top */
+body {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Adjust the body to fill the viewport height from the very top */
 html, body {
+  min-height: 100vh;
   background: linear-gradient(135deg, $background-color-start, $background-color-end) !important;
   color: $text-color !important;
   font-family: 'Montserrat', 'Segoe UI', Tahoma !important;
+  overflow-x: hidden;
 }
   
 /* Header Styles */
 header {
-    background-color: #ffffff !important;  /* Ensure the entire header has a white background */
-    color: #472505 !important;  /* Dark brown text to match theme */
-    border-radius: 10px;  /* Smooth corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow for depth */
-  }
-  
-/* Header Styles */
-.site-title {
-  color: #472505; /* Changed to dark brown to match theme */
-  font-weight: bold;
-  font-family: 'Playfair Display', 'Segoe UI', sans-serif !important;
-  font-size: 2.5rem;
-  text-align: center;
+  background-color: transparent !important;
+  color: $text-color !important;
   padding: 10px 0;
-  border-radius: 10px; /* Smooth corners */
-  background-color: #ffffff; /* White background */
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+  
+/* Site Title Styles - SMALLER SIZE */
+.site-title {
+  color: transparent !important;
+  font-weight: bold;
+  font-family: 'Montserrat', 'Segoe UI', sans-serif !important;
+  font-size: 2rem; /* Reduced from 2.5rem */
+  text-align: center;
+  padding: 10px 0; /* Reduced padding */
+  margin-bottom: 15px;
+  background: linear-gradient(to right, $primary-color, $secondary-color, $primary-color);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
 }
 
 .site-title:hover {
-  background-color: #f0f0f0; /* Light gray when hovered */
   transform: scale(1.05);
 }
   
-
-/* Navigation Bar */
+/* Navigation Bar - SMALLER SIZE */
 .site-nav {
-    background-color: #ffffff !important; /* White background */
-    padding: 8px 0;  /* Reduced padding for a smaller height */
-    border-radius: 8px;  /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.2);  /* Soft shadow for depth */
-    display: flex;  /* Use flexbox to align items */
-    justify-content: center;  /* Center the links horizontally */
-    gap: 20px;  /* Add space between each link */
+  background-color: rgba(15, 30, 59, 0.4) !important;
+  padding: 8px 0; /* Reduced padding */
+  border-radius: 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Reduced gap */
+  max-width: 90%; /* Constrain width */
+  margin: 0 auto;
+  backdrop-filter: blur(5px);
 }
 
-/* Links in Navigation */
+/* Links in Navigation - SMALLER SIZE */
 .site-nav a {
-    color: #472505 !important;  /* Dark brown text for links */
-    text-decoration: none;
-    font-size: 1.2rem;  /* Increased font size */
-    font-weight: bold;  /* Make the text bold */
-    padding: 8px 15px;  /* Adjust padding for proper space */
-    border-radius: 5px;  /* Smooth corners for links */
-    transition: color 0.3s ease, background-color 0.3s ease;  /* Smooth transition */
+  color: rgba(255, 255, 255, 0.85) !important;
+  text-decoration: none;
+  font-size: 1rem; /* Reduced from 1.2rem */
+  font-weight: 600;
+  padding: 6px 15px; /* Reduced padding */
+  border-radius: 50px;
+  transition: all 0.3s;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
 }
 
 /* Navigation Links Hover Effect */
 .site-nav a:hover {
-    color: $primary-color !important;  /* Change link color on hover to gold */
-    background-color: #f0f0f0;  /* Light gray background on hover */
+  color: $background-color-start !important;
+  background: linear-gradient(90deg, $primary-color, $secondary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba($primary-color, 0.4);
 }
-
 
 /* Responsive Adjustment for Smaller Screens */
 @media (max-width: 768px) {
   .site-nav {
-    flex-direction: column;  /* Stack links vertically on small screens */
-    align-items: center;  /* Center the links vertically */
-    gap: 10px;  /* Reduce space between links */
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    border-radius: 16px;
   }
   
   .site-nav a {
-    font-size: 1rem;  /* Adjust font size for smaller screens */
-    padding: 8px 12px;  /* Adjust padding for smaller screens */
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    width: 80%;
+    text-align: center;
   }
 }
 
-/* Button Styling with Animation */
+/* Button Styling with Animation - Matching Optivize */
 .btn {
-  background-color: $primary-color !important;
+  background: linear-gradient(90deg, $primary-color, $secondary-color) !important;
   color: $background-color-start !important;
-  border-radius: 30px;  /* Rounder corners to match index.md */
-  padding: 12px 28px;
+  border-radius: 50px;
+  padding: 12px 24px;
   border: none !important;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba($primary-color, 0.3);
 }
 
 .btn:hover {
-  background-color: darken($primary-color, 10%) !important;
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba($primary-color, 0.4);
+}
+
+/* Button with shimmering effect */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.6s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 /* Table Styling */
+table {
+  border-radius: 16px;
+  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 20px 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
 table th, table td {
-  background-color: rgba(71, 37, 5, 0.8) !important; /* Semi-transparent dark brown */
+  background-color: rgba($background-color-start, 0.8) !important;
   color: $text-color !important;
-  border-color: $primary-color !important;
+  border: none !important;
+  padding: 12px 15px;
 }
 
 table th {
-  font-weight: bold;  /* Bold headers */
-  background-color: rgba(71, 37, 5, 0.9) !important; /* Slightly darker for headers */
+  font-weight: 600;
+  background-color: rgba($background-color-start, 0.9) !important;
+  color: $primary-color !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9em;
+}
+
+table tr:hover td {
+  background-color: rgba($background-color-end, 0.9) !important;
 }
 
 /* Pre, Code Block Styling */
 pre, code {
-  background-color: rgba(71, 37, 5, 0.8) !important; /* Semi-transparent dark brown */
+  background-color: rgba($background-color-start, 0.5) !important;
   color: $text-color !important;
-  border-radius: 8px;  /* Rounded corners for code blocks */
-  padding: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Soft shadow */
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+code {
+  padding: 3px 6px;
 }
 
 /* Search Results */
 .search-result-title {
   color: $primary-color !important;
+  font-weight: 600;
 }
 
 .search-result-highlight {
-  color: $primary-color !important;
+  color: $secondary-color !important;
   font-weight: bold !important;
 }
 
@@ -142,16 +233,71 @@ canvas {
   filter: var(--default-canvas-filter);
 }
 
-/* Add some new styles from index.md to enhance consistency */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
-/* Glass card effect from index.md */
+/* Glass card effect - Enhanced for Optivize */
 .glass-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  margin: 20px 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 
+              inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  padding: 25px;
+  margin: 25px 0;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Additional Optivize-specific elements */
+
+/* Product-style cards */
+.product-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+.product-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-color: rgba($primary-color, 0.2);
+}
+
+/* Glow effect for elements */
+.glow-element {
+  position: relative;
+}
+
+.glow-element::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  filter: blur(20px);
+  background: radial-gradient(circle, rgba($primary-color, 0.3), transparent 70%);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.glow-element:hover::after {
+  opacity: 1;
 }
