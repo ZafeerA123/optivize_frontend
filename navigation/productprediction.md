@@ -101,12 +101,49 @@ html, body {
 .main-content {
     animation: fadeIn 1s ease forwards;
 }
+.tooltip {
+  display: inline-block;
+  margin-left: 6px;
+  background: #555;
+  color: #fff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  line-height: 16px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: help;
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  white-space: normal;
+  width: 220px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+}
+
 </style>
 
-<div class="sprinkle-overlay" id="sprinkle-overlay"></div>
 
 <script>
-const sprinkleColors = ['#ffafcc', '#ffcba4', '#b5ead7', '#caffbf', '#9bf6ff', '#a0c4ff', '#e0c3fc'];
 const overlay = document.getElementById('sprinkle-overlay');
 
 function createSprinkle() {
@@ -124,7 +161,6 @@ function createSprinkle() {
     setTimeout(() => sprinkle.remove(), 10000);
 }
 
-setInterval(createSprinkle, 100);
 </script>
 
 <div class="cookie-prediction-container">
@@ -184,12 +220,20 @@ setInterval(createSprinkle, 100);
         <input type="number" id="price" step="0.01" min="0" placeholder="3.99">
       </div>
       <div class="form-group">
-        <label>Marketing (1-10)</label>
+        <label>
+          Marketing (1-10)
+          <span class="tooltip" data-tooltip="1 = No promotion. 5 = Basic social media or flyers. 10 = Large-scale advertising across media.">?</span>
+        </label>
         <input type="number" id="marketing" min="1" max="10" placeholder="7">
+
       </div>
       <div class="form-group">
-        <label>Distribution (1-10)</label>
+        <label>
+          Distribution (1-10)
+          <span class="tooltip" data-tooltip="1 = Sold only in 1 store. 5 = Available in local chains. 10 = Nationwide + online with delivery.">?</span>
+        </label>
         <input type="number" id="distribution" min="1" max="10" placeholder="8">
+
       </div>
     </div>
     <button id="predict-success" class="primary-btn">Predict Success</button>
