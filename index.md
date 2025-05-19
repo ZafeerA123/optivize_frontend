@@ -760,7 +760,7 @@ menu: nav/home.html
   </div>
 </div>
 
-<!-- CTA Section -->
+<!-- the CTA Section -->
 <div class="cta-section">
   <div class="cta-bg"></div>
   <div class="cta-ripple"></div>
