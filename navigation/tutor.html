@@ -7,229 +7,363 @@ menu: nav/index.md
 permalink: /bot/
 ---
 
-<!-- Updated CSS Styles -->
 <style>
-  /* General Styles */
+  /* Match the index page styling */
   body {
-    font-family: 'Arial', sans-serif;
-    background-color: #1a1a2e; /* Dark blue/purple background */
     margin: 0;
     padding: 0;
-    color: white;
+    font-family: 'Inter', sans-serif;
+    color: #fff;
+    background: none !important;
   }
 
+  /* Gradient background with animation */
+  .chatbot-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0b1e3b, #162b4d);
+    z-index: -2;
+  }
+  
+  .chatbot-gradient-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 70% 20%, rgba(43, 83, 158, 0.2), transparent 60%),
+                radial-gradient(circle at 20% 80%, rgba(29, 47, 94, 0.3), transparent 60%);
+    animation: gradientMove 20s infinite alternate;
+    z-index: -1;
+  }
+  
+  @keyframes gradientMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+  }
+
+  /* Glowing orbs */
+  .chatbot-glow-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.15;
+    z-index: 0;
+  }
+  
+  .chatbot-glow-orb-1 {
+    top: 10%;
+    left: 5%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(251, 176, 52, 0.6), rgba(251, 176, 52, 0) 70%);
+    animation: float 25s infinite alternate;
+  }
+  
+  .chatbot-glow-orb-2 {
+    bottom: 10%;
+    right: 5%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(66, 99, 176, 0.4), rgba(66, 99, 176, 0) 70%);
+    animation: float 30s infinite alternate-reverse;
+  }
+  
+  @keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(50px, -30px) scale(1.1); }
+    100% { transform: translate(-30px, 50px) scale(0.9); }
+  }
+
+  /* Chat container */
   #cantteach-bot-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    background-color: #121212; /* Dark background for the container */
-    border-radius: 12px; /* Rounded corners for the container */
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
   }
 
   /* Header */
   .header {
-    background-color: #6a4c93; /* Dark purple */
+    background: rgba(255, 255, 255, 0.05);
     padding: 20px;
     text-align: center;
-    font-size: 2.5rem;
-    font-weight: bold;
-    border-radius: 12px 12px 0 0; /* Rounded top corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    font-size: 1.8rem;
+    font-weight: 700;
+    border-radius: 16px 16px 0 0;
+    color: #fbb034;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    margin-bottom: 1px;
   }
 
-  /* Chat Section */
+  /* Chat box */
   .chat-box {
     flex-grow: 1;
     padding: 20px;
     overflow-y: auto;
-    background-color: #333; /* Dark grey background for chat */
-    color: #eee; /* Light text for better contrast */
-    border-radius: 0 0 12px 12px; /* Rounded bottom corners */
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Inset shadow for depth */
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border-radius: 0;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 
-  /* Input Section */
+  /* Input section */
   .input-section {
     display: flex;
-    padding: 10px;
-    background-color: #1a1a2e; /* Dark blue background */
-    border-radius: 0 0 12px 12px; /* Rounded bottom corners */
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3); /* Shadow on top */
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  /* Input Field */
+  /* Input field */
   .input-field {
     flex-grow: 1;
-    padding: 12px;
+    padding: 12px 20px;
     border: none;
-    border-radius: 10px;
-    margin-right: 10px;
+    border-radius: 50px;
+    margin-right: 15px;
     font-size: 1rem;
-    color: #333; /* Dark text */
-    background-color: #fff; /* White background */
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s;
   }
 
-  /* Send Button */
+  .input-field:focus {
+    outline: none;
+    border-color: rgba(251, 176, 52, 0.3);
+    box-shadow: 0 0 0 2px rgba(251, 176, 52, 0.1);
+  }
+
+  /* Send button */
   .send-button {
-    padding: 12px 25px;
-    background-color: #6a4c93; /* Dark purple */
-    color: white;
+    padding: 12px 30px;
+    background: linear-gradient(90deg, #fbb034, #ffdd00);
+    color: #0f1e3b;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 600;
     border: none;
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 50px;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(251, 176, 52, 0.3);
+    position: relative;
+    overflow: hidden;
   }
 
-  /* Button Hover Effect */
   .send-button:hover {
-    background-color: #9b7cd6; /* Lighter purple for hover */
-    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(251, 176, 52, 0.4);
   }
 
-  /* Chat Bubbles */
+  .send-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #ffdd00, #fbb034);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .send-button:hover::before {
+    opacity: 1;
+  }
+
+  /* Chat bubbles */
   div[data-q] {
     margin-bottom: 20px;
-    background: rgba(100, 100, 255, 0.15); /* Soft blue background for user messages */
-    padding: 15px;
-    border-radius: 10px;
+    background: rgba(251, 176, 52, 0.1);
+    padding: 15px 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(251, 176, 52, 0.2);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
   div[data-q] .question-text {
-    color: #4a90e2; /* Blue text for user questions */
+    color: #fbb034;
+    font-weight: 500;
   }
 
   div[data-r] {
     margin-bottom: 20px;
-    background: #6a4c93; /* Purple background for bot responses */
-    padding: 15px;
-    border-radius: 10px;
-    color: white;
+    background: rgba(66, 99, 176, 0.15);
+    padding: 15px 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(66, 99, 176, 0.2);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
   div[data-r] .response-text {
-    color: white;
+    color: rgba(255, 255, 255, 0.9);
   }
 
-  /* Chatbox Scrollbar Styling */
-  #chat-box::-webkit-scrollbar {
+  /* Action buttons */
+  div[data-q] button {
+    padding: 6px 12px;
+    margin-right: 8px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  div[data-q] button:first-of-type {
+    background: rgba(255, 95, 87, 0.2);
+    color: #ff5f57;
+  }
+
+  div[data-q] button:last-of-type {
+    background: rgba(66, 99, 176, 0.2);
+    color: #4263b0;
+  }
+
+  div[data-q] button:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+  }
+
+  /* Floating tutorial */
+  #floating-tutorial {
+    position: fixed;
+    bottom: 120px;
+    right: 24px;
+    width: 340px;
+    background: rgba(30, 30, 30, 0.9);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid rgba(68, 68, 68, 0.5);
+    border-radius: 16px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    backdrop-filter: blur(10px);
+  }
+
+  #floating-tutorial strong {
+    color: #fbb034;
+  }
+
+  #floating-tutorial button {
+    background: rgba(251, 176, 52, 0.2);
+    color: #fbb034;
+    border: 1px solid rgba(251, 176, 52, 0.3);
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  #floating-tutorial button:hover {
+    background: rgba(251, 176, 52, 0.3);
+  }
+
+  /* Scrollbar */
+  .chat-box::-webkit-scrollbar {
     width: 8px;
   }
 
-  #chat-box::-webkit-scrollbar-thumb {
-    background: #6a4c93; /* Match the header and footer */
-    border-radius: 5px;
+  .chat-box::-webkit-scrollbar-thumb {
+    background: rgba(251, 176, 52, 0.3);
+    border-radius: 4px;
   }
 
-  
+  .chat-box::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    #cantteach-bot-container {
+      padding: 10px;
+    }
+    
+    .header {
+      font-size: 1.5rem;
+      padding: 15px;
+    }
+    
+    #floating-tutorial {
+      width: 280px;
+      right: 10px;
+      bottom: 100px;
+    }
+  }
 </style>
+
+<!-- Background elements -->
+<div class="chatbot-background"></div>
+<div class="chatbot-gradient-overlay"></div>
+<div class="chatbot-glow-orb chatbot-glow-orb-1"></div>
+<div class="chatbot-glow-orb chatbot-glow-orb-2"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-<div
-  id="cantteach-bot-container"
-  style="
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    /* Make the main background a dark/black color */
-    background-color: #000;
-    font-family: 'Arial', sans-serif;
-    color: white;
-  "
->
+<div id="cantteach-bot-container">
   <!-- Header -->
-  <div
-    style="
-      /* Orange header similar to the screenshot */
-      background-color: #D87E00;
-      padding: 20px;
-      text-align: center;
-      font-size: 2rem;
-      font-weight: bold;
-      /* Slight drop shadow to separate from background */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    "
-  >
-    Customer Service Chatbot
+  <div class="header">
+    OptiBot Assistant
   </div>
+  
   <!-- Chat Section -->
-  <div
-    id="chat-box"
-    style="
-      flex-grow: 1; /* Take up remaining space */
-      padding: 20px;
-      overflow-y: auto;
-      /* White background for the chat area */
-      background-color: #fff;
-      color: #000; /* Black text inside the chat */
-      /* Subtle inset shadow to give it some depth */
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-      border-radius: 0; /* Square corners like in the screenshot */
-    "
-  ></div>
-  <!-- OptiBot Tutorial Hints -->
-<!-- Floating Tutorial Box -->
-<div id="floating-tutorial" style="position: fixed; bottom: 200px; right: 24px; width: 340px; background: #1e1e1e; color: white; font-family: 'Inter', sans-serif; border: 1px solid #444; border-radius: 16px; box-shadow: 0 8px 16px rgba(0,0,0,0.6); z-index: 9999; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <strong style="font-size: 1rem;">💬 OptiBot Tips</strong>
-    <button onclick="document.getElementById('floating-tutorial').style.display='none'" style="background: transparent; color: #ffbd70; border: none; font-size: 1rem; cursor: pointer;">✖</button>
+  <div id="chat-box" class="chat-box"></div>
+  
+  <!-- Floating Tutorial Box -->
+  <div id="floating-tutorial">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <strong style="font-size: 1rem;">💬 OptiBot Tips</strong>
+      <button onclick="document.getElementById('floating-tutorial').style.display='none'">✖</button>
+    </div>
+    <div id="floating-tutorial-slide">
+      <strong>Welcome to OptiBot!</strong>
+      <p style="font-size: 0.9rem; margin-top: 4px;">Click the arrows to learn what you can ask.</p>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+      <button onclick="prevFloatingTutorial()">⬅️</button>
+      <button onclick="nextFloatingTutorial()">➡️</button>
+    </div>
   </div>
-  <div id="floating-tutorial-slide">
-    <strong>Welcome to OptiBot!</strong>
-    <p style="font-size: 0.9rem; margin-top: 4px;">Click the arrows to learn what you can ask.</p>
-  </div>
-  <div style="display: flex; justify-content: space-between;">
-    <button onclick="prevFloatingTutorial()" style="background: #333; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">⬅️</button>
-    <button onclick="nextFloatingTutorial()" style="background: #D87E00; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">➡️</button>
-  </div>
-</div>
+  
   <!-- Input Section -->
-  <div
-    style="
-      display: flex;
-      padding: 10px;
-      /* Dark background (black or near-black) for the bottom bar */
-      background-color: #000;
-      box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
-    "
-  >
+  <div class="input-section">
     <input
       type="text"
       id="question"
       placeholder="Type your question here"
-      style="
-        flex-grow: 1; /* Take up as much space as possible */
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        margin-right: 10px;
-        font-size: 1rem;
-        /* Black text on a white input background */
-        color: #000;
-        background-color: #fff;
-      "
+      class="input-field"
     />
     <button
       onclick="sendQuestion(document.getElementById('question').value)"
-      style="
-        padding: 10px 20px;
-        /* White button with black text (similar to screenshot) */
-        background-color: #fff;
-        color: #000;
-        font-size: 1rem;
-        font-weight: bold;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, color 0.3s ease;
-      "
+      class="send-button"
     >
       Send
     </button>
   </div>
 </div>
+
 <script>
   var pythonURI;
   if (location.hostname === "localhost") {
@@ -322,9 +456,9 @@ permalink: /bot/
     const chatBox = document.getElementById("chat-box");
     // Display the user's question
     chatBox.innerHTML += `
-      <div data-q="${question}" style="margin-bottom: 20px; background: rgba(232, 244, 255, 0.85); padding: 15px; border-radius: 8px;">
-        <strong style="color: #B87306;">You:</strong>
-        <span style="color: #B87306;" class="question-text">${question}</span>
+      <div data-q="${question}">
+        <strong>You:</strong>
+        <span class="question-text">${question}</span>
         <button onclick="deleteQ('${question}')">Delete</button>
         <button onclick="updateQ('${question}')">Update</button>
       </div>`;
@@ -338,10 +472,10 @@ permalink: /bot/
     const data = await response.json();
     const aiResponse = data.response || "Error: Unable to fetch response.";
     chatBox.innerHTML += `
-  <div data-r="${question}" style="margin-bottom: 20px; background: black; padding: 15px; border-radius: 8px; color: white;">
-    <strong>OptiBot:</strong>
-    <div class="response-text">${marked.parse(aiResponse)}</div>
-  </div>`;
+      <div data-r="${question}">
+        <strong>OptiBot:</strong>
+        <div class="response-text">${marked.parse(aiResponse)}</div>
+      </div>`;
     document.getElementById("question").value = ""; // Clear input
     chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
   }
@@ -364,18 +498,18 @@ async function fetchAllLogs() {
           const { question, response } = log;
           // Add question to the chat box
           chatBox.innerHTML += `
-              <div data-q="${question}" style="margin-bottom: 20px; background: rgba(232, 244, 255, 0.85); padding: 15px; border-radius: 8px;">
-                  <strong style="color: #0056B3;">You:</strong>
-                  <span style="color: #0056B3;" class="question-text">${question}</span>
+              <div data-q="${question}">
+                  <strong>You:</strong>
+                  <span class="question-text">${question}</span>
                   <button onclick="deleteQ('${question}')">Delete</button>
                   <button onclick="updateQ('${question}')">Update</button>
               </div>`;
           // Add response to the chat box
           chatBox.innerHTML += `
-  <div data-r="${question}" style="margin-bottom: 20px; background: #0077BE; padding: 15px; border-radius: 8px; color: white;">
-    <strong>Optibot:</strong>
-    <div class="response-text">${marked.parse(response)}</div>
-  </div>`;
+              <div data-r="${question}">
+                <strong>OptiBot:</strong>
+                <div class="response-text">${marked.parse(response)}</div>
+              </div>`;
       });
   } catch (error) {
       console.error("Error fetching logs:", error);
@@ -429,22 +563,4 @@ function prevFloatingTutorial() {
 
 // Initial load
 renderFloatingTutorial();
-
 </script>
-<!-- Optional CSS -->
-<style>
-  /* Chatbox Scrollbar Styling */
-  #chat-box::-webkit-scrollbar {
-    width: 8px;
-  }
-  #chat-box::-webkit-scrollbar-thumb {
-    background: #B35A00;
-    /* Match header and footer */
-    border-radius: 5px;
-  }
-  /* Button Hover Effect */
-  button:hover {
-    background-color: #BE7200;
-    color: white;
-  }
-</style>
