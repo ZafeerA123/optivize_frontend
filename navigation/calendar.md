@@ -10,191 +10,123 @@ permalink: /Calendar
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crumble Cookies Operations Dashboard</title>
+  <title>Unified Smart Marketing & Operations Calendar</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #1a2980, #26d0ce);
-      color: #ffffff;
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 8px;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-      min-height: calc(100vh - 40px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    /* Improved Tab Styling */
-    .nav-tabs {
-      border-bottom: none;
-      gap: 8px;
-    }
-    .nav-tabs .nav-link {
-      border: none;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.8);
-      transition: all 0.3s ease;
-      padding: 12px 24px;
-    }
-    .nav-tabs .nav-link:hover,
-    .nav-tabs .nav-link.active {
-      background: rgba(255, 255, 255, 0.2);
-      color: #ffffff;
-      transform: translateY(-2px);
-    }
-    /* Calendar Styling */
-    #calendar {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      padding: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .fc-toolbar {
-      color: white !important;
-      padding: 15px 0;
+      background-color: #eef1f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     .fc-toolbar-title {
-      color: white !important;
-      font-size: 1.4rem !important;
+      font-size: 1.8rem;
+      font-weight: 700;
     }
-    .fc-button {
-      background: rgba(255, 255, 255, 0.1) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
-      color: white !important;
-      transition: all 0.3s ease;
-    }
-    .fc-button:hover {
-      background: rgba(255, 255, 255, 0.2) !important;
-    }
-    .dashboard-box {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      padding: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-    }
-    .form-control {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-    }
-    .form-control::placeholder {
-      color: rgba(255, 255, 255, 0.6) !important;
-    }
-    .btn-primary {
-      background: #4a90e2;
+    .fc-event {
+      font-size: 0.85rem;
+      padding: 5px 8px;
+      border-radius: 10px;
       border: none;
+    }
+    .event-campaign { background-color: #ffc107; color: #000; }
+    .event-social { background-color: #0d6efd; color: #fff; }
+    .event-shipment { background-color: #198754; color: #fff; }
+    .event-meeting { background-color: #6f42c1; color: #fff; }
+    .event-holiday { background-color: #dc3545; color: #fff; }
+    .event-workforce { background-color: #20c997; color: #fff; }
+    .nav-tabs {
+      border-bottom: none;
+    }
+    .nav-tabs .nav-link {
+      border-radius: 12px;
+      background: linear-gradient(to right, #4e54c8, #8f94fb);
+      color: white;
+      margin-right: 6px;
+      font-weight: 600;
       transition: all 0.3s ease;
     }
-    .btn-primary:hover {
-      background: #357abd;
-      transform: translateY(-2px);
+    .nav-tabs .nav-link:hover {
+      background: linear-gradient(to right, #3b3fba, #7a7ffb);
     }
-    .list-item {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .nav-tabs .nav-link.active {
+      background: #343a40;
+      font-weight: bold;
+    }
+    .form-section {
+      background-color: #fff;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+    .tab-pane {
+      animation: fadeEffect 0.5s ease-in-out;
+    }
+    @keyframes fadeEffect {
+      from {opacity: 0;}
+      to {opacity: 1;}
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1 class="text-center mb-4">Crumble Cookies Operations Dashboard</h1>   
-    <div id="notifications" class="alert alert-warning mb-4" style="display: none;"></div>
+  <div class="container my-4">
+    <h1 class="text-center mb-4">Unified Smart Marketing & Operations Calendar</h1>
     <ul class="nav nav-tabs mb-4" id="tabMenu" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#calendarSection">📅 Calendar</button>
+        <button class="nav-link active" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendarSection" type="button">Calendar View</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#inventorySection">📦 Inventory</button>
+        <button class="nav-link" id="workforce-tab" data-bs-toggle="tab" data-bs-target="#workforceSection" type="button">Add Workforce</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#shipmentsSection">🚚 Shipments</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tasksSection">✅ Tasks</button>
+        <button class="nav-link" id="events-tab" data-bs-toggle="tab" data-bs-target="#eventsSection" type="button">Add Event</button>
       </li>
     </ul>
     <div class="tab-content">
-      <!-- Calendar Tab -->
       <div class="tab-pane fade show active" id="calendarSection">
-        <div id="calendar"></div>
+        <div id='calendar'></div>
       </div>
-      <!-- Inventory Tab -->
-      <div class="tab-pane fade" id="inventorySection">
-        <div class="dashboard-box">
-          <h4 class="mb-4">📦 Current Inventory</h4>
-          <div id="inventoryList" class="mb-4"></div>
-          <form id="inventoryForm">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <input type="text" class="form-control" placeholder="Item name" required>
-              </div>
-              <div class="col-md-4">
-                <input type="number" class="form-control" placeholder="Quantity" required>
-              </div>
-              <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Update</button>
-              </div>
+      <div class="tab-pane fade" id="workforceSection">
+        <div class="form-section">
+          <h5>Add New Team Member</h5>
+          <form id="workforceForm">
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" class="form-control" id="name" required>
             </div>
+            <div class="mb-3">
+              <label for="availability" class="form-label">Availability</label>
+              <input type="text" class="form-control" id="availability" placeholder="e.g. Mon-Fri, 9am-5pm" required>
+            </div>
+            <button type="submit" class="btn btn-success">Add Member</button>
           </form>
         </div>
       </div>
-      <!-- Shipments Tab -->
-      <div class="tab-pane fade" id="shipmentsSection">
-        <div class="dashboard-box">
-          <h4 class="mb-4">🚚 Shipment Schedule</h4>
-          <form id="shipmentForm" class="mb-4">
-            <div class="row g-3">
-              <div class="col-md-5">
-                <input type="text" class="form-control" placeholder="Item name" required>
-              </div>
-              <div class="col-md-5">
-                <input type="date" class="form-control" required>
-              </div>
-              <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Add</button>
-              </div>
+      <div class="tab-pane fade" id="eventsSection">
+        <div class="form-section">
+          <h5>Add New Event</h5>
+          <form id="eventForm">
+            <div class="mb-3">
+              <label for="eventTitle" class="form-label">Event Title</label>
+              <input type="text" class="form-control" id="eventTitle" required>
             </div>
-          </form>
-          <div id="shipmentList"></div>
-        </div>
-      </div>
-      <!-- Tasks Tab -->
-      <div class="tab-pane fade" id="tasksSection">
-        <div class="dashboard-box">
-          <h4 class="mb-4">✅ Task Management</h4>
-          <form id="taskForm" class="mb-4">
-            <div class="row g-3">
-              <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Employee name" required>
-              </div>
-              <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Task description" required>
-              </div>
-              <div class="col-md-3">
-                <input type="date" class="form-control" required>
-              </div>
-              <div class="col-md-1">
-                <button type="submit" class="btn btn-primary w-100">➕</button>
-              </div>
+            <div class="mb-3">
+              <label for="eventDate" class="form-label">Event Date</label>
+              <input type="date" class="form-control" id="eventDate" required>
             </div>
+            <div class="mb-3">
+              <label for="eventType" class="form-label">Event Type</label>
+              <select class="form-select" id="eventType">
+                <option value="event-campaign">Campaign</option>
+                <option value="event-social">Social</option>
+                <option value="event-shipment">Shipment</option>
+                <option value="event-meeting">Meeting</option>
+                <option value="event-holiday">Holiday</option>
+                <option value="event-workforce">Workforce</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Event</button>
           </form>
-          <div id="taskList"></div>
         </div>
       </div>
     </div>
@@ -203,97 +135,71 @@ permalink: /Calendar
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
   <script>
-    // Data Storage
-    let store = {
-      inventory: [],
-      shipments: [],
-      tasks: []
-    };
-    // Calendar Initialization
-    document.addEventListener('DOMContentLoaded', function() {
+    let calendar;
+    async function initCalendar() {
       const calendarEl = document.getElementById('calendar');
-      const calendar = new FullCalendar.Calendar(calendarEl, {
+      calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         headerToolbar: {
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
-        events: [],
-        eventDidMount: function(info) {
-          info.el.style.backgroundColor = '#4a90e2';
-          info.el.style.border = 'none';
+        events: async function(fetchInfo, successCallback, failureCallback) {
+          try {
+            const res = await fetch('/api/events');
+            const eventsData = await res.json();
+            const holidaysRes = await fetch('https://calendarific.com/api/v2/holidays?api_key=YOUR_API_KEY&country=US&year=' + new Date().getFullYear());
+            const holidays = await holidaysRes.json();
+            const holidayEvents = holidays.response.holidays.map(h => ({
+              title: h.name,
+              start: h.date.iso,
+              classNames: ['event-holiday']
+            }));
+            const formatted = eventsData.map(e => ({
+              title: e.title,
+              start: e.start,
+              end: e.end,
+              classNames: [e.type]
+            }));
+            successCallback([...formatted, ...holidayEvents]);
+          } catch (error) {
+            console.error('Event load error:', error);
+            failureCallback(error);
+          }
+        },
+        eventClick: function(info) {
+          alert(`Event: ${info.event.title}\nStart: ${info.event.start}`);
         }
       });
       calendar.render();
-    });
-    // Inventory Management
-    function updateInventoryDisplay() {
-      const inventoryList = document.getElementById('inventoryList');
-      inventoryList.innerHTML = store.inventory.map(item => `
-        <div class="list-item">
-          <span>${item.name}</span>
-          <span class="${item.quantity < 3 ? 'low-stock' : ''}">${item.quantity}</span>
-        </div>
-      `).join('');
     }
-    document.getElementById('inventoryForm').addEventListener('submit', function(e) {
+    document.addEventListener('DOMContentLoaded', initCalendar);
+    document.getElementById('eventForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const [nameInput, qtyInput] = e.target.elements;
-      store.inventory.push({
-        name: nameInput.value,
-        quantity: parseInt(qtyInput.value)
+      const title = document.getElementById('eventTitle').value;
+      const start = document.getElementById('eventDate').value;
+      const type = document.getElementById('eventType').value;
+      await fetch('/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, start, type })
       });
-      updateInventoryDisplay();
-      e.target.reset();
+      calendar.refetchEvents();
+      this.reset();
     });
-    // Shipment Management
-    function updateShipmentsDisplay() {
-      const shipmentList = document.getElementById('shipmentList');
-      shipmentList.innerHTML = store.shipments.map(shipment => `
-        <div class="list-item">
-          <span>${shipment.item}</span>
-          <span>${new Date(shipment.date).toLocaleDateString()}</span>
-        </div>
-      `).join('');
-    }
-    document.getElementById('shipmentForm').addEventListener('submit', function(e) {
+    document.getElementById('workforceForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const [itemInput, dateInput] = e.target.elements;
-      store.shipments.push({
-        item: itemInput.value,
-        date: dateInput.value
+      const name = document.getElementById('name').value;
+      const availability = document.getElementById('availability').value;
+      await fetch('/api/workforce', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, availability })
       });
-      updateShipmentsDisplay();
-      e.target.reset();
+      alert(`Added ${name} with availability: ${availability}`);
+      this.reset();
     });
-    // Task Management
-    function updateTasksDisplay() {
-      const taskList = document.getElementById('taskList');
-      taskList.innerHTML = store.tasks.map(task => `
-        <div class="list-item">
-          <div>
-            <strong>${task.employee}</strong>: ${task.description}
-          </div>
-          <span>${new Date(task.date).toLocaleDateString()}</span>
-        </div>
-      `).join('');
-    }
-    document.getElementById('taskForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const [employeeInput, descInput, dateInput] = e.target.elements;
-      store.tasks.push({
-        employee: employeeInput.value,
-        description: descInput.value,
-        date: dateInput.value
-      });
-      updateTasksDisplay();
-      e.target.reset();
-    });
-    // Initial Load
-    updateInventoryDisplay();
-    updateShipmentsDisplay();
-    updateTasksDisplay();
   </script>
 </body>
 </html>
