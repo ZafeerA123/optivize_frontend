@@ -179,73 +179,224 @@ permalink: /Calendar
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-  <script>
-    let calendar;
-    async function initCalendar() {
-      const calendarEl = document.getElementById('calendar');
-      calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-        },
-        events: async function(fetchInfo, successCallback, failureCallback) {
-          try {
-            const res = await fetch('/api/events');
-            const eventsData = await res.json();
-            const holidaysRes = await fetch('https://calendarific.com/api/v2/holidays?api_key=YOUR_API_KEY&country=US&year=' + new Date().getFullYear());
-            const holidays = await holidaysRes.json();
-            const holidayEvents = holidays.response.holidays.map(h => ({
-              title: h.name,
-              start: h.date.iso,
-              classNames: ['event-holiday']
-            }));
-            const formatted = eventsData.map(e => ({
-              title: e.title,
-              start: e.start,
-              end: e.end,
-              classNames: [e.type]
-            }));
-            successCallback([...formatted, ...holidayEvents]);
-          } catch (error) {
-            console.error('Event load error:', error);
-            failureCallback(error);
-          }
-        },
-        eventClick: function(info) {
-          alert(`Event: ${info.event.title}\nStart: ${info.event.start}`);
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script type="module">
+  import { pythonURI } from '{{site.baseurl}}/assets/js/api/config.js';
+  let calendar;
+  async function fetchEvents() {
+    const res = await fetch(`${pythonURI}/api/events`);
+    return res.json();
+  }
+  async function fetchEmployees() {
+    const res = await fetch(`${pythonURI}/api/employees`);
+    return res.json();
+  }
+  async function fetchShipments() {
+    const res = await fetch(`${pythonURI}/api/shipments`);
+    return res.json();
+  }
+  async function initCalendar() {
+    const calendarEl = document.getElementById('calendar');
+    calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      },
+      events: async function(fetchInfo, successCallback, failureCallback) {
+        try {
+          const eventsData = await fetchEvents();
+          // Format events for calendar
+          const formatted = eventsData.map(e => ({
+            id: e.id,
+            title: e.title,
+            start: e.start,
+            end: e.end,
+            classNames: [e.type]
+          }));
+          successCallback(formatted);
+        } catch (error) {
+          console.error('Event load error:', error);
+          failureCallback(error);
         }
-      });
-      calendar.render();
+      },
+      eventClick: function(info) {
+        alert(`Event: ${info.event.title}\nStart: ${info.event.start}`);
+      }
+    });
+    calendar.render();
+  }
+  // Render Employees and Shipments in HTML tables or lists - you need to create these containers in your HTML with these IDs
+  async function renderEmployees() {
+    const employees = await fetchEmployees();
+    const container = document.getElementById('employeeList');
+    container.innerHTML = '';
+    employees.forEach(emp => {
+      const div = document.createElement('div');
+      div.textContent = `Name: ${emp.name}, Availability: ${emp.availability}, Position: ${emp.position || 'N/A'}`;
+      // Update and Delete buttons
+      const updateBtn = document.createElement('button');
+      updateBtn.textContent = 'Update';
+      updateBtn.onclick = () => updateEmployeePrompt(emp);
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.onclick = () => deleteEmployee(emp.id);
+      div.appendChild(updateBtn);
+      div.appendChild(deleteBtn);
+      container.appendChild(div);
+    });
+  }
+  async function renderShipments() {
+    const shipments = await fetchShipments();
+    const container = document.getElementById('shipmentList');
+    container.innerHTML = '';
+    shipments.forEach(ship => {
+      const div = document.createElement('div');
+      div.textContent = `Amount: ${ship.amount}, Inventory: ${ship.inventory}, Transporting: ${ship.transport}, Time: ${ship.time}`;
+// Update and Delete buttons
+      const updateBtn = document.createElement('button');
+      updateBtn.textContent = 'Update';
+      updateBtn.onclick = () => updateShipmentPrompt(ship);
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.onclick = () => deleteShipment(ship.id);
+      div.appendChild(updateBtn);
+      div.appendChild(deleteBtn);
+      container.appendChild(div);
+    });
+  }
+  // CRUD Functions
+  async function addEvent(event) {
+    await fetch(`${pythonURI}/api/events`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(event)
+    });
+    calendar.refetchEvents();
+  }
+  async function updateEvent(id, event) {
+    await fetch(`${pythonURI}/api/events/${id}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(event)
+    });
+    calendar.refetchEvents();
+  }
+  async function deleteEvent(id) {
+    await fetch(`${pythonURI}/api/events/${id}`, {
+      method: 'DELETE'
+    });
+    calendar.refetchEvents();
+  }
+  async function addEmployee(employee) {
+    await fetch(`${pythonURI}/api/employees`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(employee)
+    });
+    await renderEmployees();
+  }
+  async function updateEmployee(id, employee) {
+    await fetch(`${pythonURI}/api/employees/${id}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(employee)
+    });
+    await renderEmployees();
+  }
+  async function deleteEmployee(id) {
+    if (!confirm('Delete this employee?')) return;
+    await fetch(`${pythonURI}/api/employees/${id}`, {
+      method: 'DELETE'
+    });
+    await renderEmployees();
+  }
+  async function addShipment(shipment) {
+    await fetch(`${pythonURI}/api/shipments`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(shipment)
+    });
+    await renderShipments();
+  }
+  async function updateShipment(id, shipment) {
+    await fetch(`${pythonURI}/api/shipments/${id}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(shipment)
+    });
+    await renderShipments();
+  }
+  async function deleteShipment(id) {
+    if (!confirm('Delete this shipment?')) return;
+    await fetch(`${pythonURI}/api/shipments/${id}`, {
+      method: 'DELETE'
+    });
+    await renderShipments();
+  }
+  // Prompt helpers for updating (simplified)
+  function updateEmployeePrompt(emp) {
+    const name = prompt('Name:', emp.name);
+    const availability = prompt('Availability:', emp.availability);
+    const position = prompt('Position:', emp.position || '');
+    if (name && availability) {
+      updateEmployee(emp.id, {name, availability, position});
     }
-    document.addEventListener('DOMContentLoaded', initCalendar);
-    document.getElementById('eventForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const title = document.getElementById('eventTitle').value;
-      const start = document.getElementById('eventDate').value;
-      const type = document.getElementById('eventType').value;
-      await fetch('/api/events', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, start, type })
-      });
-      calendar.refetchEvents();
-      this.reset();
-    });
-    document.getElementById('workforceForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const name = document.getElementById('name').value;
-      const availability = document.getElementById('availability').value;
-      await fetch('/api/workforce', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, availability })
-      });
-      alert(`Added ${name} with availability: ${availability}`);
-      this.reset();
-    });
-  </script>
-</body>
-</html>
+  }
+  function updateShipmentPrompt(ship) {
+    const amount = prompt('Amount:', ship.amount);
+    const inventory = prompt('Inventory:', ship.inventory);
+    const transport = prompt('Transporting:', ship.transport);
+    const time = prompt('Time:', ship.time);
+    if (amount && inventory && transport && time) {
+      updateShipment(ship.id, {amount, inventory, transport, time});
+    }
+  }
+  // Event Form submit with add
+  document.getElementById('eventForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const title = document.getElementById('eventTitle').value;
+    const start = document.getElementById('eventDate').value;
+    const type = document.getElementById('eventType').value;
+    if (!title || !start) {
+      alert('Please fill all event fields');
+      return;
+    }
+    await addEvent({title, start, type});
+    this.reset();
+  });
+  // Employee Form submit with add
+  document.getElementById('workforceForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const availability = document.getElementById('availability').value;
+    const position = document.getElementById('position').value || '';
+    if (!name || !availability) {
+      alert('Please fill all employee fields');
+      return;
+    }
+    await addEmployee({name, availability, position});
+    this.reset();
+  });
+  // Shipment Form submit with add (assumes you have one)
+  document.getElementById('shipmentForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const amount = document.getElementById('amount').value;
+    const inventory = document.getElementById('inventory').value;
+    const transport = document.getElementById('transport').value;
+    const time = document.getElementById('time').value;
+    if (!amount || !inventory || !transport || !time) {
+      alert('Please fill all shipment fields');
+      return;
+    }
+    await addShipment({amount, inventory, transport, time});
+    this.reset();
+  });
+  // Initial render
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initCalendar();
+    await renderEmployees();
+    await renderShipments();
+  });
+</script>
