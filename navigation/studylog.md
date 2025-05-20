@@ -204,12 +204,12 @@ permalink: navigation/log
 </head>
 <body>
 
-<h2 style="text-align: center; color: #333;">🍪 Predict Cookie Success</h2>
+<h2 style="text-align: center; color: #333;">🍪 Predict product Success</h2>
 
 <div class="container">
     <form id="predictionForm">
-        <label>Cookie Flavor:</label>
-        <input type="text" id="cookieFlavor" required>
+        <label>product type:</label>
+        <input type="text" id="producttype" required>
         <label>Price ($):</label>
         <input type="number" id="price" step="0.01" required>
         <label>Marketing Spend ($):</label>
@@ -231,12 +231,12 @@ permalink: navigation/log
     document.getElementById("predictionForm").addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        let flavor = document.getElementById("cookieFlavor").value.trim();
+        let type = document.getElementById("producttype").value.trim();
         let price = parseFloat(document.getElementById("price").value);
         let marketing = parseFloat(document.getElementById("marketing").value);
         let loading = document.getElementById("loading");
 
-        if (!flavor || isNaN(price) || isNaN(marketing)) {
+        if (!type || isNaN(price) || isNaN(marketing)) {
             Swal.fire("Error", "Please fill all fields correctly!", "error");
             return;
         }
@@ -244,7 +244,7 @@ permalink: navigation/log
         loading.style.display = "block";
 
         const payload = {
-            cookie_flavor: flavor,
+            product_type: type,
             price: price,
             marketing: marketing  // Corrected here, removed extra 'price'
         };

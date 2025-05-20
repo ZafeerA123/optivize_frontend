@@ -14,7 +14,7 @@ html, body {
     width: 100%;
     overflow-x: hidden;
     font-family: 'Poppins', sans-serif;
-    background: url('https://i.imgur.com/7R0g4Kg.jpg'); /* Cookie pattern background */
+    background: url('https://i.imgur.com/7R0g4Kg.jpg'); /* product pattern background */
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -68,7 +68,7 @@ html, body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* Heading with cookie font style */
+/* Heading with product font style */
 .main-content h1 {
     font-size: 3rem;
     color: #5a3e36;
@@ -140,6 +140,21 @@ html, body {
   opacity: 1;
 }
 
+.tooltip-icon {
+  display: inline-block;
+  background: #555;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  text-align: center;
+  line-height: 18px;
+  cursor: help;
+  margin-left: 5px;
+  font-weight: bold;
+}
+
 </style>
 
 
@@ -163,7 +178,7 @@ function createSprinkle() {
 
 </script>
 
-<div class="cookie-prediction-container">
+<div class="product-prediction-container">
   <!-- Training Section -->
   <div class="section-card">
     <h2>Train Model</h2>
@@ -171,7 +186,7 @@ function createSprinkle() {
       <label>Training Samples (JSON)</label>
       <textarea id="training-data" rows="8" placeholder='[
   {
-    "cookie_flavor": "Double Chocolate",
+    "product_type": "Double Chocolate",
     "seasonality": "All Year",
     "price": 3.75,
     "marketing": 8,
@@ -179,7 +194,7 @@ function createSprinkle() {
     "success_score": 82
   },
   {
-    "cookie_flavor": "Pumpkin Spice",
+    "product_type": "Pumpkin Spice",
     "seasonality": "Fall",
     "price": 4.25,
     "marketing": 7,
@@ -197,8 +212,8 @@ function createSprinkle() {
     <h2>Predict Success</h2>
     <div class="form-row">
       <div class="form-group">
-        <label>Cookie Flavor</label>
-        <input type="text" id="cookie-flavor" placeholder="e.g. Triple Chocolate">
+        <label>product type</label>
+        <input type="text" id="product-type" placeholder="e.g. Triple Chocolate">
       </div>
       <div class="form-group">
         <label>Seasonality</label>
@@ -221,19 +236,40 @@ function createSprinkle() {
       </div>
       <div class="form-group">
         <label>
-          Marketing (1-10)
-          <span class="tooltip" data-tooltip="1 = No promotion. 5 = Basic social media or flyers. 10 = Large-scale advertising across media.">?</span>
+          Marketing (1–10)
+          <span class="tooltip-icon" ti tle="
+      1 – No marketing or brand awareness
+      2 – Limited local word of mouth
+      3 – Small social media presence
+      4 – Infrequent promotions or ads
+      5 – Occasional targeted marketing
+      6 – Consistent online ads and local campaigns
+      7 – Strong digital presence, some brand recognition
+      8 – Influencer partnerships, seasonal ads
+      9 – National ad campaigns, consistent brand messaging
+      10 – Iconic branding, omnipresent media visibility
+      ">?</span>
         </label>
         <input type="number" id="marketing" min="1" max="10" placeholder="7">
-
       </div>
+
       <div class="form-group">
         <label>
-          Distribution (1-10)
-          <span class="tooltip" data-tooltip="1 = Sold only in 1 store. 5 = Available in local chains. 10 = Nationwide + online with delivery.">?</span>
+          Distribution (1–10)
+          <span class="tooltip-icon" title="
+      1 – Sold in one small local store
+      2 – Limited availability in select neighborhoods
+      3 – Only available in one city
+      4 – Some regional presence
+      5 – Moderate availability across multiple areas
+      6 – Broad regional distribution
+      7 – Available in multiple states or regions
+      8 – National availability via stores or online
+      9 – Widespread presence in major chains and platforms
+      10 – Global distribution and fulfillment
+      ">?</span>
         </label>
         <input type="number" id="distribution" min="1" max="10" placeholder="8">
-
       </div>
     </div>
     <button id="predict-success" class="primary-btn">Predict Success</button>
@@ -251,7 +287,7 @@ function createSprinkle() {
       <table>
         <thead>
           <tr>
-            <th>Flavor</th>
+            <th>type</th>
             <th>Score</th>
             <th>Price</th>
             <th>Category</th>
@@ -579,14 +615,14 @@ function calculateDistributionPosition(distAnalysis) {
     }
     // Prediction Functionality with Debugging
     document.getElementById('predict-success').addEventListener('click', async function() {
-      const flavor = document.getElementById('cookie-flavor').value;
+      const type = document.getElementById('product-type').value;
       const seasonality = document.getElementById('seasonality').value;
       const price = parseFloat(document.getElementById('price').value);
       const marketing = parseInt(document.getElementById('marketing').value);
       const distribution = parseInt(document.getElementById('distribution').value);
       const resultsDiv = document.getElementById('prediction-results');
       
-      if (!flavor || isNaN(price) || isNaN(marketing) || isNaN(distribution)) {
+      if (!type || isNaN(price) || isNaN(marketing) || isNaN(distribution)) {
         resultsDiv.innerHTML = '<div class="error-message">Please fill all fields with valid values</div>';
         return;
       }
@@ -598,7 +634,7 @@ function calculateDistributionPosition(distAnalysis) {
           ...fetchOptions,
           method: 'POST',
           body: JSON.stringify({
-            cookie_flavor: flavor,
+            product_type: type,
             seasonality: seasonality,
             price: price,
             marketing: marketing,
@@ -659,7 +695,7 @@ function calculateDistributionPosition(distAnalysis) {
           if (searchTerm) {
             const term = searchTerm.toLowerCase();
             filtered = filtered.filter(item => 
-              (item.cookie_flavor?.toLowerCase().includes(term) || false) ||
+              (item.product_type?.toLowerCase().includes(term) || false) ||
               (item.product_category?.toLowerCase().includes(term) || false) ||
               (item.price?.toString().includes(term) || false) ||
               (item.success_score?.toString().includes(term) || false)
@@ -669,7 +705,7 @@ function calculateDistributionPosition(distAnalysis) {
           tableBody.innerHTML = filtered.length > 0 
             ? filtered.map(item => `
                 <tr class="${item.predicted_success ? 'success-row' : 'warning-row'}">
-                  <td>${item.cookie_flavor || 'N/A'}</td>
+                  <td>${item.product_type || 'N/A'}</td>
                   <td>${item.success_score?.toFixed(1) || 'N/A'}</td>
                   <td>$${item.price?.toFixed(2) || 'N/A'}</td>
                   <td>${item.product_category || 'N/A'}</td>
@@ -695,7 +731,7 @@ function calculateDistributionPosition(distAnalysis) {
 </script>
 
 <style>
-.cookie-prediction-container {
+.product-prediction-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
