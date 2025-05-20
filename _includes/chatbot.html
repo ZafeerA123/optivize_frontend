@@ -1,308 +1,354 @@
-<!-- Sleek Floating Chatbot -->
- 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
-    .chatbot-subtitle {
-        font-family: 'Inter', sans-serif;
-        font-size: 0.875rem;
-        color: #ffbd70;
-        text-align: center;
-        padding: 6px 16px 8px;
-        font-weight: 400;
-        background-color: #1e1e1e;
-        border-bottom: 1px solid #333;
-    }
+    /* Floating toggle button with new styling */
     #chatbot-toggle {
         position: fixed;
         bottom: 24px;
         right: 24px;
         width: 64px;
         height: 64px;
-        background: linear-gradient(135deg, #ffa500, #d87e00);
-        color: white;
+        background: linear-gradient(135deg, #fbb034, #ffdd00);
+        color: #0f1e3b;
         border: none;
         border-radius: 50%;
         font-size: 1.6rem;
         cursor: pointer;
         z-index: 9999;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        transition: transform 0.2s ease, background 0.2s ease;
+        box-shadow: 0 4px 15px rgba(251, 176, 52, 0.3);
+        transition: all 0.3s;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-  
     #chatbot-toggle:hover {
-      transform: scale(1.1);
-      background-color: #be6f00;
-    }
-  
-    #chatbot-window {
-      position: fixed;
-      bottom: 100px;
-      right: 24px;
-      width: 360px;
-      max-height: 600px;
-      background: rgba(30, 30, 30, 0.95);
-      backdrop-filter: blur(8px);
-      color: white;
-      border: 1px solid #D87E00;
-      border-radius: 16px;
-      display: none;
-      flex-direction: column;
-      z-index: 9998;
-      overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    }
-  
-    #chatbot-window header {
-      background-color: #D87E00;
-      color: white;
-      padding: 14px;
-      text-align: center;
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
-  
-    #chat-box {
-      flex-grow: 1;
-      padding: 16px;
-      overflow-y: auto;
-      background: #1e1e1e;
-      font-size: 0.95rem;
-    }
-  
-    #chat-box div {
-      margin-bottom: 12px;
-      line-height: 1.4;
-    }
-  
-    #chatbot-input {
-      display: flex;
-      padding: 12px;
-      background: #121212;
-      border-top: 1px solid #333;
-    }
-  
-    #chatbot-input input {
-      flex-grow: 1;
-      padding: 10px 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      background-color: #fff;
-      color: #000;
-    }
-  
-    #chatbot-input button {
-      background: #D87E00;
-      border: none;
-      color: white;
-      padding: 10px 16px;
-      margin-left: 10px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-  
-    #chatbot-input button:hover {
-      background-color: #be6f00;
-    }
-  
-    #chat-box strong {
-      display: block;
-      margin-bottom: 4px;
-      color: #ffa94d;
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(251, 176, 52, 0.4);
     }
 
-    #chatbot-toggle img {
-        position: relative;
-        top: 5px; 
-        right: -0.5px;
+    #chatbot-toggle::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #ffdd00, #fbb034);
+        border-radius: 50%;
+        opacity: 0;
+        transition: opacity 0.3s;
     }
 
+    #chatbot-toggle:hover::before {
+        opacity: 1;
+    }
+
+   #chatbot-toggle img {
+    position: relative;
+    z-index: 1;
+    width: 40px;  /* Add fixed width */
+    height: 40px; /* Add fixed height */
+    margin: 0 auto; /* Center horizontally */
+    top: -3px; 
+    }
+
+    /* Floating label */
     #chatbot-label {
         position: fixed;
         bottom: 96px;
         right: 24px;
         font-family: 'Inter', sans-serif;
         font-size: 0.875rem;
-        font-weight: 700; /* Bolder */
-        color: #ffbd70;
-        background-color: #111; /* Darker */
-        padding: 6px 14px;
+        font-weight: 600;
+        color: #fbb034;
+        background: rgba(30, 30, 30, 0.9);
+        padding: 8px 16px;
         border-radius: 8px;
         z-index: 9999;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Slightly stronger shadow */
-        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(251, 176, 52, 0.2);
     }
 
+    /* Chat window with new styling */
+    #chatbot-window {
+        position: fixed;
+        bottom: 100px;
+        right: 24px;
+        width: 380px;
+        max-height: 600px;
+        background: rgba(30, 30, 30, 0.95);
+        backdrop-filter: blur(10px);
+        color: white;
+        border: 1px solid rgba(251, 176, 52, 0.3);
+        border-radius: 16px;
+        display: none;
+        flex-direction: column;
+        z-index: 9998;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
 
+    /* Header with gradient */
+    #chatbot-window header {
+        background: linear-gradient(90deg, #0b1e3b, #162b4d);
+        color: #fbb034;
+        padding: 16px;
+        text-align: center;
+        font-size: 1.25rem;
+        font-weight: 700;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-    </style>
+    /* Chat box styling */
+    #chat-box {
+        flex-grow: 1;
+        padding: 16px;
+        overflow-y: auto;
+        background: rgba(255, 255, 255, 0.03);
+        font-size: 0.95rem;
+    }
+
+    /* Chat bubbles */
+    #chat-box div[data-user="user"] {
+        margin-bottom: 16px;
+        background: rgba(251, 176, 52, 0.1);
+        padding: 12px 16px;
+        border-radius: 16px;
+        border: 1px solid rgba(251, 176, 52, 0.2);
+        backdrop-filter: blur(5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    #chat-box div[data-user="user"] strong {
+        color: #fbb034;
+    }
+
+    #chat-box div[data-user="bot"] {
+        margin-bottom: 16px;
+        background: rgba(66, 99, 176, 0.15);
+        padding: 12px 16px;
+        border-radius: 16px;
+        border: 1px solid rgba(66, 99, 176, 0.2);
+        backdrop-filter: blur(5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    #chat-box div[data-user="bot"] strong {
+        color: #4263b0;
+    }
+
+    /* Input area */
+    #chatbot-input {
+        display: flex;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #chatbot-input input {
+        flex-grow: 1;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s;
+    }
+
+    #chatbot-input input:focus {
+        outline: none;
+        border-color: rgba(251, 176, 52, 0.3);
+        box-shadow: 0 0 0 2px rgba(251, 176, 52, 0.1);
+    }
+
+    #chatbot-input button {
+        padding: 10px 20px;
+        margin-left: 12px;
+        background: linear-gradient(90deg, #fbb034, #ffdd00);
+        color: #0f1e3b;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(251, 176, 52, 0.3);
+    }
+
+    #chatbot-input button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(251, 176, 52, 0.4);
+    }
+
+    /* Tutorial carousel */
+    #tutorial-carousel {
+        padding: 16px;
+        background: rgba(30, 30, 30, 0.9);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-family: 'Inter', sans-serif;
+        backdrop-filter: blur(5px);
+    }
+
+    #tutorial-slide {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    #tutorial-slide strong {
+        color: #fbb034;
+    }
+
+    #tutorial-carousel button {
+        background: rgba(251, 176, 52, 0.2);
+        color: #fbb034;
+        border: 1px solid rgba(251, 176, 52, 0.3);
+        border-radius: 6px;
+        padding: 6px 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    #tutorial-carousel button:hover {
+        background: rgba(251, 176, 52, 0.3);
+    }
+
+    /* Scrollbar */
+    #chat-box::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #chat-box::-webkit-scrollbar-thumb {
+        background: rgba(251, 176, 52, 0.3);
+        border-radius: 4px;
+    }
+
+    #chat-box::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+    }
+</style>
+
 <!-- Floating Chatbot -->
 <div id="chatbot-label">
     Need help? Ask me!
 </div>
 
-  <!-- Chatbot Markup -->
-  <button id="chatbot-toggle" aria-label="Open chatbot">
-    <img src="{{ site.baseurl }}/images/favicon.ico" alt="Chatbot Icon" />
-  </button>
-  
-  
-  
-  
-  <div id="chatbot-window">
-    <header>OptiBot - Chat</header>
+<button id="chatbot-toggle" aria-label="Open chatbot">
+    <img src="{{ site.baseurl }}/images/favicon.ico" alt="Chatbot Icon"  />
+</button>
+
+<div id="chatbot-window">
+    <header>OptiBot Assistant</header>
     <div id="chat-box"></div>
-    <div id="tutorial-carousel" style="padding: 16px; color: white; background: #1e1e1e; border-top: 1px solid #333; font-family: 'Inter', sans-serif;">
-      <div id="tutorial-slide">
-        <strong>Welcome to OptiBot!</strong>
-        <p>Click the arrows below to see what you can ask me.</p>
-      </div>
-      <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-        <button onclick="prevTutorial()" style="background: #333; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">⬅️ Prev</button>
-        <button onclick="nextTutorial()" style="background: #D87E00; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">Next ➡️</button>
-      </div>
+    <div id="tutorial-carousel">
+        <div id="tutorial-slide">
+            <strong>Welcome to OptiBot!</strong>
+            <p>Click the arrows below to see what you can ask me.</p>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+            <button onclick="prevTutorial()">⬅️ Prev</button>
+            <button onclick="nextTutorial()">Next ➡️</button>
+        </div>
     </div>
     <div id="chatbot-input">
-      <input type="text" id="question" placeholder="Ask me anything..." />
-      <button onclick="sendQuestion(document.getElementById('question').value)">Send</button>
+        <input type="text" id="question" placeholder="Ask me anything..." />
+        <button onclick="sendQuestion(document.getElementById('question').value)">Send</button>
     </div>
-  </div>
-  
-  <!-- Chatbot Script -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script>
-      const tutorialPrompts = [
-    {
-      title: "📖 Help",
-      content: "Ask: <code>what can you do</code> to see all available commands."
-    },
-    {
-      title: "Explanation",
-      content: "Ask: <code>How does cookie prediction work</code> to see how cookie prediction API works."
-    },
-    {
-      title: "📦 List All Items",
-      content: "Ask: <code>list all products</code> or <code>show my flashcards</code>."
-    },
-    {
-      title: "📁 Create a Group",
-      content: "Ask: <code>create group [group name]</code> or <code>add group [group name]</code>."
-    },
-    {
-      title: "🆕 Add Item (Two-Step)",
-      content: "Ask: <code>add new item called [item] with content [Description]</code> → Then: <code>[Group Name]</code> when prompted."
-    },
-    {
-      title: "⚡ Add Item to Group (One Line)",
-      content: "Ask: <code>add item [item name] to group [group name]</code>."
-    },
-    {
-      title: "✏️ Update Item",
-      content: "Ask: <code>update item [Existing Item] with new content [New Description]</code>."
-    },
-    {
-      title: "❌ Delete Item",
-      content: "Ask: <code>delete item [Item name]</code> → Then: <code>yes</code> when asked."
-    },
-    {
-      title: "📌 Find Item Group",
-      content: "Ask: <code>what group is [item]} in?</code>"
-    },
-    {
-      title: "🔢 Get 2nd Product",
-      content: "Ask: <code>what is my second product?</code>"
-    },
-    {
-      title: "🔄 Update Group Name",
-      content: "(Work in Progress) Ask: <code>update group [Group name] to [New Group name]</code>."
-    },
-    {
-      title: "🗑️ Delete Group",
-      content: "Ask: <code>delete group [Group name]</code>."
-    },
-    {
-      title: "Be Aware",
-      content: "All Group names must be in lowercase for database purposes."
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    const tutorialPrompts = [
+        { title: "📖 Help", content: "Ask: <code>what can you do</code> to see all available commands." },
+        { title: "Explanation", content: "Ask: <code>How does cookie prediction work</code> to see how cookie prediction API works." },
+        { title: "📦 List All Items", content: "Ask: <code>list all products</code> or <code>show my flashcards</code>." },
+        { title: "📁 Create a Group", content: "Ask: <code>create group [group name]</code> or <code>add group [group name]</code>." },
+        { title: "🆕 Add Item (Two-Step)", content: "Ask: <code>add new item called [item] with content [Description]</code> → Then: <code>[Group Name]</code> when prompted." },
+        { title: "⚡ Add Item to Group (One Line)", content: "Ask: <code>add item [item name] to group [group name]</code>." },
+        { title: "✏️ Update Item", content: "Ask: <code>update item [Existing Item] with new content [New Description]</code>." },
+        { title: "❌ Delete Item", content: "Ask: <code>delete item [Item name]</code> → Then: <code>yes</code> when asked." },
+        { title: "📌 Find Item Group", content: "Ask: <code>what group is [item]} in?</code>" },
+        { title: "🔢 Get 2nd Product", content: "Ask: <code>what is my second product?</code>" },
+        { title: "🔄 Update Group Name", content: "(Work in Progress) Ask: <code>update group [Group name] to [New Group name]</code>." },
+        { title: "🗑️ Delete Group", content: "Ask: <code>delete group [Group name]</code>." },
+        { title: "Be Aware", content: "All Group names must be in lowercase for database purposes." }
+    ];
+
+    let currentSlide = 0;
+    const tutorialDiv = document.getElementById("tutorial-slide");
+
+    function renderTutorial() {
+        const { title, content } = tutorialPrompts[currentSlide];
+        tutorialDiv.innerHTML = `<strong>${title}</strong><p>${content}</p>`;
     }
-  ];
 
-  currentSlide = 0;
-  const tutorialDiv = document.getElementById("tutorial-slide");
+    function nextTutorial() {
+        currentSlide = (currentSlide + 1) % tutorialPrompts.length;
+        renderTutorial();
+    }
 
-  function renderTutorial() {
-    const { title, content } = tutorialPrompts[currentSlide];
-    tutorialDiv.innerHTML = `<strong>${title}</strong><p>${content}</p>`;
-  }
+    function prevTutorial() {
+        currentSlide = (currentSlide - 1 + tutorialPrompts.length) % tutorialPrompts.length;
+        renderTutorial();
+    }
 
-  function nextTutorial() {
-    currentSlide = (currentSlide + 1) % tutorialPrompts.length;
-    renderTutorial();
-  }
-
-  function prevTutorial() {
-    currentSlide = (currentSlide - 1 + tutorialPrompts.length) % tutorialPrompts.length;
-    renderTutorial();
-  }
-
-  // Load first tutorial
-  renderTutorial();
+    // Toggle chatbot window
     const chatbotToggle = document.getElementById("chatbot-toggle");
     const chatbotWindow = document.getElementById("chatbot-window");
     const chatBox = document.getElementById("chat-box");
-  
+
     chatbotToggle.addEventListener("click", () => {
-  chatbotWindow.style.display = chatbotWindow.style.display === "flex" ? "none" : "flex";
-  document.getElementById("chatbot-label").style.display = "none";
+        chatbotWindow.style.display = chatbotWindow.style.display === "flex" ? "none" : "flex";
+        document.getElementById("chatbot-label").style.display = "none";
     });
 
-  
-    const pythonURI =
-      location.hostname === "localhost" || location.hostname === "127.0.0.1"
+    // Chatbot functionality
+    const pythonURI = location.hostname === "localhost" || location.hostname === "127.0.0.1"
         ? "http://127.0.0.1:8212"
         : "https://optivize.stu.nighthawkcodingsociety.com";
-  
+
     const fetchOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
     };
-  
+
     async function sendQuestion(question) {
-      if (!question.trim()) return;
-  
-      chatBox.innerHTML += `
-        <div><strong>You:</strong> ${question}</div>
-      `;
-  
-      const response = await fetch(`${pythonURI}/api/ai/help`, {
-        ...fetchOptions,
-        body: JSON.stringify({ question }),
-      });
-  
-      const data = await response.json();
-      const reply = data.response || "Sorry, I couldn’t process that.";
-  
-      chatBox.innerHTML += `
-        <div><strong>OptiBot:</strong> ${marked.parseInline(reply)}</div>
-      `;
-  
-      document.getElementById("question").value = "";
-      chatBox.scrollTop = chatBox.scrollHeight;
+        if (!question.trim()) return;
+
+        chatBox.innerHTML += `
+            <div data-user="user">
+                <strong>You:</strong> ${question}
+            </div>
+        `;
+
+        const response = await fetch(`${pythonURI}/api/ai/help`, {
+            ...fetchOptions,
+            body: JSON.stringify({ question }),
+        });
+
+        const data = await response.json();
+        const reply = data.response || "Sorry, I couldn't process that.";
+
+        chatBox.innerHTML += `
+            <div data-user="bot">
+                <strong>OptiBot:</strong> ${marked.parse(reply)}
+            </div>
+        `;
+
+        document.getElementById("question").value = "";
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
-  
-    document.getElementById("question").addEventListener("keypress", function (event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        sendQuestion(this.value);
-      }
+
+    document.getElementById("question").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendQuestion(this.value);
+        }
     });
-  </script>
-  
+
+    // Load first tutorial
+    renderTutorial();
+</script>
