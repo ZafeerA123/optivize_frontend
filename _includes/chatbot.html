@@ -44,9 +44,13 @@
         opacity: 1;
     }
 
-    #chatbot-toggle img {
-        position: relative;
-        z-index: 1;
+   #chatbot-toggle img {
+    position: relative;
+    z-index: 1;
+    width: 40px;  /* Add fixed width */
+    height: 40px; /* Add fixed height */
+    margin: 0 auto; /* Center horizontally */
+    top: -3px; 
     }
 
     /* Floating label */
@@ -232,7 +236,7 @@
 </div>
 
 <button id="chatbot-toggle" aria-label="Open chatbot">
-    <img src="{{ site.baseurl }}/images/favicon.ico" alt="Chatbot Icon" />
+    <img src="{{ site.baseurl }}/images/favicon.ico" alt="Chatbot Icon"  />
 </button>
 
 <div id="chatbot-window">
