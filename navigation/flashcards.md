@@ -294,6 +294,51 @@ permalink: /flashcards
     flex: 1;
     min-width: 0;
   }
+
+
+  .zapier-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.zapier-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  color: #333;
+}
+
+.zapier-instructions {
+  margin-top: 15px;
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.zapier-steps {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+.zapier-code {
+  background: #ebebeb;
+  padding: 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  margin: 10px 0;
+  word-break: break-all;
+}
 </style>
 
 <div class="container">
@@ -341,35 +386,74 @@ permalink: /flashcards
       <button id="clear-items-search">Clear</button>
     </div>
 
-    <div class="action-bar">
-      <h2 id="current-group-name">Items in Group: <span></span> <span class="total-items-display" id="total-items-count"></span></h2>
-      <div class="sort-options">
-        <select id="item-sort">
-          <option value="name-asc">Sort by: Name (A-Z)</option>
-          <option value="name-desc">Sort by: Name (Z-A)</option>
-          <option value="count-asc">Sort by: Count (Low-High)</option>
-          <option value="count-desc">Sort by: Count (High-Low)</option>
-        </select>
-        <button id="add-item-btn">+ Add Item</button>
-        <button id="back-to-groups" class="secondary">← Back to Groups</button>
-      </div>
-    </div>
-
-    <div class="table-container">
-      <table id="items-table">
-        <thead>
-          <tr>
-            <th>Overview</th>
-            <th>Description</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="items-list">
-          <!-- Items will be loaded here -->
-        </tbody>
-      </table>
+  <div class="action-bar">
+    <h2 id="current-group-name">Items in Group: <span></span> <span class="total-items-display" id="total-items-count"></span></h2>
+    <div class="sort-options">
+      <select id="item-sort">
+        <option value="name-asc">Sort by: Name (A-Z)</option>
+        <option value="name-desc">Sort by: Name (Z-A)</option>
+        <option value="count-asc">Sort by: Count (Low-High)</option>
+        <option value="count-desc">Sort by: Count (High-Low)</option>
+      </select>
+      <button id="add-item-btn">+ Add Item</button>
+      <button id="back-to-groups" class="secondary">← Back to Groups</button>
     </div>
   </div>
+
+  <div class="table-container">
+    <table id="items-table">
+      <thead>
+        <tr>
+          <th>Overview</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="items-list">
+        <!-- Items will be loaded here -->
+      </tbody>
+    </table>
+  </div>
+
+  
+  </div>
+
+
+  <!-- Zapier Alert Modal -->
+<div id="zapier-modal" class="zapier-modal">
+  <div class="zapier-modal-content">
+    <h3 class="modal-title">Set Low Stock Alert</h3>
+    
+<div class="form-group">
+  <label for="alert-threshold">Alert me when quantity falls below:</label>
+  <input type="number" id="alert-threshold" min="1" value="5">
+</div>
+
+<div class="zapier-instructions">
+  <p><strong>How to set up this alert in Zapier:</strong></p>
+  <ol class="zapier-steps">
+    <li>Create a free account on <a href="https://zapier.com" target="_blank">Zapier.com</a></li>
+    <li>Create a new Zap with "Webhooks by Zapier" as the trigger</li>
+    <li>Select "Retrieve Poll" as the event</li>
+    <li>Use this API URL (copy it):</li>
+  </ol>
+  
+  <div class="zapier-code" id="zapier-url"></div>
+  
+  <ol class="zapier-steps" start="5">
+    <li>Choose where to send alerts: Email, SMS, Slack, etc.</li>
+    <li>Test and enable your Zap</li>
+  </ol>
+  
+  <p><small>Zapier will check stock levels every 15 minutes (free plan) or 1 minute (paid plan).</small></p>
+</div>
+
+<div class="modal-actions">
+  <button id="close-zapier-modal" class="secondary">Close</button>
+  <button id="copy-zapier-url">Copy URL</button>
+</div>
+  </div>
+</div>
 </div>
 
 <!-- Create Group Modal -->
@@ -580,6 +664,7 @@ permalink: /flashcards
         <td>
           <button class="edit-item" data-id="${item.id}">Edit</button>
           <button class="delete-item danger" data-id="${item.id}">Delete</button>
+           <button class="set-alert" data-id="${item.id}" data-name="${item.title}">Set Alert</button>
         </td>
       `;
       itemsTable.appendChild(row);
@@ -1007,4 +1092,66 @@ permalink: /flashcards
     setupEventListeners();
     fetchGroupsWithCounts();
   });
+
+  // Add Zapier integration
+let zapierItemId = null;
+let zapierItemName = null;
+
+function showZapierModal(itemId, itemName) {
+  zapierItemId = itemId;
+  zapierItemName = itemName;
+  
+  // Update the URL with the correct item ID and default threshold
+  updateZapierUrl();
+  
+  document.getElementById('zapier-modal').style.display = 'flex';
+}
+
+function updateZapierUrl() {
+  const threshold = document.getElementById('alert-threshold').value;
+  const baseUrl = window.location.origin; // Gets the base URL of your site
+  const apiUrl = `${pythonURI}/api/zapier/low-stock/${zapierItemId}/${threshold}`;
+  
+  document.getElementById('zapier-url').textContent = apiUrl;
+}
+
+// Setup additional event listeners for Zapier functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Handle the "Set Alert" button click
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('set-alert')) {
+      showZapierModal(e.target.dataset.id, e.target.dataset.name);
+    }
+  });
+  
+  // Close Zapier modal
+  document.getElementById('close-zapier-modal')?.addEventListener('click', () => {
+    document.getElementById('zapier-modal').style.display = 'none';
+  });
+  
+  // Copy URL button
+  document.getElementById('copy-zapier-url')?.addEventListener('click', () => {
+    const urlElement = document.getElementById('zapier-url');
+    
+    // Create a temporary input element to copy from
+    const temp = document.createElement('input');
+    document.body.appendChild(temp);
+    temp.value = urlElement.textContent;
+    temp.select();
+    document.execCommand('copy');
+    document.body.removeChild(temp);
+    
+    // Show feedback
+    const originalText = document.getElementById('copy-zapier-url').textContent;
+    document.getElementById('copy-zapier-url').textContent = 'Copied!';
+    setTimeout(() => {
+      document.getElementById('copy-zapier-url').textContent = originalText;
+    }, 2000);
+  });
+  
+  // Update URL when threshold changes
+  document.getElementById('alert-threshold')?.addEventListener('input', updateZapierUrl);
+});
 </script>
+
+
