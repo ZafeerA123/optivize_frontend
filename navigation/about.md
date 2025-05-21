@@ -118,7 +118,7 @@ permalink: /about
       <p>Optivize isn’t just a tech provider—it’s a partner for community-driven business growth. Through responsible AI, we aim to uplift local businesses and enable long-term prosperity in a rapidly changing world.</p>
     </section>
     <hr>
-    <div style="background-color: rgba(255, 221, 0, 0.5); color: #000000; font-family: Arial, sans-serif; padding: 20px; border-radius: 10px;">
+    <div style="background-color: rgba(173, 216, 230, 0.5); color: #000000; font-family: Arial, sans-serif; padding: 20px; border-radius: 10px;">
     <h1>User Story: AI Chatbot for Local Businesses</h1>
     <h2>Title:</h2>
     <p>AI Chatbot for Local Business Assistance</p>
@@ -146,7 +146,9 @@ permalink: /about
     <h2>Summary:</h2>
     <p>This AI chatbot would enhance the customer experience, streamline business operations, and make it easier for local businesses to handle queries efficiently.</p>
     <hr>
-    <div style="background-color: rgba(255, 221, 0, 0.5); color: #000000; font-family: Arial, sans-serif; padding: 20px; border-radius: 10px;">
+    </div>
+    <hr>
+    <div style="background-color: rgba(173, 216, 230, 0.5); color: #000000; font-family: Arial, sans-serif; padding: 20px; border-radius: 10px;">
     <h1>User Story: Inventory Management System</h1>
     <h2>Title:</h2>
     <p>Inventory Management System for Business Efficiency</p>
@@ -174,4 +176,32 @@ permalink: /about
     </ul>
     <h2>Summary:</h2>
     <p>The inventory management system will streamline stock tracking, order processing, and reporting, helping businesses maintain optimal inventory levels, improve customer satisfaction, and reduce operational costs.</p>
+</div>
+<hr>
+<div style="background-color: rgba(173, 216, 230, 0.5); color: #000000; font-family: Arial, sans-serif; padding: 20px; border-radius: 10px;">
+ <h1>User Story: User Management System</h1>
+    <h2>Title:</h2>
+    <p>User Management System for Efficient Account Handling</p>
+    <h2>As a:</h2>
+    <p>System administrator or website owner,</p>
+    <h2>I want:</h2>
+    <p>A user management system that allows me to create, update, and delete user accounts, manage roles and permissions, and ensure the security of user data,</p>
+    <h2>So that:</h2>
+    <p>I can maintain a secure and organized user base, ensure proper access control, and provide personalized experiences for different user groups.</p>
+    <h2>Acceptance Criteria:</h2>
+    <ul>
+        <li><strong>Account Creation:</strong> The system should allow administrators to create new user accounts with required details like name, email, and role.</li>
+        <li><strong>Role Management:</strong> The system should allow assigning different roles to users (e.g., admin, editor, viewer) and control permissions for each role.</li>
+        <li><strong>Account Update:</strong> The system should allow users to update their profiles and admins to modify user details as needed.</li>
+        <li><strong>Account Deletion:</strong> The system should allow administrators to delete user accounts securely when they are no longer needed.</li>
+        <li><strong>Authentication:</strong> The system should support secure login mechanisms, such as multi-factor authentication (MFA), to ensure user accounts are protected.</li>
+        <li><strong>Password Reset:</strong> The system should allow users to reset their passwords securely in case they forget it.</li>
+    </ul>
+    <h2>Non-Functional Requirements:</h2>
+    <ul>
+        <li><strong>Scalability:</strong> The system should be able to handle increasing numbers of users as the platform grows without compromising performance.</li>
+        <li><strong>Performance:</strong> The user management system should operate with minimal latency, providing a smooth experience for administrators and users alike.</li>
+    </ul>
+    <h2>Summary:</h2>
+    <p>The user management system will allow for efficient account administration, role-based access control, and secure authentication, helping administrators maintain user data integrity and user-specific functionality.</p>
 </div>
