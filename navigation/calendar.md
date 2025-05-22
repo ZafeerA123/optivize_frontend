@@ -529,8 +529,28 @@ function renderCalendar(events) {
   calendar.render();
 }
 
-  // --- EVENTS ---
-  // Fetch events from API
+  async function postEvent({ title, description, start_time, end_time, category }) {
+  try {
+    const response = await fetch(`${pythonURI}/api/calendarv3/events`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, description, start_time, end_time, category })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to post event');
+    }
+
+    const data = await response.json();
+    console.log('Event posted:', data);
+    await getEvents();  // Refresh list after posting
+
+  } catch (error) {
+    console.error('Error posting event:', error);
+    alert('Failed to add event: ' + error.message);
+  }
+}
+
 async function getEvents() {
   try {
     const response = await fetch(`${pythonURI}/api/calendarv3/events`, {
@@ -558,7 +578,7 @@ async function getEvents() {
 
 function displayEvents(events) {
   const calendarDiv = document.getElementById('calendar');
-  calendarDiv.innerHTML = ''; // Clear existing
+  calendarDiv.innerHTML = '';
 
   if (!events.length) {
     calendarDiv.innerHTML = '<p>No events found.</p>';
@@ -582,57 +602,29 @@ function displayEvents(events) {
   calendarDiv.appendChild(ul);
 }
 
-// Call getEvents when page loads
+// Attach form submit handler
 document.addEventListener('DOMContentLoaded', () => {
-  getEvents();
-});
-  async function postEvent({ title, description, start_time, end_time, category }) {
-  try {
-    const response = await fetch(`${pythonURI}/api/calendarv3/events`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, description, start_time, end_time, category })
-    });
+  getEvents();  // Load events on page load
 
-    if (!response.ok) {
-      throw new Error('Failed to post event');
-    }
+  const form = document.getElementById('eventForm');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-    const data = await response.json();
-    console.log('Event posted:', data);
+    // Get form data
+    const formData = new FormData(form);
+    const eventData = {
+      title: formData.get('title'),
+      description: formData.get('description'),
+      start_time: formData.get('start_time'),
+      end_time: formData.get('end_time'),
+      category: formData.get('category')
+    };
 
-    // After successful post, refresh the list of events
-    await getEvents();
+    await postEvent(eventData);
 
-  } catch (error) {
-    console.error('Error posting event:', error);
-  }
-}
-function displayEvents(events) {
-  const calendarDiv = document.getElementById('calendar');
-  calendarDiv.innerHTML = ''; // Clear old content
-
-  if (!events || events.length === 0) {
-    calendarDiv.innerHTML = '<p>No events found.</p>';
-    return;
-  }
-
-  const ul = document.createElement('ul');
-
-  events.forEach(event => {
-    const li = document.createElement('li');
-    li.textContent = `${event.title} — ${event.start_time}`;
-    ul.appendChild(li);
+    form.reset(); // Clear form after successful submission
   });
-
-  calendarDiv.appendChild(ul);
-}
-
-// Call displayEvents with sample data
-displayEvents([
-  { title: "Test Event", start_time: "2025-05-22 10:00:00" },
-  { title: "Another Event", start_time: "2025-05-23 15:00:00" }
-]);
+});
 
 async function updateEvent(id, { title, description, start_time, end_time, category }) {
     await fetch(`${pythonURI}/api/calendarv3/events/${id}`, {
