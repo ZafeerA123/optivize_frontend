@@ -319,48 +319,37 @@ permalink: /Calendar
           <div id="shipmentList"></div>
         </div>
       </div>
-      <!-- Events Tab -->
-      <div class="tab-pane fade" id="eventsSection">
-        <div class="dashboard-box">
-            <h4 class="mb-4">🎉 Manage Events</h4>
-            <form id="eventForm" class="mb-4">
-  <div class="mb-3">
-    <small style="color: white;">Title</small>
-    <input type="text" class="form-control" name="title" placeholder="Event title" required>
-  </div>
+      <form id="eventForm">
+  <label>
+    Title: <br>
+    <input type="text" name="title" required />
+  </label><br><br>
 
-  <div class="mb-3">
-    <small style="color: white;">Description</small>
-    <input type="text" class="form-control" name="description" placeholder="Event description">
-  </div>
+  <label>
+    Description: <br>
+    <textarea name="description" required></textarea>
+  </label><br><br>
 
-  <div class="mb-3">
-    <small style="color: white;">Start Date & Time</small>
-    <input type="datetime-local" class="form-control" name="start_time" required>
-  </div>
+  <label>
+    Start Time (YYYY-MM-DD HH:mm:ss): <br>
+    <input type="text" name="start_time" placeholder="2025-05-25 14:00:00" required />
+  </label><br><br>
 
-  <div class="mb-3">
-    <small style="color: white;">End Date & Time</small>
-    <input type="datetime-local" class="form-control" name="end_time" required>
-  </div>
+  <label>
+    End Time (YYYY-MM-DD HH:mm:ss): <br>
+    <input type="text" name="end_time" placeholder="2025-05-25 15:00:00" required />
+  </label><br><br>
 
-  <div class="mb-3">
-    <small style="color: white;">Category (emoji + name)</small>
-    <select class="form-select" name="category" required>
-      <option value="" disabled selected>Select a category</option>
-      <option value="general">🎯 General</option>
-      <option value="delivery">🚚 Delivery</option>
-      <option value="marketing">📣 Marketing</option>
-      <option value="maintenance">🛠️ Maintenance</option>
-      <option value="custom">🌀 Custom</option>
-    </select>
-  </div>
+  <label>
+    Category: <br>
+    <input type="text" name="category" required />
+  </label><br><br>
 
-  <div class="mb-3">
-    <button type="submit" class="btn btn-primary">Add Event</button>
-  </div>
+  <button type="submit">Add Event</button>
 </form>
-            <div id="eventList"></div>
+
+<div id="calendar"></div>
+          <div id="eventList"></div>
         </div>
       </div>
       <!-- Tasks Tab -->
@@ -550,31 +539,28 @@ async function getEvents() {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch events: ${response.status} ${response.statusText}`);
+      throw new Error(`Failed to fetch events: ${response.statusText}`);
     }
 
     const data = await response.json();
 
     if (data.success && Array.isArray(data.events)) {
-      console.log("Fetched events:", data.events);
       displayEvents(data.events);
     } else {
       console.error('Unexpected response structure:', data);
       document.getElementById('calendar').innerHTML = '<p>Failed to load events.</p>';
     }
-
   } catch (error) {
     console.error('Error fetching events:', error);
     document.getElementById('calendar').innerHTML = `<p>Error fetching events: ${error.message}</p>`;
   }
 }
 
-// Render events under a div with id="calendar"
 function displayEvents(events) {
   const calendarDiv = document.getElementById('calendar');
   calendarDiv.innerHTML = ''; // Clear existing
 
-  if (!events || !events.length) {
+  if (!events.length) {
     calendarDiv.innerHTML = '<p>No events found.</p>';
     return;
   }
@@ -583,7 +569,13 @@ function displayEvents(events) {
 
   events.forEach(event => {
     const li = document.createElement('li');
-    li.textContent = `${event.title} — ${event.start_time}`;
+    li.innerHTML = `
+      <strong>Title:</strong> ${event.title || 'N/A'}<br>
+      <strong>Description:</strong> ${event.description || 'N/A'}<br>
+      <strong>Start:</strong> ${event.start_time || 'N/A'}<br>
+      <strong>End:</strong> ${event.end_time || 'N/A'}<br>
+      <strong>Category:</strong> ${event.category || 'N/A'}
+    `;
     ul.appendChild(li);
   });
 
@@ -595,11 +587,26 @@ document.addEventListener('DOMContentLoaded', () => {
   getEvents();
 });
   async function postEvent({ title, description, start_time, end_time, category }) {
-    await fetch(`${pythonURI}/api/calendarv3/events`, {
+  try {
+    const response = await fetch(`${pythonURI}/api/calendarv3/events`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, description, start_time, end_time, category })
     });
+
+    if (!response.ok) {
+      throw new Error('Failed to post event');
+    }
+
+    const data = await response.json();
+    console.log('Event posted:', data);
+
+    // After successful post, refresh the list of events
+    await getEvents();
+
+  } catch (error) {
+    console.error('Error posting event:', error);
+  }
 }
 function displayEvents(events) {
   const calendarDiv = document.getElementById('calendar');
