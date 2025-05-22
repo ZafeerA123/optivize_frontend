@@ -142,7 +142,7 @@ html, body {
 
 .tooltip-icon {
   display: inline-block;
-  background: #555;
+  background: #5a3e36;
   color: white;
   border-radius: 50%;
   width: 18px;
@@ -153,6 +153,56 @@ html, body {
   cursor: help;
   margin-left: 5px;
   font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.tooltip-icon:hover {
+  background: #7a5e56;
+  transform: scale(1.1);
+}
+
+.tooltip-icon::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 100%;
+  margin-bottom: 10px;
+  width: 250px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.tooltip-icon:hover::after {
+  opacity: 1;
+}
+
+.tooltip-icon::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 100%;
+  margin-bottom: 2px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tooltip-icon:hover::before {
+  opacity: 1;
 }
 
 </style>
@@ -212,19 +262,18 @@ function createSprinkle() {
     <h2>Predict Success</h2>
     <div class="form-row">
       <div class="form-group">
-        <label>product type</label>
+        <label>Product Title</label>
         <input type="text" id="product-type" placeholder="e.g. Triple Chocolate">
       </div>
       <div class="form-group">
         <label>Seasonality</label>
         <select id="seasonality">
-          <option value="All Year">All Year</option>
+          <option value="year-round">All Year</option>
           <option value="Winter">Winter</option>
           <option value="Spring">Spring</option>
           <option value="Summer">Summer</option>
           <option value="Fall">Fall</option>
-          <option value="Holiday">Holiday</option>
-          <option value="Seasonal">Holiday</option> # Ill have to test this later
+          <option value="holiday">Holiday</option>
 
         </select>
       </div>
@@ -237,18 +286,18 @@ function createSprinkle() {
       <div class="form-group">
         <label>
           Marketing (1–10)
-          <span class="tooltip-icon" ti tle="
-      1 – No marketing or brand awareness
-      2 – Limited local word of mouth
-      3 – Small social media presence
-      4 – Infrequent promotions or ads
-      5 – Occasional targeted marketing
-      6 – Consistent online ads and local campaigns
-      7 – Strong digital presence, some brand recognition
-      8 – Influencer partnerships, seasonal ads
-      9 – National ad campaigns, consistent brand messaging
-      10 – Iconic branding, omnipresent media visibility
-      ">?</span>
+          <span class="tooltip-icon" data-tooltip="
+            1 – No marketing or brand awareness
+            2 – Limited local word of mouth
+            3 – Small social media presence
+            4 – Infrequent promotions or ads
+            5 – Occasional targeted marketing
+            6 – Consistent online ads and local campaigns
+            7 – Strong digital presence, some brand recognition
+            8 – Influencer partnerships, seasonal ads
+            9 – National ad campaigns, consistent brand messaging
+            10 – Iconic branding, omnipresent media visibility
+          ">?</span>
         </label>
         <input type="number" id="marketing" min="1" max="10" placeholder="7">
       </div>
@@ -256,7 +305,7 @@ function createSprinkle() {
       <div class="form-group">
         <label>
           Distribution (1–10)
-          <span class="tooltip-icon" title="
+          <span class="tooltip-icon" data-tooltip="
       1 – Sold in one small local store
       2 – Limited availability in select neighborhoods
       3 – Only available in one city
@@ -287,7 +336,7 @@ function createSprinkle() {
       <table>
         <thead>
           <tr>
-            <th>type</th>
+            <th>Title</th>
             <th>Score</th>
             <th>Price</th>
             <th>Category</th>
@@ -568,9 +617,10 @@ function calculateDistributionPosition(distAnalysis) {
           <!-- Recommendations -->
           <div class="insight-card recommendations">
             <h4>Actionable Recommendations</h4>
-            ${recommendations.length ? `
+            ${recommendations.filter(r => !r.includes('$0.00') && !r.includes('None')).length ? `
               <ul>
-                ${recommendations.map(r => `<li>${r}</li>`).join('')}
+                ${recommendations.filter(r => !r.includes('$0.00') && !r.includes('None'))
+                  .map(r => `<li>${r}</li>`).join('')}
               </ul>
             ` : '<p class="no-data">No recommendations available</p>'}
           </div>
@@ -624,6 +674,10 @@ function calculateDistributionPosition(distAnalysis) {
       
       if (!type || isNaN(price) || isNaN(marketing) || isNaN(distribution)) {
         resultsDiv.innerHTML = '<div class="error-message">Please fill all fields with valid values</div>';
+        return;
+      }
+      if (price <= 0) {
+        resultsDiv.innerHTML = '<div class="error-message">Please enter a valid price greater than 0</div>';
         return;
       }
       
