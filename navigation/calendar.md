@@ -256,7 +256,7 @@ permalink: /Calendar
 </head>
 <body>
   <div class="container">
-    <h1 class="text-center mb-4">Crumble Cookies Operations Dashboard</h1>   
+    <h1 class="text-center mb-4">Operations Dashboard</h1>   
     <div id="notifications" class="alert alert-warning mb-4" style="display: none;"></div>
     <ul class="nav nav-tabs mb-4" id="tabMenu" role="tablist">
       <li class="nav-item" role="presentation">
@@ -390,25 +390,21 @@ permalink: /Calendar
     </div>
   </div>
 </head>
-<body>
+
   <!-- Employee Table -->
   <h2>Employee Table</h2>
   <table id="employeeTable" border="1">
-    <thead>
       <tr>
         <th>Name</th>
         <th>Position</th>
         <th>Work Time</th>
         <th>Actions</th>
       </tr>
-    </thead>
-    <tbody></tbody>
   </table>
 
   <!-- Shipment Table -->
   <h2>Shipment Table</h2>
   <table id="shipmentTable" border="1">
-    <thead>
       <tr>
         <th>Inventory</th>
         <th>Amount</th>
@@ -416,16 +412,11 @@ permalink: /Calendar
         <th>Shipment Time</th>
         <th>Actions</th>
       </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
   <!-- Full Script for Fetching & Display -->
   <script>
     const pythonURI = 'https://your-backend-url.com'; // Update with your real backend URL
     const fetchOptions = { credentials: 'include' };
-
-    // --- EVENTS ---
+// --- EVENTS ---
     async function getEvents() {
       const res = await fetch(`${pythonURI}/api/calendarv3/events`, fetchOptions);
       return await res.json();
@@ -449,8 +440,7 @@ permalink: /Calendar
         method: 'DELETE'
       });
     }
-
-    // --- EMPLOYEES ---
+// --- EMPLOYEES ---
     async function getEmployees() {
       const res = await fetch(`${pythonURI}/api/calendarv3/employees`, fetchOptions);
       return await res.json();
@@ -474,8 +464,7 @@ permalink: /Calendar
         method: 'DELETE'
       });
     }
-
-    // --- SHIPMENTS ---
+// --- SHIPMENTS ---
     async function getShipments() {
       const res = await fetch(`${pythonURI}/api/calendarv3/shipments`, fetchOptions);
       return await res.json();
@@ -499,10 +488,8 @@ permalink: /Calendar
         method: 'DELETE'
       });
     }
-
-    // --- TABLE LOGIC ---
-
-    // EMPLOYEES
+// --- TABLE LOGIC ---
+// EMPLOYEES
     async function loadEmployeeTable() {
       const data = await getEmployees();
       const tbody = document.querySelector('#employeeTable tbody');
@@ -521,15 +508,13 @@ permalink: /Calendar
         tbody.appendChild(row);
       });
     }
-
     async function saveEmployee(id, btn) {
       const row = btn.closest('tr');
       const [name, position, work_time] = Array.from(row.children).map(td => td.textContent.trim());
       await updateEmployee(id, { name, position, work_time });
       loadEmployeeTable();
     }
-
-    // SHIPMENTS
+// SHIPMENTS
     async function loadShipmentTable() {
       const data = await getShipments();
       const tbody = document.querySelector('#shipmentTable tbody');
@@ -549,7 +534,6 @@ permalink: /Calendar
         tbody.appendChild(row);
       });
     }
-
     async function saveShipment(id, btn) {
       const row = btn.closest('tr');
       const [inventory, amount, transport_method, shipment_time] = Array.from(row.children).map(td => td.textContent.trim());
@@ -561,8 +545,7 @@ permalink: /Calendar
       });
       loadShipmentTable();
     }
-
-    // Load all tables on page load
+// Load all tables on page load
     document.addEventListener('DOMContentLoaded', () => {
       loadEmployeeTable();
       loadShipmentTable();
