@@ -397,7 +397,6 @@ permalink: /Calendar
 <!-- Scripts -->
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
 <!-- Bootstrap JS + Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
@@ -547,27 +546,26 @@ async function getEvents() {
   try {
     const response = await fetch(`${pythonURI}/api/calendarv3/events`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' }
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch events');
+      throw new Error(`Failed to fetch events: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json();
 
-    // Check the structure: data should be { success: true, events: [...] }
     if (data.success && Array.isArray(data.events)) {
       console.log("Fetched events:", data.events);
       displayEvents(data.events);
     } else {
       console.error('Unexpected response structure:', data);
+      document.getElementById('calendar').innerHTML = '<p>Failed to load events.</p>';
     }
 
   } catch (error) {
     console.error('Error fetching events:', error);
+    document.getElementById('calendar').innerHTML = `<p>Error fetching events: ${error.message}</p>`;
   }
 }
 
@@ -602,47 +600,33 @@ document.addEventListener('DOMContentLoaded', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, description, start_time, end_time, category })
     });
-  }
-  async function getEvents() {
-  try {
-    const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/events', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) throw new Error('Failed to fetch events');
-
-    const events = await response.json();
-    displayEvents(events);
-  } catch (error) {
-    console.error('Error fetching events:', error);
-  }
 }
-
 function displayEvents(events) {
   const calendarDiv = document.getElementById('calendar');
-  calendarDiv.innerHTML = ''; // Clear existing
+  calendarDiv.innerHTML = ''; // Clear old content
 
-  if (!events.length) {
+  if (!events || events.length === 0) {
     calendarDiv.innerHTML = '<p>No events found.</p>';
     return;
   }
 
-  // Simple list output of events
   const ul = document.createElement('ul');
 
   events.forEach(event => {
     const li = document.createElement('li');
-
-    // Adjust based on your event data structure
-    li.textContent = `${event.title || 'No title'} — ${event.date || 'No date'}`;
+    li.textContent = `${event.title} — ${event.start_time}`;
     ul.appendChild(li);
   });
 
   calendarDiv.appendChild(ul);
 }
+
+// Call displayEvents with sample data
+displayEvents([
+  { title: "Test Event", start_time: "2025-05-22 10:00:00" },
+  { title: "Another Event", start_time: "2025-05-23 15:00:00" }
+]);
+
 async function updateEvent(id, { title, description, start_time, end_time, category }) {
     await fetch(`${pythonURI}/api/calendarv3/events/${id}`, {
       method: 'PUT',
