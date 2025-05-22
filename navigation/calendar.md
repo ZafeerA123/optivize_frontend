@@ -389,141 +389,184 @@ permalink: /Calendar
       </div>
     </div>
   </div>
-<h4>Employees</h4>
-<table>
-  <thead><tr><th>Name</th><th>Position</th><th>Work Time</th><th>Actions</th></tr></thead>
-  <tbody id="employeeTableBody"></tbody>
-</table>
+</head>
+<body>
+  <!-- Employee Table -->
+  <h2>Employee Table</h2>
+  <table id="employeeTable" border="1">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Position</th>
+        <th>Work Time</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-<h4>Shipments</h4>
-<table>
-  <thead><tr><th>Inventory</th><th>Amount</th><th>Transport</th><th>Shipment Time</th><th>Actions</th></tr></thead>
-  <tbody id="shipmentTableBody"></tbody>
-</table>
+  <!-- Shipment Table -->
+  <h2>Shipment Table</h2>
+  <table id="shipmentTable" border="1">
+    <thead>
+      <tr>
+        <th>Inventory</th>
+        <th>Amount</th>
+        <th>Transport Method</th>
+        <th>Shipment Time</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-<script>
-  const { pythonURI, fetchOptions } = window.apiConfig;
-  async function loadCalendarEvents(calendar) {
-    const res = await fetch(`${pythonURI}/api/calendarv3/events`, { ...fetchOptions });
-    const data = await res.json();
-    calendar.removeAllEvents();
-    data.events.forEach(event => {
-      calendar.addEvent({
-        id: event.id,
-        title: event.title,
-        start: event.start,
-        end: event.end
+  <!-- Full Script for Fetching & Display -->
+  <script>
+    const pythonURI = 'https://your-backend-url.com'; // Update with your real backend URL
+    const fetchOptions = { credentials: 'include' };
+
+    // --- EVENTS ---
+    async function getEvents() {
+      const res = await fetch(`${pythonURI}/api/calendarv3/events`, fetchOptions);
+      return await res.json();
+    }
+    async function postEvent({ title, description, start_time, end_time, category }) {
+      await fetch(`${pythonURI}/api/calendarv3/events`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description, start_time, end_time, category })
       });
-    });
-  }
-  async function deleteCalendarEvent(id) {
-    await fetch(`${pythonURI}/api/calendarv3/events/${id}`, {
-      ...fetchOptions, method: 'DELETE'
-    });
-  }
-  async function updateCalendarEvent(id, updatedEvent) {
-    await fetch(`${pythonURI}/api/calendarv3/events/${id}`, {
-      ...fetchOptions,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedEvent)
-    });
-  }
-  async function loadEmployeeTable() {
-    const res = await fetch(`${pythonURI}/api/calendarv3/employees`, { ...fetchOptions });
-    const data = await res.json();
-    const tbody = document.getElementById('employeeTableBody');
-    tbody.innerHTML = data.employees.map(emp => `
-      <tr data-id="${emp.id}">
-        <td contenteditable="true">${emp.name}</td>
-        <td contenteditable="true">${emp.position}</td>
-        <td contenteditable="true">${emp.work_time}</td>
-        <td>
-          <button onclick="updateEmployee(this)">Update</button>
-          <button onclick="deleteEmployee(${emp.id})">Delete</button>
-        </td>
-      </tr>
-    `).join('');
-  }
-  async function loadShipmentTable() {
-    const res = await fetch(`${pythonURI}/api/calendarv3/shipments`, { ...fetchOptions });
-    const data = await res.json();
-    const tbody = document.getElementById('shipmentTableBody');
-    tbody.innerHTML = data.shipments.map(ship => `
-      <tr data-id="${ship.id}">
-        <td contenteditable="true">${ship.inventory}</td>
-        <td contenteditable="true">${ship.amount}</td>
-        <td contenteditable="true">${ship.transport_method}</td>
-        <td contenteditable="true">${new Date(ship.shipment_time).toISOString()}</td>
-        <td>
-          <button onclick="updateShipment(this)">Update</button>
-          <button onclick="deleteShipment(${ship.id})">Delete</button>
-        </td>
-      </tr>
-    `).join('');
-  }
-  async function updateEmployee(btn) {
-    const tr = btn.closest('tr');
-    const id = tr.dataset.id;
-    const [name, position, work_time] = [...tr.children].slice(0, 3).map(td => td.innerText.trim());
-    await fetch(`${pythonURI}/api/calendarv3/employees/${id}`, {
-      ...fetchOptions,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, position, work_time })
-    });
-  }
-  async function deleteEmployee(id) {
-    await fetch(`${pythonURI}/api/calendarv3/employees/${id}`, {
-      ...fetchOptions, method: 'DELETE'
-    });
-    loadEmployeeTable();
-  }
-  async function updateShipment(btn) {
-    const tr = btn.closest('tr');
-    const id = tr.dataset.id;
-    const [inventory, amount, transport_method, shipment_time] = [...tr.children].slice(0, 4).map(td => td.innerText.trim());
-    await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
-      ...fetchOptions,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    }
+    async function updateEvent(id, { title, description, start_time, end_time, category }) {
+      await fetch(`${pythonURI}/api/calendarv3/events/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description, start_time, end_time, category })
+      });
+    }
+    async function deleteEvent(id) {
+      await fetch(`${pythonURI}/api/calendarv3/events/${id}`, {
+        method: 'DELETE'
+      });
+    }
+
+    // --- EMPLOYEES ---
+    async function getEmployees() {
+      const res = await fetch(`${pythonURI}/api/calendarv3/employees`, fetchOptions);
+      return await res.json();
+    }
+    async function postEmployee({ name, position, work_time }) {
+      await fetch(`${pythonURI}/api/calendarv3/employees`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, position, work_time })
+      });
+    }
+    async function updateEmployee(id, { name, position, work_time }) {
+      await fetch(`${pythonURI}/api/calendarv3/employees/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, position, work_time })
+      });
+    }
+    async function deleteEmployee(id) {
+      await fetch(`${pythonURI}/api/calendarv3/employees/${id}`, {
+        method: 'DELETE'
+      });
+    }
+
+    // --- SHIPMENTS ---
+    async function getShipments() {
+      const res = await fetch(`${pythonURI}/api/calendarv3/shipments`, fetchOptions);
+      return await res.json();
+    }
+    async function postShipment({ inventory, amount, transport_method, shipment_time }) {
+      await fetch(`${pythonURI}/api/calendarv3/shipments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inventory, amount, transport_method, shipment_time })
+      });
+    }
+    async function updateShipment(id, { inventory, amount, transport_method, shipment_time }) {
+      await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inventory, amount, transport_method, shipment_time })
+      });
+    }
+    async function deleteShipment(id) {
+      await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
+        method: 'DELETE'
+      });
+    }
+
+    // --- TABLE LOGIC ---
+
+    // EMPLOYEES
+    async function loadEmployeeTable() {
+      const data = await getEmployees();
+      const tbody = document.querySelector('#employeeTable tbody');
+      tbody.innerHTML = '';
+      data.employees.forEach(emp => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td contenteditable="true">${emp.name}</td>
+          <td contenteditable="true">${emp.position}</td>
+          <td contenteditable="true">${emp.work_time}</td>
+          <td>
+            <button onclick="saveEmployee(${emp.id}, this)">Update</button>
+            <button onclick="deleteEmployee(${emp.id}).then(loadEmployeeTable)">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    async function saveEmployee(id, btn) {
+      const row = btn.closest('tr');
+      const [name, position, work_time] = Array.from(row.children).map(td => td.textContent.trim());
+      await updateEmployee(id, { name, position, work_time });
+      loadEmployeeTable();
+    }
+
+    // SHIPMENTS
+    async function loadShipmentTable() {
+      const data = await getShipments();
+      const tbody = document.querySelector('#shipmentTable tbody');
+      tbody.innerHTML = '';
+      data.shipments.forEach(ship => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td contenteditable="true">${ship.inventory}</td>
+          <td contenteditable="true">${ship.amount}</td>
+          <td contenteditable="true">${ship.transport_method}</td>
+          <td contenteditable="true">${ship.shipment_time}</td>
+          <td>
+            <button onclick="saveShipment(${ship.id}, this)">Update</button>
+            <button onclick="deleteShipment(${ship.id}).then(loadShipmentTable)">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    async function saveShipment(id, btn) {
+      const row = btn.closest('tr');
+      const [inventory, amount, transport_method, shipment_time] = Array.from(row.children).map(td => td.textContent.trim());
+      await updateShipment(id, {
         inventory,
         amount: parseInt(amount),
         transport_method,
         shipment_time
-      })
+      });
+      loadShipmentTable();
+    }
+
+    // Load all tables on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadEmployeeTable();
+      loadShipmentTable();
     });
-  }
-  async function deleteShipment(id) {
-    await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
-      ...fetchOptions, method: 'DELETE'
-    });
-    loadShipmentTable();
-  }
-  document.addEventListener('DOMContentLoaded', async () => {
-    // Initialize FullCalendar
-    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-      initialView: 'dayGridMonth',
-      editable: true,
-      eventClick: async function (info) {
-        if (confirm("Delete this event?")) {
-          await deleteCalendarEvent(info.event.id);
-          info.event.remove();
-        }
-      },
-      eventDrop: async function (info) {
-        await updateCalendarEvent(info.event.id, {
-          title: info.event.title,
-          start: info.event.start.toISOString(),
-          end: info.event.end ? info.event.end.toISOString() : null
-        });
-      }
-    });
-    calendar.render();
-    await loadCalendarEvents(calendar);
-// Load Employee and Shipment Tables
-    await loadEmployeeTable();
-    await loadShipmentTable();
-  });
-</script>
+  </script>
+</body>
+</html>
