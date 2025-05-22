@@ -1185,7 +1185,11 @@ document.getElementById('confirm-google-import')?.addEventListener('click', asyn
   }
 
   sessionStorage.setItem("pending_sheet_id", sheetId);
-  window.location.href = "http://localhost:8212/google/connect";  // OAuth step
+    const apiBaseURL = window.location.hostname === "localhost"
+    ? "http://localhost:8212"
+    : "https://your-deployment-domain.com";
+
+  window.location.href = `${apiBaseURL}/google/connect`;
 });
 
 // Auto-import after OAuth callback
