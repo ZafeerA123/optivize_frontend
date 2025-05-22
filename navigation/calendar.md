@@ -154,7 +154,6 @@ permalink: /Calendar
       color: #fbb034;
       transform: translateY(-2px);
     }
-    <style>
     /* Updated Button Styling */
     .btn-primary {
       background: linear-gradient(135deg, #ffdd00, #fbb034);
@@ -465,7 +464,48 @@ permalink: /Calendar
       body: JSON.stringify({ title, description, start_time, end_time, category })
     });
   }
-  async function updateEvent(id, { title, description, start_time, end_time, category }) {
+  async function getEvents() {
+  try {
+    const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/events', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch events');
+
+    const events = await response.json();
+    displayEvents(events);
+  } catch (error) {
+    console.error('Error fetching events:', error);
+  }
+}
+
+function displayEvents(events) {
+  const calendarDiv = document.getElementById('calendar');
+  calendarDiv.innerHTML = ''; // Clear existing
+
+  if (!events.length) {
+    calendarDiv.innerHTML = '<p>No events found.</p>';
+    return;
+  }
+
+  // Simple list output of events
+  const ul = document.createElement('ul');
+
+  events.forEach(event => {
+    const li = document.createElement('li');
+
+    // Adjust based on your event data structure
+    li.textContent = `${event.title || 'No title'} — ${event.date || 'No date'}`;
+    ul.appendChild(li);
+  });
+
+  calendarDiv.appendChild(ul);
+}
+async function updateEvent(id, { title, description, start_time, end_time, category }) {
     await fetch(`${pythonURI}/api/calendarv3/events/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -490,7 +530,43 @@ permalink: /Calendar
       body: JSON.stringify({ name, position, work_time })
     });
   }
-  async function updateEmployee(id, { name, position, work_time }) {
+  async function getEmployees() {
+  try {
+    const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/employees', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch employees');
+
+    const employees = await response.json();
+    displayEmployees(employees);
+  } catch (error) {
+    console.error('Error fetching employees:', error);
+  }
+}
+  function displayEmployees(employees) {
+  const tableBody = document.querySelector('#employee-table tbody');
+  tableBody.innerHTML = ''; // Clear existing rows
+
+  employees.forEach(emp => {
+    const tr = document.createElement('tr');
+
+    // Adjust these according to your employee data structure
+    tr.innerHTML = `
+      <td>${emp.id || ''}</td>
+      <td>${emp.name || ''}</td>
+      <td>${emp.position || ''}</td>
+      <td>${emp.department || ''}</td>
+    `;
+
+    tableBody.appendChild(tr);
+  });
+}
+async function updateEmployee(id, { name, position, work_time }) {
     await fetch(`${pythonURI}/api/calendarv3/employees/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -515,6 +591,45 @@ permalink: /Calendar
       body: JSON.stringify({ inventory, amount, transport_method, shipment_time })
     });
   }
+  async function getShipments() {
+  try {
+    const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/shipments', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch shipments');
+
+    const shipments = await response.json();
+    displayShipments(shipments);
+  } catch (error) {
+    console.error('Error fetching shipments:', error);
+  }
+}
+
+function displayShipments(shipments) {
+  const tableBody = document.querySelector('#shipment-table tbody');
+  tableBody.innerHTML = ''; // Clear existing rows
+
+  shipments.forEach(shipment => {
+    const tr = document.createElement('tr');
+
+    // Adjust these fields based on your shipment data structure
+    tr.innerHTML = `
+      <td>${shipment.id || ''}</td>
+      <td>${shipment.item || ''}</td>
+      <td>${shipment.quantity || ''}</td>
+      <td>${shipment.status || ''}</td>
+      <td>${shipment.date || ''}</td>
+    `;
+
+    tableBody.appendChild(tr);
+  });
+}
+
   async function updateShipment(id, { inventory, amount, transport_method, shipment_time }) {
     await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
       method: 'PUT',
