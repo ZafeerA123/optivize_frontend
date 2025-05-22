@@ -325,18 +325,42 @@ permalink: /Calendar
         <div class="dashboard-box">
             <h4 class="mb-4">🎉 Manage Events</h4>
             <form id="eventForm" class="mb-4">
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" placeholder="Event Title" required>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="datetime-local" class="form-control" required>
-                    </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-primary w-100">Add Event</button>
-                    </div>
-                </div>
-            </form>
+  <div class="mb-3">
+    <small style="color: white;">Title</small>
+    <input type="text" class="form-control" name="title" placeholder="Event title" required>
+  </div>
+
+  <div class="mb-3">
+    <small style="color: white;">Description</small>
+    <input type="text" class="form-control" name="description" placeholder="Event description">
+  </div>
+
+  <div class="mb-3">
+    <small style="color: white;">Start Date & Time</small>
+    <input type="datetime-local" class="form-control" name="start_time" required>
+  </div>
+
+  <div class="mb-3">
+    <small style="color: white;">End Date & Time</small>
+    <input type="datetime-local" class="form-control" name="end_time" required>
+  </div>
+
+  <div class="mb-3">
+    <small style="color: white;">Category (emoji + name)</small>
+    <select class="form-select" name="category" required>
+      <option value="" disabled selected>Select a category</option>
+      <option value="general">🎯 General</option>
+      <option value="delivery">🚚 Delivery</option>
+      <option value="marketing">📣 Marketing</option>
+      <option value="maintenance">🛠️ Maintenance</option>
+      <option value="custom">🌀 Custom</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <button type="submit" class="btn btn-primary">Add Event</button>
+  </div>
+</form>
             <div id="eventList"></div>
         </div>
       </div>
