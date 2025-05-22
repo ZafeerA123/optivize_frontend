@@ -468,7 +468,6 @@ permalink: /Calendar
   try {
     const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/events', {
       method: 'GET',
-      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -534,7 +533,6 @@ async function updateEvent(id, { title, description, start_time, end_time, categ
   try {
     const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/employees', {
       method: 'GET',
-      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -593,20 +591,19 @@ async function updateEmployee(id, { name, position, work_time }) {
   }
   async function getShipments() {
   try {
-    const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/shipments', {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+    const response = await fetch("https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/shipments", {
+      method: "GET",
     });
 
-    if (!response.ok) throw new Error('Failed to fetch shipments');
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
 
-    const shipments = await response.json();
-    displayShipments(shipments);
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error('Error fetching shipments:', error);
+    console.error("Error fetching shipments:", error);
+    return { shipments: [] }; // return default object to prevent crash
   }
 }
 
