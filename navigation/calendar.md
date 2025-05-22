@@ -390,6 +390,29 @@ permalink: /Calendar
     </div>
   </div>
 </head>
+<div class="container">
+  <h1>Calendar</h1>
+  <div id="calendar"></div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      events: [
+        {
+          title: 'Launch Date',
+          start: '2025-05-21'
+        }
+      ]
+    });
+    calendar.render();
+  });
+</script>
+
 <h1>Calendar and Management</h1>
 
 <!-- Employee Table -->
