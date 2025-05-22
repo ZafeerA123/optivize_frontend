@@ -452,6 +452,94 @@ permalink: /Calendar
 <script>
   const pythonURI = 'https://optivize.stu.nighthawkcodingsociety.com'; // Replace with your backend
   const fetchOptions = { credentials: 'include' };
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadShipmentTable(); // Load shipment table + events
+  await loadEmployeeTable(); // Load employee table
+});
+
+ async function loadShipmentTable() {
+  try {
+    const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/shipments');
+    const data = await response.json();
+
+    const tableBody = document.querySelector("#shipment-table tbody");
+    tableBody.innerHTML = "";
+
+    const events = [];
+
+    data.shipments.forEach(shipment => {
+      // Populate table row
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${shipment.id}</td>
+        <td>${shipment.title}</td>
+        <td>${shipment.start_time}</td>
+        <td>${shipment.end_time}</td>
+        <td>${shipment.category}</td>
+      `;
+      tableBody.appendChild(row);
+
+      // Add to calendar
+      events.push({
+        title: shipment.title,
+        start: shipment.start_time,
+        end: shipment.end_time,
+        extendedProps: {
+          category: shipment.category,
+          description: shipment.description
+        }
+      });
+    });
+
+    // Render calendar
+    renderCalendar(events);
+
+  } catch (err) {
+    console.error("Error fetching shipments:", err);
+  }
+}
+
+ async function loadEmployeeTable() {
+  try {
+    const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/employees');
+    const data = await response.json();
+
+    const tableBody = document.querySelector("#employee-table tbody");
+    tableBody.innerHTML = "";
+
+    data.employees.forEach(emp => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${emp.id}</td>
+        <td>${emp.name}</td>
+        <td>${emp.role}</td>
+        <td>${emp.email}</td>
+      `;
+      tableBody.appendChild(row);
+    });
+
+  } catch (err) {
+    console.error("Error fetching employees:", err);
+  }
+}
+function renderCalendar(events) {
+  const calendarEl = document.getElementById('calendar');
+  if (!calendarEl) {
+    console.error("No calendar element found");
+    return;
+  }
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    height: 'auto',
+    events: events,
+    eventClick: function(info) {
+      alert(`${info.event.title}\n${info.event.extendedProps.category}\n${info.event.extendedProps.description}`);
+    }
+  });
+
+  calendar.render();
+}
 
   // --- EVENTS ---
   async function getEvents() {
