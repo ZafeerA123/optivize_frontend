@@ -1,26 +1,12 @@
 ---
 layout: base
-title: Crumbl
+title: Predictions
 description: Product Success Prediction
 hide: true
 permalink: /navigation/predictions
 ---
 <style>
-/* Reset and base styles */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    overflow-x: hidden;
-    font-family: 'Poppins', sans-serif;
-    background: url('https://i.imgur.com/7R0g4Kg.jpg'); /* product pattern background */
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    position: relative;
-    z-index: 0;
-}
+
 
 /* Sprinkle overlay full-screen */
 .sprinkle-overlay {
