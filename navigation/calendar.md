@@ -6,6 +6,7 @@ hide: true
 permalink: /Calendar 
 ---
 
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -268,6 +269,9 @@ permalink: /Calendar
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#shipmentsSection">🚚 Shipments</button>
       </li>
       <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#eventsSection">🎉 Events</button>
+      </li>
+      <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tasksSection">✅ Tasks</button>
       </li>
     </ul>
@@ -316,6 +320,50 @@ permalink: /Calendar
           <div id="shipmentList"></div>
         </div>
       </div>
+      <!-- Events Tab -->
+      <div class="tab-pane fade" id="eventsSection">
+        <div class="dashboard-box">
+            <h4 class="mb-4">🎉 Manage Events</h4>
+            <form id="eventForm" class="mb-4">
+  <div class="mb-3">
+    <small style="color: white;">Title</small>
+    <input type="text" class="form-control" name="title" placeholder="Event title" required>
+  </div>
+
+  <div class="mb-3">
+    <small style="color: white;">Description</small>
+    <input type="text" class="form-control" name="description" placeholder="Event description">
+  </div>
+
+  <div class="mb-3">
+    <small style="color: white;">Start Date & Time</small>
+    <input type="datetime-local" class="form-control" name="start_time" required>
+  </div>
+
+  <div class="mb-3">
+    <small style="color: white;">End Date & Time</small>
+    <input type="datetime-local" class="form-control" name="end_time" required>
+  </div>
+
+  <div class="mb-3">
+    <small style="color: white;">Category (emoji + name)</small>
+    <select class="form-select" name="category" required>
+      <option value="" disabled selected>Select a category</option>
+      <option value="general">🎯 General</option>
+      <option value="delivery">🚚 Delivery</option>
+      <option value="marketing">📣 Marketing</option>
+      <option value="maintenance">🛠️ Maintenance</option>
+      <option value="custom">🌀 Custom</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <button type="submit" class="btn btn-primary">Add Event</button>
+  </div>
+</form>
+            <div id="eventList"></div>
+        </div>
+      </div>
       <!-- Tasks Tab -->
       <div class="tab-pane fade" id="tasksSection">
         <div class="dashboard-box">
@@ -341,75 +389,99 @@ permalink: /Calendar
       </div>
     </div>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-  <script>
-    let calendar;
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script>
+    let calendar; 
     async function initCalendar() {
-      const calendarEl = document.getElementById('calendar');
-      calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-        },
-        events: async function(fetchInfo, successCallback, failureCallback) {
-          try {
-            const res = await fetch('/api/events');
-            const eventsData = await res.json();
-            const holidaysRes = await fetch('https://calendarific.com/api/v2/holidays?api_key=YOUR_API_KEY&country=US&year=' + new Date().getFullYear());
-            const holidays = await holidaysRes.json();
-            const holidayEvents = holidays.response.holidays.map(h => ({
-              title: h.name,
-              start: h.date.iso,
-              classNames: ['event-holiday']
-            }));
-            const formatted = eventsData.map(e => ({
-              title: e.title,
-              start: e.start,
-              end: e.end,
-              classNames: [e.type]
-            }));
-            successCallback([...formatted, ...holidayEvents]);
-          } catch (error) {
-            console.error('Event load error:', error);
-            failureCallback(error);
-          }
-        },
-        eventClick: function(info) {
-          alert(`Event: ${info.event.title}\nStart: ${info.event.start}`);
-        }
-      });
-      calendar.render();
+        const calendarEl = document.getElementById('calendar');
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            },
+            events: async function(fetchInfo, successCallback, failureCallback) {
+                try {
+                    // Fetch events from your API
+                    const res = await fetch('/api/calendarv3/events');
+                    const eventsData = await res.json();                   
+                    // Format events for FullCalendar
+                    const formatted = eventsData.events.map(e => ({
+                        title: e.title,
+                        start: e.start_time,
+                        end: e.end_time,
+                        description: e.description,
+                        classNames: [e.category]
+                    }));
+                    successCallback(formatted);
+                } catch (error) {
+                    console.error('Event load error:', error);
+                    failureCallback(error);
+                }
+            },
+            eventClick: function(info) {
+                alert(`Event: ${info.event.title}\nDescription: ${info.event.extendedProps.description}\nStart: ${info.event.start}`);
+            }
+        });
+        calendar.render();
     }
-    document.addEventListener('DOMContentLoaded', initCalendar);
-    document.getElementById('eventForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const title = document.getElementById('eventTitle').value;
-      const start = document.getElementById('eventDate').value;
-      const type = document.getElementById('eventType').value;
-      await fetch('/api/events', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, start, type })
-      });
-      calendar.refetchEvents();
-      this.reset();
+    document.addEventListener('DOMContentLoaded', () => {
+        initCalendar();
+        loadEmployees();
+        loadShipments();
     });
-    document.getElementById('workforceForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const name = document.getElementById('name').value;
-      const availability = document.getElementById('availability').value;
-      await fetch('/api/workforce', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, availability })
-      });
-      alert(`Added ${name} with availability: ${availability}`);
-      this.reset();
+    async function loadEmployees() {
+        try {
+            const response = await fetch('/api/calendarv3/table');
+            const data = await response.json();
+            const employeeList = document.getElementById('employeeList');            
+            employeeList.innerHTML = data.employees.map(emp => `
+                <div class="list-item">
+                    <span>${emp.name} - ${emp.position}</span>
+                    <span>Availability: ${emp.work_time}</span>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading employees:', error);
+        }
+    }
+    async function loadShipments() {
+        try {
+            const response = await fetch('/api/calendarv3/shipments');
+            const data = await response.json();
+            const shipmentList = document.getElementById('shipmentList');         
+            shipmentList.innerHTML = data.shipments.map(ship => `
+                <div class="list-item">
+                    <span>${ship.inventory} (${ship.amount})</span>
+                    <span>${ship.transport_method} - ${new Date(ship.shipment_time).toLocaleDateString()}</span>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading shipments:', error);
+        }
+    }
+    // Example form handler for events
+    document.getElementById('eventForm')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = {
+            title: this.querySelector('[name="title"]').value,
+            description: this.querySelector('[name="description"]').value,
+            start_time: this.querySelector('[name="start_time"]').value,
+            end_time: this.querySelector('[name="end_time"]').value,
+            category: this.querySelector('[name="category"]').value
+        };
+        try {
+            await fetch('/api/calendarv3/events', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            calendar.refetchEvents();
+            this.reset();
+        } catch (error) {
+            console.error('Error creating event:', error);
+        }
     });
-  </script>
-</body>
-</html>
+</script>
