@@ -542,10 +542,60 @@ function renderCalendar(events) {
 }
 
   // --- EVENTS ---
-  async function getEvents() {
-    const res = await fetch(`${pythonURI}/api/calendarv3/events`, fetchOptions);
-    return await res.json();
+  // Fetch events from API
+async function getEvents() {
+  try {
+    const response = await fetch(`${pythonURI}/api/calendarv3/events`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch events');
+    }
+
+    const data = await response.json();
+
+    // Check the structure: data should be { success: true, events: [...] }
+    if (data.success && Array.isArray(data.events)) {
+      console.log("Fetched events:", data.events);
+      displayEvents(data.events);
+    } else {
+      console.error('Unexpected response structure:', data);
+    }
+
+  } catch (error) {
+    console.error('Error fetching events:', error);
   }
+}
+
+// Render events under a div with id="calendar"
+function displayEvents(events) {
+  const calendarDiv = document.getElementById('calendar');
+  calendarDiv.innerHTML = ''; // Clear existing
+
+  if (!events || !events.length) {
+    calendarDiv.innerHTML = '<p>No events found.</p>';
+    return;
+  }
+
+  const ul = document.createElement('ul');
+
+  events.forEach(event => {
+    const li = document.createElement('li');
+    li.textContent = `${event.title} — ${event.start_time}`;
+    ul.appendChild(li);
+  });
+
+  calendarDiv.appendChild(ul);
+}
+
+// Call getEvents when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  getEvents();
+});
   async function postEvent({ title, description, start_time, end_time, category }) {
     await fetch(`${pythonURI}/api/calendarv3/events`, {
       method: 'POST',
