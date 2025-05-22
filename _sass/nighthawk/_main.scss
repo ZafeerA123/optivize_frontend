@@ -6,3 +6,112 @@
 @import "platformer-game";
 @import "chatbot";
 @import "hacks";
+/* --- Custom Styles for Horizontal Navigation (Add this to the END of _sass/nighthawk/_main.scss) --- */
+
+// Target the main navigation wrapper (site-nav)
+// This positions the entire navigation block to the top right of the header
+.site-nav {
+    position: absolute; /* Allows positioning relative to the header */
+    top: 0;             /* Aligns to the top of the header */
+    right: 0;           /* Aligns to the right of the header */
+    display: block;     /* Ensures it takes up space */
+    text-align: right;  /* Ensures content inside aligns to the right */
+    padding-top: 18px;  /* Adjust this for vertical alignment with 'Optivize' site title */
+    padding-right: 15px;/* Padding from the right edge of the browser */
+    z-index: 10;        /* Ensures it sits above other content if necessary */
+}
+
+// Hide the hamburger menu elements on larger screens
+.site-nav .nav-trigger,
+.site-nav label[for="nav-trigger"] {
+    display: none;
+}
+
+// Target the container of your actual links (.trigger inside .site-nav)
+.site-nav .trigger {
+    display: flex;             /* Makes child <a> elements horizontal */
+    flex-wrap: wrap;           /* Allows links to wrap to the next line on smaller screens */
+    justify-content: flex-end; /* Aligns items to the right within its flex container */
+    align-items: center;       /* Vertically centers items if heights vary */
+    gap: 15px;                 /* Adds space between each link. Adjust as needed. */
+    margin: 0;                 /* Remove any default margins */
+    padding: 0;                /* Remove any default padding */
+    list-style: none;          /* Ensure no list-style is applied if it was an unordered list */
+    width: auto;               /* Allows the container to shrink-wrap its content */
+}
+
+// Style for individual navigation links
+.site-nav .page-link {
+    display: block;            /* Ensures padding and margin work correctly */
+    padding: 5px 10px;         /* Add some padding for better click area/visuals */
+    color: #555;               /* Adjust link color (Minima's default text color, or your custom color) */
+    text-decoration: none;     /* Remove underlines */
+    white-space: nowrap;       /* Prevent links from breaking lines */
+    font-size: 0.95em;         /* Adjust font size as needed */
+    line-height: 1;            /* Ensure consistent line height */
+    transition: color 0.3s ease; /* Smooth hover effect */
+}
+
+.site-nav .page-link:hover,
+.site-nav .page-link:focus {
+    color: #007bff; /* Example hover color. Match your theme. */
+}
+
+/* --- Responsive/Mobile Styles (Minima/Nighthawk's default behavior, adjust if needed) --- */
+@media screen and (max-width: 768px) { /* Adjust this breakpoint if your theme uses a different one */
+    .site-nav {
+        position: static; /* Reset positioning for mobile to allow it to flow naturally */
+        padding-top: 0;
+        padding-right: 0;
+        width: 100%;       /* Allow it to take full width */
+        text-align: left;  /* Align text to left in mobile menu */
+
+        // Show hamburger icon on mobile
+        label[for="nav-trigger"] {
+            display: block;
+            float: right; // Often floated right to position the hamburger
+            cursor: pointer;
+            padding: 5px 15px; // Adjust padding for touch area
+            margin: 5px 0;
+        }
+
+        .menu-icon svg {
+            fill: #424242; // Adjust color of hamburger icon
+        }
+
+        // Hide the full navigation by default (until hamburger is clicked)
+        .trigger {
+            display: none;
+            position: absolute;
+            top: 60px; /* Adjust based on your actual header height */
+            right: 15px;
+            left: 15px;
+            background-color: white; // Or your theme's background color
+            border: 1px solid #e8e8e8;
+            border-radius: 5px;
+            flex-direction: column; /* Stack links vertically on mobile */
+            justify-content: flex-start;
+            align-items: flex-start; /* Align text to the left */
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 9;
+            max-width: 300px; /* Limit width of dropdown menu */
+        }
+
+        // Show the menu when checkbox is checked
+        .nav-trigger:checked + label + .trigger {
+            display: flex;
+        }
+
+        .page-link {
+            padding: 8px 10px;
+            width: 100%; /* Make links take full width of dropdown */
+            border-bottom: 1px solid #eee; /* Separator lines for mobile links */
+            text-align: left;
+        }
+
+        .page-link:last-child {
+            border-bottom: none;
+        }
+    }
+}
