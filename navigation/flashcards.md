@@ -362,7 +362,9 @@ permalink: /flashcards
         <option value="count-desc">Sort by: Item Count (High-Low)</option>
       </select>
     </div>
+    <button id="google-import-btn">📥 Import from Google Sheets</button>
   </div>
+  
 
   <div class="table-container">
     <table id="groups-table">
@@ -418,6 +420,20 @@ permalink: /flashcards
   
   </div>
 
+  <!-- Google Sheet ID Modal -->
+  <div id="google-sheet-modal" class="modal">
+    <div class="modal-content">
+      <h3 class="modal-title">Import from Google Sheets</h3>
+      <div class="form-group">
+        <label for="sheet-id-input">Enter Google Sheet ID:</label>
+        <input type="text" id="sheet-id-input" placeholder="e.g., 1A2B3C4D5E6F...">
+      </div>
+      <div class="modal-actions">
+        <button id="cancel-google-import" class="secondary">Cancel</button>
+        <button id="confirm-google-import">Import</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Zapier Alert Modal -->
 <div id="zapier-modal" class="zapier-modal">
@@ -1152,6 +1168,58 @@ document.addEventListener('DOMContentLoaded', function() {
   // Update URL when threshold changes
   document.getElementById('alert-threshold')?.addEventListener('input', updateZapierUrl);
 });
+// Store sheet ID in sessionStorage temporarily
+document.getElementById('google-import-btn')?.addEventListener('click', () => {
+  document.getElementById('google-sheet-modal').style.display = 'flex';
+});
+
+document.getElementById('cancel-google-import')?.addEventListener('click', () => {
+  document.getElementById('google-sheet-modal').style.display = 'none';
+});
+
+document.getElementById('confirm-google-import')?.addEventListener('click', async () => {
+  const sheetId = document.getElementById('sheet-id-input').value.trim();
+  if (!sheetId) {
+    alert("Please enter a valid Google Sheet ID.");
+    return;
+  }
+
+  sessionStorage.setItem("pending_sheet_id", sheetId);
+  window.location.href = "http://localhost:8212/google/connect";  // OAuth step
+});
+
+// Auto-import after OAuth callback
+document.addEventListener("DOMContentLoaded", async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const shouldImport = urlParams.get("import") === "1";
+  const sheetId = sessionStorage.getItem("pending_sheet_id");
+
+  if (shouldImport && sheetId) {
+    try {
+      const response = await fetch("http://localhost:8212/google/import", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({ sheet_id: sheetId })
+      });
+
+      if (response.ok) {
+        alert("✅ Google Sheets data imported successfully!");
+        sessionStorage.removeItem("pending_sheet_id");
+        location.href = "/optivize_frontend/flashcards";  // refresh
+      } else {
+        const error = await response.json();
+        alert("❌ Import failed: " + (error.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error(err);
+      alert("❌ Error connecting to server");
+    }
+  }
+});
+
 </script>
 
 
