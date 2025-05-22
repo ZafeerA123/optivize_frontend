@@ -367,7 +367,7 @@ permalink: /Calendar
       <!-- Tasks Tab -->
       <div class="tab-pane fade" id="tasksSection">
         <div class="dashboard-box">
-          <h4 class="mb-4">✅ Task Management</h4>
+          <h4 class="mb-4">✅ Employee Management</h4>
           <form id="taskForm" class="mb-4">
             <div class="row g-3">
               <div class="col-md-4">
@@ -389,99 +389,141 @@ permalink: /Calendar
       </div>
     </div>
   </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<h4>Employees</h4>
+<table>
+  <thead><tr><th>Name</th><th>Position</th><th>Work Time</th><th>Actions</th></tr></thead>
+  <tbody id="employeeTableBody"></tbody>
+</table>
+
+<h4>Shipments</h4>
+<table>
+  <thead><tr><th>Inventory</th><th>Amount</th><th>Transport</th><th>Shipment Time</th><th>Actions</th></tr></thead>
+  <tbody id="shipmentTableBody"></tbody>
+</table>
+
 <script>
-    let calendar; 
-    async function initCalendar() {
-        const calendarEl = document.getElementById('calendar');
-        calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-            },
-            events: async function(fetchInfo, successCallback, failureCallback) {
-                try {
-                    // Fetch events from your API
-                    const res = await fetch('/api/calendarv3/events');
-                    const eventsData = await res.json();                   
-                    // Format events for FullCalendar
-                    const formatted = eventsData.events.map(e => ({
-                        title: e.title,
-                        start: e.start_time,
-                        end: e.end_time,
-                        description: e.description,
-                        classNames: [e.category]
-                    }));
-                    successCallback(formatted);
-                } catch (error) {
-                    console.error('Event load error:', error);
-                    failureCallback(error);
-                }
-            },
-            eventClick: function(info) {
-                alert(`Event: ${info.event.title}\nDescription: ${info.event.extendedProps.description}\nStart: ${info.event.start}`);
-            }
+  const { pythonURI, fetchOptions } = window.apiConfig;
+  async function loadCalendarEvents(calendar) {
+    const res = await fetch(`${pythonURI}/api/calendarv3/events`, { ...fetchOptions });
+    const data = await res.json();
+    calendar.removeAllEvents();
+    data.events.forEach(event => {
+      calendar.addEvent({
+        id: event.id,
+        title: event.title,
+        start: event.start,
+        end: event.end
+      });
+    });
+  }
+  async function deleteCalendarEvent(id) {
+    await fetch(`${pythonURI}/api/calendarv3/events/${id}`, {
+      ...fetchOptions, method: 'DELETE'
+    });
+  }
+  async function updateCalendarEvent(id, updatedEvent) {
+    await fetch(`${pythonURI}/api/calendarv3/events/${id}`, {
+      ...fetchOptions,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedEvent)
+    });
+  }
+  async function loadEmployeeTable() {
+    const res = await fetch(`${pythonURI}/api/calendarv3/employees`, { ...fetchOptions });
+    const data = await res.json();
+    const tbody = document.getElementById('employeeTableBody');
+    tbody.innerHTML = data.employees.map(emp => `
+      <tr data-id="${emp.id}">
+        <td contenteditable="true">${emp.name}</td>
+        <td contenteditable="true">${emp.position}</td>
+        <td contenteditable="true">${emp.work_time}</td>
+        <td>
+          <button onclick="updateEmployee(this)">Update</button>
+          <button onclick="deleteEmployee(${emp.id})">Delete</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+  async function loadShipmentTable() {
+    const res = await fetch(`${pythonURI}/api/calendarv3/shipments`, { ...fetchOptions });
+    const data = await res.json();
+    const tbody = document.getElementById('shipmentTableBody');
+    tbody.innerHTML = data.shipments.map(ship => `
+      <tr data-id="${ship.id}">
+        <td contenteditable="true">${ship.inventory}</td>
+        <td contenteditable="true">${ship.amount}</td>
+        <td contenteditable="true">${ship.transport_method}</td>
+        <td contenteditable="true">${new Date(ship.shipment_time).toISOString()}</td>
+        <td>
+          <button onclick="updateShipment(this)">Update</button>
+          <button onclick="deleteShipment(${ship.id})">Delete</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+  async function updateEmployee(btn) {
+    const tr = btn.closest('tr');
+    const id = tr.dataset.id;
+    const [name, position, work_time] = [...tr.children].slice(0, 3).map(td => td.innerText.trim());
+    await fetch(`${pythonURI}/api/calendarv3/employees/${id}`, {
+      ...fetchOptions,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, position, work_time })
+    });
+  }
+  async function deleteEmployee(id) {
+    await fetch(`${pythonURI}/api/calendarv3/employees/${id}`, {
+      ...fetchOptions, method: 'DELETE'
+    });
+    loadEmployeeTable();
+  }
+  async function updateShipment(btn) {
+    const tr = btn.closest('tr');
+    const id = tr.dataset.id;
+    const [inventory, amount, transport_method, shipment_time] = [...tr.children].slice(0, 4).map(td => td.innerText.trim());
+    await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
+      ...fetchOptions,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        inventory,
+        amount: parseInt(amount),
+        transport_method,
+        shipment_time
+      })
+    });
+  }
+  async function deleteShipment(id) {
+    await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
+      ...fetchOptions, method: 'DELETE'
+    });
+    loadShipmentTable();
+  }
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize FullCalendar
+    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+      initialView: 'dayGridMonth',
+      editable: true,
+      eventClick: async function (info) {
+        if (confirm("Delete this event?")) {
+          await deleteCalendarEvent(info.event.id);
+          info.event.remove();
+        }
+      },
+      eventDrop: async function (info) {
+        await updateCalendarEvent(info.event.id, {
+          title: info.event.title,
+          start: info.event.start.toISOString(),
+          end: info.event.end ? info.event.end.toISOString() : null
         });
-        calendar.render();
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-        initCalendar();
-        loadEmployees();
-        loadShipments();
+      }
     });
-    async function loadEmployees() {
-        try {
-            const response = await fetch('/api/calendarv3/table');
-            const data = await response.json();
-            const employeeList = document.getElementById('employeeList');            
-            employeeList.innerHTML = data.employees.map(emp => `
-                <div class="list-item">
-                    <span>${emp.name} - ${emp.position}</span>
-                    <span>Availability: ${emp.work_time}</span>
-                </div>
-            `).join('');
-        } catch (error) {
-            console.error('Error loading employees:', error);
-        }
-    }
-    async function loadShipments() {
-        try {
-            const response = await fetch('/api/calendarv3/shipments');
-            const data = await response.json();
-            const shipmentList = document.getElementById('shipmentList');         
-            shipmentList.innerHTML = data.shipments.map(ship => `
-                <div class="list-item">
-                    <span>${ship.inventory} (${ship.amount})</span>
-                    <span>${ship.transport_method} - ${new Date(ship.shipment_time).toLocaleDateString()}</span>
-                </div>
-            `).join('');
-        } catch (error) {
-            console.error('Error loading shipments:', error);
-        }
-    }
-    // Example form handler for events
-    document.getElementById('eventForm')?.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const formData = {
-            title: this.querySelector('[name="title"]').value,
-            description: this.querySelector('[name="description"]').value,
-            start_time: this.querySelector('[name="start_time"]').value,
-            end_time: this.querySelector('[name="end_time"]').value,
-            category: this.querySelector('[name="category"]').value
-        };
-        try {
-            await fetch('/api/calendarv3/events', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            calendar.refetchEvents();
-            this.reset();
-        } catch (error) {
-            console.error('Error creating event:', error);
-        }
-    });
+    calendar.render();
+    await loadCalendarEvents(calendar);
+// Load Employee and Shipment Tables
+    await loadEmployeeTable();
+    await loadShipmentTable();
+  });
 </script>
