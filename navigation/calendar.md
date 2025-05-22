@@ -605,6 +605,52 @@ async function updateEvent(id, { title, description, start_time, end_time, categ
       method: 'DELETE'
     });
   }
+  document.addEventListener('DOMContentLoaded', async () => {
+  const events = await fetchCalendarEvents();
+  renderFullCalendar(events);
+});
+ async function fetchCalendarEvents() {
+  try {
+    const res = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/events');
+    const json = await res.json();
+
+    if (!json.success || !json.events) {
+      console.error('Invalid API response', json);
+      return [];
+    }
+
+    // Map events to FullCalendar format
+    return json.events.map(event => ({
+      id: event.id,
+      title: event.title,
+      start: event.start_time.replace(' ', 'T'),
+      end: event.end_time.replace(' ', 'T'),
+      extendedProps: {
+        description: event.description,
+        category: event.category
+      }
+    }));
+  } catch (error) {
+    console.error('Error fetching calendar events:', error);
+    return [];
+  }
+}
+
+function renderFullCalendar(events) {
+  const calendarEl = document.getElementById('calendar');
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    height: 'auto',
+    events: events,
+    eventClick: function(info) {
+      alert(`Title: ${info.event.title}
+Description: ${info.event.extendedProps.description}
+Category: ${info.event.extendedProps.category}`);
+    }
+  });
+
+  calendar.render();
+}
 
   // --- EMPLOYEES ---
   async function getEmployees() {
