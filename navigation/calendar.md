@@ -420,6 +420,7 @@ permalink: /Calendar
 <h1>Calendar and Management</h1>
 
 <!-- Employee Table -->
+<div id="employee-table"></div>
 <h2>Employee Table</h2>
 <table id="employeeTable" border="1">
   <thead>
@@ -531,38 +532,32 @@ async function updateEvent(id, { title, description, start_time, end_time, categ
   }
   async function getEmployees() {
   try {
-    const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/employees', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
+    const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/employees');
     if (!response.ok) throw new Error('Failed to fetch employees');
 
-    const employees = await response.json();
-    displayEmployees(employees);
-  } catch (error) {
-    console.error('Error fetching employees:', error);
+    const data = await response.json();
+
+    if (!data || !data.employees) {
+      console.error('No employees in response:', data);
+      return;
+    }
+
+    displayEmployees(data.employees);
+
+  } catch (err) {
+    console.error('Error fetching employees:', err);
   }
 }
   function displayEmployees(employees) {
-  const tableBody = document.querySelector('#employee-table tbody');
-  tableBody.innerHTML = ''; // Clear existing rows
+  const table = document.getElementById("employee-table");
+  if (!table) {
+    console.error("Element with id 'employee-table' not found");
+    return;
+  }
 
-  employees.forEach(emp => {
-    const tr = document.createElement('tr');
-
-    // Adjust these according to your employee data structure
-    tr.innerHTML = `
-      <td>${emp.id || ''}</td>
-      <td>${emp.name || ''}</td>
-      <td>${emp.position || ''}</td>
-      <td>${emp.department || ''}</td>
-    `;
-
-    tableBody.appendChild(tr);
-  });
+  table.innerHTML = employees.map(emp =>
+    `<tr><td>${emp.name}</td><td>${emp.role}</td></tr>`
+  ).join("");
 }
 async function updateEmployee(id, { name, position, work_time }) {
     await fetch(`${pythonURI}/api/calendarv3/employees/${id}`, {
