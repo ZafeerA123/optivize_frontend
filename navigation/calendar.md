@@ -261,17 +261,10 @@ permalink: /Calendar
       <li class="nav-item" role="presentation">
         <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#calendarSection">📅 Calendar</button>
       </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#inventorySection">📦 Inventory</button>
       </li>
       <li class="nav-item" role="presentation">
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#shipmentsSection">🚚 Shipments</button>
       </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#eventsSection">🎉 Events</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tasksSection">✅ Tasks</button>
       </li>
     </ul>
     <div class="tab-content">
@@ -348,6 +341,46 @@ permalink: /Calendar
   <button type="submit">Add Event</button>
 </form>
 
+<h2>Add Shipment</h2>
+<form id="shipmentForm">
+  <label>
+    Inventory Item:<br>
+    <input type="text" name="inventory" required />
+  </label><br><br>
+
+  <label>
+    Quantity:<br>
+    <input type="number" name="amount" required />
+  </label><br><br>
+
+  <label>
+    Transport Method:<br>
+    <input type="text" name="transport_method" required />
+  </label><br><br>
+
+  <label>
+    Shipment Time (YYYY-MM-DD HH:mm:ss):<br>
+    <input type="text" name="shipment_time" required />
+  </label><br><br>
+
+  <button type="submit">Submit Shipment</button>
+</form>
+
+<h2>Shipment List</h2>
+<table id="shipment-table" border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Item</th>
+      <th>Quantity</th>
+      <th>Transport Method</th>
+      <th>Shipment Time</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
 <div id="calendar"></div>
           <div id="eventList"></div>
         </div>
@@ -382,7 +415,6 @@ permalink: /Calendar
   <h1>Calendar</h1>
   <div id="calendar"></div>
 </div>
-
 <!-- Scripts -->
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -404,38 +436,6 @@ permalink: /Calendar
     calendar.render();
   });
 </script>
-
-<h1>Calendar and Management</h1>
-
-<!-- Employee Table -->
-<div id="employee-table"></div>
-<h2>Employee Table</h2>
-<table id="employeeTable" border="1">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Position</th>
-      <th>Work Time</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<!-- Shipment Table -->
-<h2>Shipment Table</h2>
-<table id="shipmentTable" border="1">
-  <thead>
-    <tr>
-      <th>Inventory</th>
-      <th>Amount</th>
-      <th>Transport Method</th>
-      <th>Shipment Time</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
 
 <script>
   const pythonURI = 'https://optivize.stu.nighthawkcodingsociety.com'; // Replace with your backend
@@ -684,125 +684,111 @@ Category: ${info.event.extendedProps.category}`);
 
   calendar.render();
 }
-
-  // --- EMPLOYEES ---
-  async function getEmployees() {
-    const res = await fetch(`${pythonURI}/api/calendarv3/employees`, fetchOptions);
-    return await res.json();
-  }
-  async function postEmployee({ name, position, work_time }) {
-    await fetch(`${pythonURI}/api/calendarv3/employees`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, position, work_time })
-    });
-  }
-  async function getEmployees() {
+  // --- SHIPMENTS ---
+  // Fetch all shipments
+async function getShipments() {
   try {
-    const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/employees');
-    if (!response.ok) throw new Error('Failed to fetch employees');
+    const response = await fetch(`${pythonURI}/api/calendarv3/shipments`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
     const data = await response.json();
-
-    if (!data || !data.employees) {
-      console.error('No employees in response:', data);
-      return;
-    }
-
-    displayEmployees(data.employees);
-
-  } catch (err) {
-    console.error('Error fetching employees:', err);
+    displayShipments(data.shipments || []);
+  } catch (error) {
+    console.error('Error fetching shipments:', error);
   }
 }
-  function displayEmployees(employees) {
-  const table = document.getElementById("employee-table");
-  if (!table) {
-    console.error("Element with id 'employee-table' not found");
-    return;
-  }
 
-  table.innerHTML = employees.map(emp =>
-    `<tr><td>${emp.name}</td><td>${emp.role}</td></tr>`
-  ).join("");
-}
-async function updateEmployee(id, { name, position, work_time }) {
-    await fetch(`${pythonURI}/api/calendarv3/employees/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, position, work_time })
-    });
-  }
-  async function deleteEmployee(id) {
-    await fetch(`${pythonURI}/api/calendarv3/employees/${id}`, {
-      method: 'DELETE'
-    });
-  }
-
-  // --- SHIPMENTS ---
-  async function getShipments() {
-    const res = await fetch(`${pythonURI}/api/calendarv3/shipments`, fetchOptions);
-    return await res.json();
-  }
-  async function postShipment({ inventory, amount, transport_method, shipment_time }) {
+// Add a shipment
+async function postShipment({ inventory, amount, transport_method, shipment_time }) {
+  try {
     await fetch(`${pythonURI}/api/calendarv3/shipments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ inventory, amount, transport_method, shipment_time })
     });
-  }
-  async function getShipments() {
-  try {
-    const response = await fetch("https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/shipments", {
-      method: "GET",
-    });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
+    getShipments(); // Refresh list
   } catch (error) {
-    console.error("Error fetching shipments:", error);
-    return { shipments: [] }; // return default object to prevent crash
+    console.error('Error posting shipment:', error);
   }
 }
 
+// Update a shipment
+async function updateShipment(id, { inventory, amount, transport_method, shipment_time }) {
+  try {
+    await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ inventory, amount, transport_method, shipment_time })
+    });
+
+    getShipments();
+  } catch (error) {
+    console.error('Error updating shipment:', error);
+  }
+}
+
+// Delete a shipment
+async function deleteShipment(id) {
+  try {
+    await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
+      method: 'DELETE'
+    });
+
+    getShipments();
+  } catch (error) {
+    console.error('Error deleting shipment:', error);
+  }
+}
+
+// Display shipments in a table
 function displayShipments(shipments) {
   const tableBody = document.querySelector('#shipment-table tbody');
-  tableBody.innerHTML = ''; // Clear existing rows
+  tableBody.innerHTML = '';
 
   shipments.forEach(shipment => {
     const tr = document.createElement('tr');
 
-    // Adjust these fields based on your shipment data structure
     tr.innerHTML = `
       <td>${shipment.id || ''}</td>
-      <td>${shipment.item || ''}</td>
-      <td>${shipment.quantity || ''}</td>
-      <td>${shipment.status || ''}</td>
-      <td>${shipment.date || ''}</td>
+      <td>${shipment.inventory || ''}</td>
+      <td>${shipment.amount || ''}</td>
+      <td>${shipment.transport_method || ''}</td>
+      <td>${shipment.shipment_time || ''}</td>
+      <td>
+        <button onclick="deleteShipment('${shipment.id}')">Delete</button>
+      </td>
     `;
 
     tableBody.appendChild(tr);
   });
 }
 
-  async function updateShipment(id, { inventory, amount, transport_method, shipment_time }) {
-    await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ inventory, amount, transport_method, shipment_time })
-    });
-  }
-  async function deleteShipment(id) {
-    await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
-      method: 'DELETE'
-    });
-  }
+// Form submission handler
+document.addEventListener('DOMContentLoaded', () => {
+  getShipments();
 
-  // --- TABLE LOGIC ---
+  const shipmentForm = document.getElementById('shipmentForm');
+  shipmentForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(shipmentForm);
+    const shipmentData = {
+      inventory: formData.get('inventory'),
+      amount: parseInt(formData.get('amount')),
+      transport_method: formData.get('transport_method'),
+      shipment_time: formData.get('shipment_time')
+    };
+
+    await postShipment(shipmentData);
+    shipmentForm.reset();
+  });
+});
+ // --- TABLE LOGIC ---
 
   // EMPLOYEES
   async function loadEmployeeTable() {
