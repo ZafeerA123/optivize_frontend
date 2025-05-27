@@ -339,6 +339,68 @@ permalink: /flashcards
   margin: 10px 0;
   word-break: break-all;
 }
+
+.tooltip-icon {
+  display: inline-block;
+  background: #ffffff22;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+  line-height: 18px;
+  font-size: 12px;
+  margin-left: 8px;
+  cursor: help;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.tooltip-icon:hover {
+  background: #ffffff44;
+  transform: scale(1.1);
+}
+
+.tooltip-icon::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.95);
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  width: 260px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 100;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.tooltip-icon::before {
+  content: '';
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.95) transparent transparent transparent;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tooltip-icon:hover::after,
+.tooltip-icon:hover::before {
+  opacity: 1;
+}
+
 </style>
 
 <div class="container">
@@ -363,6 +425,7 @@ permalink: /flashcards
       </select>
     </div>
     <button id="google-import-btn">📥 Import from Google Sheets</button>
+    <span class="tooltip-icon" data-tooltip="Google is yet to verify our app. To continue to import, click “Advanced” and then “Proceed to Optivize” when prompted.">?</span>
   </div>
   
 
@@ -425,7 +488,11 @@ permalink: /flashcards
     <div class="modal-content">
       <h3 class="modal-title">Import from Google Sheets</h3>
       <div class="form-group">
-        <label for="sheet-id-input">Enter Google Sheet ID:</label>
+        <label for="sheet-id-input">
+          Enter Google Sheet ID:
+          <span class="tooltip-icon" data-tooltip="The Sheet ID is the long string in your Google Sheets URL. 
+        Example: https://docs.google.com/spreadsheets/d/**1A2B3C4D5E6F7G8H9I**/edit — the bold part is your Sheet ID.">?</span>
+        </label>
         <input type="text" id="sheet-id-input" placeholder="e.g., 1A2B3C4D5E6F...">
       </div>
       <div class="modal-actions">
