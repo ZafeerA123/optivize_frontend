@@ -6,145 +6,479 @@ hide: true
 permalink: /navigation/predictions
 ---
 <style>
-
-
-/* Sprinkle overlay full-screen */
-.sprinkle-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 1;
+:root {
+  --bg-start: #0b1e3b;
+  --bg-end: #162b4d;
+  --text: #ffffff;
+  --primary: #fbb034;
+  --secondary: #ffdd00;
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.15);
+  --success: #4ade80;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #60a5fa;
 }
 
-/* Sprinkle styles */
-.sprinkle {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    animation: sprinkleFall linear infinite;
-    z-index: 1;
+body {
+  background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
 }
 
-/* Sprinkle animation keyframes */
-@keyframes sprinkleFall {
-    0% {
-        transform: translateY(-10px) rotate(0deg);
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(110vh) rotate(360deg);
-        opacity: 0;
-    }
+/* Main container */
+.product-prediction-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "train"
+    "predict"
+    "history";
 }
 
-/* Container over backdrop */
-.main-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.8);
-    margin: 2rem;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+/* Card styles */
+.section-card {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Heading with product font style */
-.main-content h1 {
-    font-size: 3rem;
-    color: #5a3e36;
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+.section-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.section-card h2 {
+  color: var(--primary);
+  margin-top: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Form styles */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--glass-highlight);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(251, 176, 52, 0.2);
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-group {
+  flex: 1;
 }
 
 /* Button styles */
 .button {
-    background: #ffb4a2;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
 }
 
-.button:hover {
-    background: #ffcad4;
-    transform: translateY(-2px);
+.primary-btn {
+  background: var(--primary);
+  color: #0b1e3b;
 }
 
-/* Optional: fade-in animation for main content */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+.primary-btn:hover {
+  background: var(--secondary);
+  transform: translateY(-2px);
 }
-.main-content {
-    animation: fadeIn 1s ease forwards;
+
+.secondary-btn {
+  background: var(--glass-highlight);
+  color: var(--text);
 }
-.tooltip {
-  display: inline-block;
-  margin-left: 6px;
-  background: #555;
-  color: #fff;
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
+
+.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Results containers */
+.results-container {
+  margin-top: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.loading {
+  padding: 1rem;
   text-align: center;
-  line-height: 16px;
-  font-size: 12px;
-  font-weight: bold;
-  cursor: help;
-  position: relative;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
 }
 
-.tooltip::after {
-  content: attr(data-tooltip);
+/* Training results */
+.success-message {
+  background: rgba(74, 222, 128, 0.1);
+  border-left: 4px solid var(--success);
+  padding: 1.25rem;
+}
+
+.success-message h3 {
+  margin-top: 0;
+  color: var(--success);
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 4px solid var(--danger);
+  padding: 1.25rem;
+}
+
+.error-message h3 {
+  margin-top: 0;
+  color: var(--danger);
+}
+
+.feature-importance {
+  margin-top: 1rem;
+}
+
+.feature-importance h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.feature-importance ul {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+/* Prediction results */
+.prediction-result {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.prediction-result.success {
+  background: rgba(74, 222, 128, 0.1);
+  border-left: 4px solid var(--success);
+}
+
+.prediction-result.warning {
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 4px solid var(--warning);
+}
+
+.score-display {
+  text-align: center;
+}
+
+.score-value {
+  font-size: 3rem;
+  font-weight: 700;
+  display: block;
+  line-height: 1;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.25rem;
+}
+
+.score-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.probability {
+  display: block;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 0.5rem;
+}
+
+.prediction-details h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+}
+
+.category {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Insights grid */
+.insights-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.insight-card {
+  background: var(--glass-highlight);
+  border-radius: 12px;
+  padding: 1.25rem;
+  border: 1px solid var(--glass-border);
+}
+
+.insight-card h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+}
+
+/* Score visualization */
+.score-visualization {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.gauge-container {
+  flex: 1;
+  max-width: 200px;
+}
+
+.gauge-track {
+  height: 8px;
+  background: var(--glass);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gauge-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--danger), var(--warning), var(--success));
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.gauge-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.score-details {
+  flex: 2;
+}
+
+/* Price analysis */
+.price-comparison {
+  margin: 1rem 0;
+}
+
+.price-bar {
+  height: 6px;
+  background: linear-gradient(to right, var(--success), var(--warning), var(--danger));
+  border-radius: 3px;
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.current-price-marker {
   position: absolute;
-  bottom: 125%;
+  top: -28px;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: var(--bg-start);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.current-price-marker::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.85);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 5px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--primary);
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
   font-size: 0.75rem;
-  white-space: normal;
-  width: 220px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  z-index: 10;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 0.5rem;
 }
 
-.tooltip:hover::after {
-  opacity: 1;
+/* Marketing meter */
+.marketing-meter {
+  height: 8px;
+  background: var(--glass);
+  border-radius: 4px;
+  margin: 1rem 0;
+  position: relative;
+  overflow: hidden;
 }
 
+.marketing-meter .meter-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--info), #7c3aed);
+  border-radius: 4px;
+}
+
+/* Distribution analysis */
+.distribution-analysis {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.distribution-meter {
+  height: 8px;
+  background: var(--glass);
+  border-radius: 4px;
+  margin: 0.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.distribution-meter .meter-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--info), #3F51B5);
+  border-radius: 4px;
+}
+
+/* History table */
+.history-controls {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.history-controls input {
+  flex: 1;
+  padding: 0.75rem;
+  background: var(--glass-highlight);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.9375rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+th {
+  background: var(--glass-highlight);
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.success-row {
+  background: rgba(74, 222, 128, 0.05);
+}
+
+.warning-row {
+  background: rgba(245, 158, 11, 0.05);
+}
+
+/* Tooltip styles */
 .tooltip-icon {
-  display: inline-block;
-  background: #5a3e36;
-  color: white;
-  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 18px;
   height: 18px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--bg-start);
   font-size: 12px;
-  text-align: center;
-  line-height: 18px;
-  cursor: help;
-  margin-left: 5px;
   font-weight: bold;
-  transition: all 0.2s ease;
-}
-
-.tooltip-icon:hover {
-  background: #7a5e56;
-  transform: scale(1.1);
+  margin-left: 6px;
+  cursor: help;
+  vertical-align: middle;
+  position: relative;
 }
 
 .tooltip-icon::after {
@@ -191,32 +525,54 @@ permalink: /navigation/predictions
   opacity: 1;
 }
 
-</style>
-
-
-<script>
-const overlay = document.getElementById('sprinkle-overlay');
-
-function createSprinkle() {
-    const sprinkle = document.createElement('div');
-    sprinkle.classList.add('sprinkle');
-    const size = Math.random() * 4 + 6;
-    sprinkle.style.width = `${size}px`;
-    sprinkle.style.height = `${size}px`;
-    sprinkle.style.left = `${Math.random() * window.innerWidth}px`;
-    sprinkle.style.backgroundColor = sprinkleColors[Math.floor(Math.random() * sprinkleColors.length)];
-    sprinkle.style.animationDuration = `${Math.random() * 5 + 5}s`;
-    sprinkle.style.opacity = Math.random() * 0.5 + 0.5;
-
-    overlay.appendChild(sprinkle);
-    setTimeout(() => sprinkle.remove(), 10000);
+/* Grid areas */
+#training-section {
+  grid-area: train;
 }
 
-</script>
+#prediction-section {
+  grid-area: predict;
+}
+
+#history-section {
+  grid-area: history;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.results-container {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .product-prediction-container {
+    padding: 1rem;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .score-visualization {
+    flex-direction: column;
+  }
+  
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+</style>
 
 <div class="product-prediction-container">
   <!-- Training Section -->
-  <div class="section-card">
+  <div id="training-section" class="section-card">
     <h2>Train Model</h2>
     <div class="form-group">
       <label>Training Samples (JSON)</label>
@@ -239,12 +595,12 @@ function createSprinkle() {
   }
 ]'></textarea>
     </div>
-    <button id="train-model" class="primary-btn">Train Model</button>
+    <button id="train-model" class="button primary-btn">Train Model</button>
     <div id="training-results" class="results-container"></div>
   </div>
 
-  <!-- Prediction Section -->
-  <div class="section-card">
+  <!-- Prediction Section - Now wider below training -->
+  <div id="prediction-section" class="section-card">
     <h2>Predict Success</h2>
     <div class="form-row">
       <div class="form-group">
@@ -260,7 +616,6 @@ function createSprinkle() {
           <option value="Summer">Summer</option>
           <option value="Fall">Fall</option>
           <option value="holiday">Holiday</option>
-
         </select>
       </div>
     </div>
@@ -287,35 +642,34 @@ function createSprinkle() {
         </label>
         <input type="number" id="marketing" min="1" max="10" placeholder="7">
       </div>
-
       <div class="form-group">
         <label>
           Distribution (1–10)
           <span class="tooltip-icon" data-tooltip="
-      1 – Sold in one small local store
-      2 – Limited availability in select neighborhoods
-      3 – Only available in one city
-      4 – Some regional presence
-      5 – Moderate availability across multiple areas
-      6 – Broad regional distribution
-      7 – Available in multiple states or regions
-      8 – National availability via stores or online
-      9 – Widespread presence in major chains and platforms
-      10 – Global distribution and fulfillment
-      ">?</span>
+            1 – Sold in one small local store
+            2 – Limited availability in select neighborhoods
+            3 – Only available in one city
+            4 – Some regional presence
+            5 – Moderate availability across multiple areas
+            6 – Broad regional distribution
+            7 – Available in multiple states or regions
+            8 – National availability via stores or online
+            9 – Widespread presence in major chains and platforms
+            10 – Global distribution and fulfillment
+          ">?</span>
         </label>
         <input type="number" id="distribution" min="1" max="10" placeholder="8">
       </div>
     </div>
-    <button id="predict-success" class="primary-btn">Predict Success</button>
+    <button id="predict-success" class="button primary-btn">Predict Success</button>
     <div id="prediction-results" class="results-container"></div>
   </div>
 
   <!-- History Section -->
-  <div class="section-card">
+  <div id="history-section" class="section-card">
     <h2>Prediction History</h2>
     <div class="history-controls">
-      <button id="refresh-history" class="secondary-btn">Refresh</button>
+      <button id="refresh-history" class="button secondary-btn">Refresh</button>
       <input type="text" id="history-search" placeholder="Search history...">
     </div>
     <div id="history-results" class="results-container">
@@ -390,77 +744,126 @@ function createSprinkle() {
         `;
       }
     });
-  function renderDistributionAnalysis(distAnalysis) {
-  if (!distAnalysis) return '<div class="no-data">No distribution data available</div>';
 
-  return `
-    <div class="insight-card distribution-analysis">
-      <h4>Channel Distribution Analysis</h4>
+    // Prediction Functionality
+    document.getElementById('predict-success').addEventListener('click', async function() {
+      const type = document.getElementById('product-type').value;
+      const seasonality = document.getElementById('seasonality').value;
+      const price = parseFloat(document.getElementById('price').value);
+      const marketing = parseInt(document.getElementById('marketing').value);
+      const distribution = parseInt(document.getElementById('distribution').value);
+      const resultsDiv = document.getElementById('prediction-results');
       
-      <div class="distribution-metrics">
-        <div class="metric">
-          <span class="value">${distAnalysis.current_channels}</span>
-          <span class="label">Your Channels</span>
-        </div>
-        <div class="metric">
-          <span class="value">${distAnalysis.category_average}</span>
-          <span class="label">Category Avg</span>
-        </div>
-        <div class="metric">
-          <span class="value">${distAnalysis.rating}</span>
-          <span class="label">Rating</span>
-        </div>
-      </div>
+      if (!type || isNaN(price) || isNaN(marketing) || isNaN(distribution)) {
+        resultsDiv.innerHTML = '<div class="error-message">Please fill all fields with valid values</div>';
+        return;
+      }
+      if (price <= 0) {
+        resultsDiv.innerHTML = '<div class="error-message">Please enter a valid price greater than 0</div>';
+        return;
+      }
       
-      <div class="distribution-visual">
-        <div class="range-labels">
-          <span>Min: ${distAnalysis.effective_range.min}</span>
-          <span>Optimal: ${distAnalysis.category_average}</span>
-          <span>Max: ${distAnalysis.effective_range.max}</span>
-        </div>
-        <div class="range-bar">
-          <div class="current-marker" style="left: ${calculateDistributionPosition(distAnalysis)}%">
-            <div class="marker-label">${distAnalysis.current_channels}</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="distribution-insight">
-        <p><strong>${distAnalysis.advice}</strong></p>
-        <p>Difference: ${distAnalysis.difference} (${distAnalysis.percentage_difference}%)</p>
-      </div>
-      
-      <div class="distribution-recommendations">
-        <h5>Recommendations:</h5>
-        <ul>
-          ${distAnalysis.recommendations.map(r => `<li>${r}</li>`).join('')}
-        </ul>
-      </div>
-    </div>
-  `;
-}
-
-// Helper function for positioning
-function calculateDistributionPosition(distAnalysis) {
-  const range = distAnalysis.effective_range.max - distAnalysis.effective_range.min;
-  return ((distAnalysis.current_channels - distAnalysis.effective_range.min) / range) * 100;
-}
-
-    // Enhanced Insight Rendering with Fallbacks
-    function renderInsights(insights, result) {
-      if (!insights) {
-        return `
+      try {
+        resultsDiv.innerHTML = '<p class="loading">Making prediction...</p>';
+        
+        const response = await fetch(`${API_BASE}/predict`, {
+          ...fetchOptions,
+          method: 'POST',
+          body: JSON.stringify({
+            product_type: type,
+            seasonality: seasonality,
+            price: price,
+            marketing: marketing,
+            distribution_channels: distribution
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          const successClass = result.is_success ? 'success' : 'warning';
+          resultsDiv.innerHTML = `
+            <div class="prediction-result ${successClass}">
+              <div class="score-display">
+                <span class="score-value">${(result.score || 0).toFixed(1)}</span>
+                <span class="score-label">Success Score</span>
+                <span class="probability">${result.insights?.success_probability?.range || ''}</span>
+              </div>
+              <div class="prediction-details">
+                <h3>${result.is_success ? '👍 Launch Recommended' : '👎 Needs Improvement'}</h3>
+                <p class="category">${result.category || 'N/A'} • ${result.insights?.score_analysis?.label || ''}</p>
+                ${renderInsights(result.insights, result)}
+              </div>
+            </div>
+          `;
+          loadHistory();
+        } else {
+          throw new Error(result.message || 'Prediction failed');
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `
           <div class="error-message">
-            <h4>Data Loading Issue</h4>
-            <p>No insights data was received from the server.</p>
-            <p>Possible causes:</p>
-            <ul>
-              <li>Model not properly trained</li>
-              <li>Insufficient historical data</li>
-              <li>Backend API issue</li>
-            </ul>
+            <h3>Prediction Error</h3>
+            <p>${error.message}</p>
+            ${error.message.includes('trained') ? '<p>Please train the model first</p>' : ''}
           </div>
         `;
+      }
+    });
+
+    // History Functionality
+    async function loadHistory(searchTerm = '') {
+      const tableBody = document.getElementById('history-table-body');
+      tableBody.innerHTML = '<tr><td colspan="5" class="loading">Loading history...</td></tr>';
+      
+      try {
+        const response = await fetch(`${API_BASE}/history`, {
+          ...fetchOptions,
+          method: 'GET'
+        });
+        const history = await response.json();
+        
+        if (response.ok) {
+          let filtered = Array.isArray(history) ? history : [];
+          if (searchTerm) {
+            const term = searchTerm.toLowerCase();
+            filtered = filtered.filter(item => 
+              (item.product_type?.toLowerCase().includes(term) || false) ||
+              (item.product_category?.toLowerCase().includes(term) || false) ||
+              (item.price?.toString().includes(term) || false) ||
+              (item.success_score?.toString().includes(term) || false)
+            );
+          }
+          
+          tableBody.innerHTML = filtered.length > 0 
+            ? filtered.map(item => `
+                <tr class="${item.predicted_success ? 'success-row' : 'warning-row'}">
+                  <td>${item.product_type || 'N/A'}</td>
+                  <td>${item.success_score?.toFixed(1) || 'N/A'}</td>
+                  <td>$${item.price?.toFixed(2) || 'N/A'}</td>
+                  <td>${item.product_category || 'N/A'}</td>
+                  <td>${item.date_created ? new Date(item.date_created).toLocaleString() : 'N/A'}</td>
+                </tr>
+              `).join('')
+            : '<tr><td colspan="5">No matching predictions found</td></tr>';
+        } else {
+          throw new Error(history.message || 'Failed to load history');
+        }
+      } catch (error) {
+        tableBody.innerHTML = `<tr><td colspan="5" class="error">Error loading history: ${error.message}</td></tr>`;
+      }
+    }
+
+    document.getElementById('refresh-history').addEventListener('click', () => loadHistory());
+    document.getElementById('history-search').addEventListener('input', (e) => loadHistory(e.target.value));
+    
+    // Initial load
+    loadHistory();
+    
+    // Helper function to render insights
+    function renderInsights(insights, result) {
+      if (!insights) {
+        return '<div class="no-data">No insights data available</div>';
       }
 
       // Safe data access with fallbacks
@@ -539,17 +942,6 @@ function calculateDistributionPosition(distAnalysis) {
                 <div class="score-details">
                   <h3>${scoreAnalysis.label} (${result?.score?.toFixed(1) || 'N/A'})</h3>
                   <p>${scoreAnalysis.description}</p>
-                  ${scoreAnalysis.distribution_analysis ? `
-                    <div class="distribution-analysis">
-                      <h4>Distribution Analysis</h4>
-                      <div class="distribution-meter">
-                        <div class="meter-fill" 
-                            style="width: ${((scoreAnalysis.distribution_score || 0) / 10) * 100}%"></div>
-                        <span>${scoreAnalysis.distribution_score || 0}/10</span>
-                      </div>
-                      <p>${scoreAnalysis.distribution_analysis}</p>
-                    </div>
-                  ` : ''}
                 </div>
               </div>
             ` : '<p class="no-data">No score analysis available</p>'}
@@ -564,25 +956,23 @@ function calculateDistributionPosition(distAnalysis) {
                   <div class="current-price-marker" style="left: ${calculatePricePosition()}%">
                     $${priceAnalysis.current_price.toFixed(2)}
                   </div>
-                  <div class="range-labels">
-                    <span>$${(priceAnalysis.price_range.min || 0).toFixed(2)}</span>
-                    <span>Avg: $${(priceAnalysis.category_average || 0).toFixed(2)}</span>
-                    <span>$${(priceAnalysis.price_range.max || 0).toFixed(2)}</span>
-                  </div>
+                </div>
+                <div class="range-labels">
+                  <span>$${(priceAnalysis.price_range.min || 0).toFixed(2)}</span>
+                  <span>Avg: $${(priceAnalysis.category_average || 0).toFixed(2)}</span>
+                  <span>$${(priceAnalysis.price_range.max || 0).toFixed(2)}</span>
                 </div>
               </div>
               <p><strong>${priceAnalysis.position || 'N/A'}</strong>: ${priceAnalysis.advice || ''}</p>
             ` : '<p class="no-data">No price analysis available</p>'}
           </div>
-          <!-- NEW Distribution Analysis Card -->
-          ${renderDistributionAnalysis(insights.distribution_analysis)}
+          
           <!-- Marketing Analysis -->
           <div class="insight-card marketing-analysis">
             <h4>Marketing Effectiveness</h4>
             ${marketingAnalysis.current ? `
               <div class="marketing-meter">
                 <div class="meter-fill" style="width: ${(marketingAnalysis.current / 10) * 100}%"></div>
-                <span>${marketingAnalysis.current}/10 (Avg: ${marketingAnalysis.average_successful?.toFixed(1) || 'N/A'})</span>
               </div>
               <p><strong>${marketingAnalysis.rating || 'N/A'}</strong>: ${marketingAnalysis.advice || ''}</p>
               <p>Effective range: ${marketingAnalysis.effective_range?.min || 'N/A'}-${marketingAnalysis.effective_range?.max || 'N/A'}/10</p>
@@ -613,568 +1003,5 @@ function calculateDistributionPosition(distAnalysis) {
         </div>
       `;
     }
-
-    function renderDistributionAnalysis(distAnalysis) {
-      if (!distAnalysis) return '<div class="no-data">No distribution data</div>';
-
-      return `
-        <div class="insight-card distribution-analysis">
-          <h4>Distribution Channels</h4>
-          
-          <div class="distribution-header">
-            <div class="distribution-score">
-              <span class="score">${distAnalysis.score}/100</span>
-              <span class="rating">${distAnalysis.rating}</span>
-            </div>
-            <div class="distribution-meter">
-              <div class="meter-fill" style="width: ${distAnalysis.score * 10}%"></div>
-            </div>
-          </div>
-          
-          <p class="distribution-description">${distAnalysis.description}</p>
-          
-          <div class="channel-details">
-            <h5>Current Channel Status:</h5>
-            <ul class="channel-list">
-              ${distAnalysis.channel_analysis.map(item => `<li>${item}</li>`).join('')}
-            </ul>
-          </div>
-          
-          <div class="distribution-recommendations">
-            <h5>Recommendations:</h5>
-            <ul class="recommendation-list">
-              ${distAnalysis.recommendations.map(item => `<li>${item}</li>`).join('')}
-            </ul>
-          </div>
-        </div>
-      `;
-    }
-    // Prediction Functionality with Debugging
-    document.getElementById('predict-success').addEventListener('click', async function() {
-      const type = document.getElementById('product-type').value;
-      const seasonality = document.getElementById('seasonality').value;
-      const price = parseFloat(document.getElementById('price').value);
-      const marketing = parseInt(document.getElementById('marketing').value);
-      const distribution = parseInt(document.getElementById('distribution').value);
-      const resultsDiv = document.getElementById('prediction-results');
-      
-      if (!type || isNaN(price) || isNaN(marketing) || isNaN(distribution)) {
-        resultsDiv.innerHTML = '<div class="error-message">Please fill all fields with valid values</div>';
-        return;
-      }
-      if (price <= 0) {
-        resultsDiv.innerHTML = '<div class="error-message">Please enter a valid price greater than 0</div>';
-        return;
-      }
-      
-      try {
-        resultsDiv.innerHTML = '<p class="loading">Making prediction...</p>';
-        
-        const response = await fetch(`${API_BASE}/predict`, {
-          ...fetchOptions,
-          method: 'POST',
-          body: JSON.stringify({
-            product_type: type,
-            seasonality: seasonality,
-            price: price,
-            marketing: marketing,
-            distribution_channels: distribution
-          })
-        });
-        
-        const result = await response.json();
-        console.log("API Response:", result);  // Debugging line
-        
-        if (response.ok) {
-          const successClass = result.is_success ? 'success' : 'warning';
-          resultsDiv.innerHTML = `
-            <div class="prediction-result ${successClass}">
-              <div class="score-display">
-                  <span class="score-value">${(result.score || 0).toFixed(1)}%</span>  <!-- Ensuring it's a percentage -->
-                <span class="score-label">Success Score</span>
-                <span class="probability">${result.insights?.success_probability?.range || ''}</span>
-              </div>
-              <div class="prediction-details">
-                <h3>${result.is_success ? '👍 Launch Recommended' : '👎 Needs Improvement'}</h3>
-                <p class="category">${result.category || 'N/A'} • ${result.insights?.score_analysis?.label || ''}</p>
-                ${renderInsights(result.insights, result)}
-              </div>
-            </div>
-          `;
-          loadHistory();
-        } else {
-          throw new Error(result.message || 'Prediction failed');
-        }
-      } catch (error) {
-        console.error("Prediction error:", error);  // Debugging line
-        resultsDiv.innerHTML = `
-          <div class="error-message">
-            <h3>Prediction Error</h3>
-            <p>${error.message}</p>
-            ${error.message.includes('trained') ? '<p>Please train the model first</p>' : ''}
-          </div>
-        `;
-      }
-    });
-
-    // History Functionality
-    async function loadHistory(searchTerm = '') {
-      const tableBody = document.getElementById('history-table-body');
-      tableBody.innerHTML = '<tr><td colspan="5" class="loading">Loading history...</td></tr>';
-      
-      try {
-        const response = await fetch(`${API_BASE}/history`, {
-          ...fetchOptions,
-          method: 'GET'
-        });
-        const history = await response.json();
-        console.log("History data:", history);  // Debugging line
-        
-        if (response.ok) {
-          let filtered = Array.isArray(history) ? history : [];
-          if (searchTerm) {
-            const term = searchTerm.toLowerCase();
-            filtered = filtered.filter(item => 
-              (item.product_type?.toLowerCase().includes(term) || false) ||
-              (item.product_category?.toLowerCase().includes(term) || false) ||
-              (item.price?.toString().includes(term) || false) ||
-              (item.success_score?.toString().includes(term) || false)
-            );
-          }
-          
-          tableBody.innerHTML = filtered.length > 0 
-            ? filtered.map(item => `
-                <tr class="${item.predicted_success ? 'success-row' : 'warning-row'}">
-                  <td>${item.product_type || 'N/A'}</td>
-                  <td>${item.success_score?.toFixed(1) || 'N/A'}</td>
-                  <td>$${item.price?.toFixed(2) || 'N/A'}</td>
-                  <td>${item.product_category || 'N/A'}</td>
-                  <td>${item.date_created ? new Date(item.date_created).toLocaleString() : 'N/A'}</td>
-                </tr>
-              `).join('')
-            : '<tr><td colspan="5">No matching predictions found</td></tr>';
-        } else {
-          throw new Error(history.message || 'Failed to load history');
-        }
-      } catch (error) {
-        console.error("History load error:", error);  // Debugging line
-        tableBody.innerHTML = `<tr><td colspan="5" class="error">Error loading history: ${error.message}</td></tr>`;
-      }
-    }
-
-    document.getElementById('refresh-history').addEventListener('click', () => loadHistory());
-    document.getElementById('history-search').addEventListener('input', (e) => loadHistory(e.target.value));
-    
-    // Initial load
-    loadHistory();
   });
 </script>
-
-<style>
-.product-prediction-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.section-card {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.form-row {
-  display: flex;
-  gap: 15px;
-}
-
-.form-row .form-group {
-  flex: 1;
-}
-
-.primary-btn {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.secondary-btn {
-  background: #f0f0f0;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.results-container {
-  margin-top: 20px;
-  padding: 15px;
-  border-radius: 4px;
-}
-
-.loading {
-  color: #666;
-  font-style: italic;
-}
-
-.success-message {
-  background: #e8f5e9;
-  padding: 15px;
-  border-left: 4px solid #4CAF50;
-}
-
-.error-message {
-  background: #ffebee;
-  padding: 15px;
-  border-left: 4px solid #f44336;
-}
-
-.prediction-result {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 15px;
-}
-
-.prediction-result.success {
-  background: #e8f5e9;
-  border-left: 4px solid #4CAF50;
-}
-
-.prediction-result.warning {
-  background: #fff8e1;
-  border-left: 4px solid #ffc107;
-}
-
-.score-display {
-  text-align: center;
-}
-
-.score-value {
-  font-size: 2.5rem;
-  font-weight: bold;
-  display: block;
-}
-
-.score-label {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.probability {
-  display: block;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.category {
-  font-size: 0.9rem;
-  color: #666;
-  margin-top: -10px;
-  font-style: italic;
-}
-
-/* Insights Styles */
-.insights-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.insight-card {
-  background: white;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.insight-card h4 {
-  margin-top: 0;
-  color: #333;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
-}
-
-.gauge, .marketing-meter {
-  height: 20px;
-  background: #f0f0f0;
-  border-radius: 10px;
-  margin: 10px 0;
-  position: relative;
-}
-
-.gauge-fill {
-  height: 100%;
-  background: linear-gradient(to right, #4CAF50, #FFC107);
-  border-radius: 10px;
-}
-
-.meter-fill {
-  height: 100%;
-  background: linear-gradient(to right, #2196F3, #9C27B0);
-  border-radius: 10px;
-}
-
-.price-comparison {
-  margin: 15px 0;
-}
-
-.price-bar {
-  height: 30px;
-  background: linear-gradient(to right, #8BC34A, #FFC107, #F44336);
-  border-radius: 4px;
-  position: relative;
-}
-
-.current-price-marker {
-  position: absolute;
-  top: -25px;
-  transform: translateX(-50%);
-  background: #333;
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-}
-
-.range-labels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 5px;
-  font-size: 12px;
-  color: #666;
-}
-
-.seasonality-analysis.match {
-  border-left: 4px solid #4CAF50;
-}
-
-.seasonality-analysis.mismatch {
-  border-left: 4px solid #FFC107;
-}
-
-.impact {
-  font-weight: bold;
-  margin-top: 8px;
-}
-
-.no-data {
-  color: #666;
-  font-style: italic;
-}
-
-/* History Table Styles */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-th, td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-th {
-  background: #f5f5f5;
-  font-weight: bold;
-}
-
-.success-row {
-  background-color: #e8f5e9;
-}
-
-.warning-row {
-  background-color: #fff8e1;
-}
-
-.history-controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.history-controls input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-/* Updated Gauge Styles */
-.score-visualization {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.gauge-container {
-  flex: 1;
-  max-width: 200px;
-}
-
-.gauge-track {
-  height: 20px;
-  background: #f0f0f0;
-  border-radius: 10px;
-  position: relative;
-  overflow: hidden;
-}
-
-.gauge-fill {
-  height: 100%;
-  background: linear-gradient(to right, #f44336, #FFC107, #4CAF50);
-  border-radius: 10px;
-  transition: width 0.5s ease;
-}
-
-.gauge-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 5px;
-}
-
-.score-details {
-  flex: 2;
-}
-
-.distribution-analysis {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
-}
-
-.distribution-meter {
-  height: 15px;
-  background: #f0f0f0;
-  border-radius: 7px;
-  margin: 8px 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.distribution-meter .meter-fill {
-  height: 100%;
-  background: linear-gradient(to right, #2196F3, #3F51B5);
-  border-radius: 7px;
-}
-
-.distribution-meter span {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-size: 10px;
-  font-weight: bold;
-  text-shadow: 0 1px 1px rgba(0,0,0,0.3);
-}
-/* Distribution Analysis Card */
-.insight-card.distribution-analysis {
-  border-left: 4px solid #3F51B5;
-  background: white;
-}
-
-.distribution-header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin: 15px 0;
-}
-
-.distribution-score {
-  display: flex;
-  flex-direction: column;
-  min-width: 80px;
-}
-
-.distribution-score .score {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #3F51B5;
-  line-height: 1;
-}
-
-.distribution-score .rating {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.distribution-meter {
-  flex-grow: 1;
-  height: 20px;
-  background: #f0f0f0;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.distribution-meter .meter-fill {
-  height: 100%;
-  background: linear-gradient(to right, #2196F3, #3F51B5);
-  transition: width 0.5s ease;
-}
-
-.distribution-description {
-  color: #444;
-  margin: 15px 0;
-  line-height: 1.5;
-}
-
-.channel-details, .distribution-recommendations {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
-}
-
-.channel-details h5, .distribution-recommendations h5 {
-  margin-top: 0;
-  color: #333;
-}
-
-.channel-list, .recommendation-list {
-  padding-left: 20px;
-  margin: 10px 0;
-}
-
-.channel-list li {
-  margin-bottom: 8px;
-  color: #555;
-  list-style-type: disc;
-}
-
-.recommendation-list li {
-  margin-bottom: 8px;
-  color: #3F51B5;
-  font-weight: 500;
-  list-style-type: circle;
-}
-</style>
