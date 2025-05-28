@@ -318,20 +318,78 @@ permalink: /Calendar
     <button type="submit">Submit Shipment</button>
   </form>
 
-  <h3>Shipment Records</h3>
-  <table id="shipment-table">
-    <thead>
-      <tr>
-        <th>ID</th><th>Item</th><th>Quantity</th><th>Transport</th><th>Time</th><th>Actions</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</div>
-<div class="container">
-  <h1>Calendar</h1>
-  <div id="calendar"></div>
-</div>
+  <button type="submit">Add Event</button>
+</form>
+
+<h2>Add Shipment</h2>
+<form id="shipmentForm">
+  <label>
+    Inventory Item:<br>
+    <input type="text" name="inventory" required />
+  </label><br><br>
+
+  <label>
+    Quantity:<br>
+    <input type="number" name="amount" required />
+  </label><br><br>
+
+  <label>
+    Transport Method:<br>
+    <input type="text" name="transport_method" required />
+  </label><br><br>
+
+  <label>
+    Shipment Time (YYYY-MM-DD HH:mm:ss):<br>
+    <input type="text" name="shipment_time" required />
+  </label><br><br>
+
+  <button type="submit">Submit Shipment</button>
+</form>
+
+<h2>Shipment List</h2>
+<table id="shipment-table" border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Item</th>
+      <th>Quantity</th>
+      <th>Transport Method</th>
+      <th>Shipment Time</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div id="calendar"></div>
+          <div id="eventList"></div>
+        </div>
+      </div>
+      <!-- Tasks Tab -->
+      <div class="tab-pane fade" id="tasksSection">
+        <div class="dashboard-box">
+          <h4 class="mb-4">✅ Employee Management</h4>
+          <form id="taskForm" class="mb-4">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <input type="text" class="form-control" placeholder="Employee name" required>
+              </div>
+              <div class="col-md-4">
+                <input type="text" class="form-control" placeholder="Task description" required>
+              </div>
+              <div class="col-md-3">
+                <input type="date" class="form-control" required>
+              </div>
+              <div class="col-md-1">
+                <button type="submit" class="btn btn-primary w-100">➕</button>
+              </div>
+            </div>
+          </form>
+          <div id="taskList"></div>
+        </div>
+      </div>
+
+
 <!-- Scripts -->
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
