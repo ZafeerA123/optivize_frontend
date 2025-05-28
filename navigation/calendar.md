@@ -253,86 +253,80 @@ permalink: /Calendar
     }
   </style>
 </head>
-<div id="events" class="tab-content active">
-  <h2>📅 Event Manager</h2>
+<!-- Events Tab -->
+<div id="events" class="tab-content">
+  <h2>Event Manager</h2>
 
-  <section style="margin-bottom: 2rem; padding: 1rem; background: #f9f9f9; border: 1px solid #ccc; border-radius: 8px;">
-    <h3 style="margin-bottom: 1rem;">➕ Add New Event</h3>
-    <form id="eventForm" style="display: grid; gap: 10px;">
-      <label>
-        Title:
-        <input type="text" name="title" placeholder="Enter event title" required />
-      </label>
-      <label>
-        Location:
-        <input type="text" name="location" placeholder="Enter location" required />
-      </label>
-      <label>
-        Description:
-        <input type="text" name="description" placeholder="Enter short description" required />
-      </label>
-      <label>
-        Start Time:
-        <input type="text" name="start_time" placeholder="YYYY-MM-DD HH:mm:ss" required />
-      </label>
-      <label>
-        End Time:
-        <input type="text" name="end_time" placeholder="YYYY-MM-DD HH:mm:ss" required />
-      </label>
-      <button type="submit">Submit Event</button>
-    </form>
-  </section>
+  <h3>Add New Event</h3>
+  <form id="eventForm">
+    <label>
+      Title:
+      <input type="text" name="title" placeholder="Enter event title" required />
+    </label>
+    <label>
+      Location:
+      <input type="text" name="location" placeholder="Enter location" required />
+    </label>
+    <label>
+      Description:
+      <input type="text" name="description" placeholder="Enter short description" required />
+    </label>
+    <label>
+      Start Time:
+      <input type="text" name="start_time" placeholder="YYYY-MM-DD HH:mm:ss" required />
+    </label>
+    <label>
+      End Time:
+      <input type="text" name="end_time" placeholder="YYYY-MM-DD HH:mm:ss" required />
+    </label>
+    <button type="submit">Submit Event</button>
+  </form>
 
-  <section style="padding: 1rem; background: #fff; border: 1px solid #ccc; border-radius: 8px;">
-    <h3 style="margin-bottom: 1rem;">📋 Upcoming Events</h3>
-    <table id="event-table">
-      <thead>
-        <tr>
-          <th>ID</th><th>Title</th><th>Location</th><th>Description</th><th>Start</th><th>End</th><th>Actions</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
+  <h3>Upcoming Events</h3>
+  <table id="event-table">
+    <thead>
+      <tr>
+        <th>ID</th><th>Title</th><th>Location</th><th>Description</th><th>Start</th><th>End</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
 
+<!-- Shipments Tab -->
 <div id="shipments" class="tab-content">
-  <h2>🚚 Shipment Manager</h2>
+  <h2>Shipment Manager</h2>
 
-  <section style="margin-bottom: 2rem; padding: 1rem; background: #f9f9f9; border: 1px solid #ccc; border-radius: 8px;">
-    <h3 style="margin-bottom: 1rem;">➕ Add New Shipment</h3>
-    <form id="shipmentForm" style="display: grid; gap: 10px;">
-      <label>
-        Inventory Item:
-        <input type="text" name="inventory" placeholder="e.g., Cookie Dough" required />
-      </label>
-      <label>
-        Quantity:
-        <input type="number" name="amount" placeholder="e.g., 100" required />
-      </label>
-      <label>
-        Transport Method:
-        <input type="text" name="transport_method" placeholder="e.g., Truck, Plane" required />
-      </label>
-      <label>
-        Shipment Time:
-        <input type="text" name="shipment_time" placeholder="YYYY-MM-DD HH:mm:ss" required />
-      </label>
-      <button type="submit">Submit Shipment</button>
-    </form>
-  </section>
+  <h3>Add New Shipment</h3>
+  <form id="shipmentForm">
+    <label>
+      Inventory Item:
+      <input type="text" name="inventory" placeholder="e.g., Cookie Dough" required />
+    </label>
+    <label>
+      Quantity:
+      <input type="number" name="amount" placeholder="e.g., 100" required />
+    </label>
+    <label>
+      Transport Method:
+      <input type="text" name="transport_method" placeholder="e.g., Truck, Plane" required />
+    </label>
+    <label>
+      Shipment Time:
+      <input type="text" name="shipment_time" placeholder="YYYY-MM-DD HH:mm:ss" required />
+    </label>
+    <button type="submit">Submit Shipment</button>
+  </form>
 
-  <section style="padding: 1rem; background: #fff; border: 1px solid #ccc; border-radius: 8px;">
-    <h3 style="margin-bottom: 1rem;">📦 Shipment Records</h3>
-    <table id="shipment-table">
-      <thead>
-        <tr>
-          <th>ID</th><th>Item</th><th>Quantity</th><th>Transport</th><th>Time</th><th>Actions</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
+  <h3>Shipment Records</h3>
+  <table id="shipment-table">
+    <thead>
+      <tr>
+        <th>ID</th><th>Item</th><th>Quantity</th><th>Transport</th><th>Time</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
 <div class="container">
   <h1>Calendar</h1>
