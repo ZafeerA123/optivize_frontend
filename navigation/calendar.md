@@ -253,164 +253,45 @@ permalink: /Calendar
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h1 class="text-center mb-4">Operations Dashboard</h1>   
-    <div id="notifications" class="alert alert-warning mb-4" style="display: none;"></div>
-    <ul class="nav nav-tabs mb-4" id="tabMenu" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#calendarSection">📅 Calendar</button>
-      </li>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#shipmentsSection">🚚 Shipments</button>
-      </li>
-      </li>
-    </ul>
-    <div class="tab-content">
-      <!-- Calendar Tab -->
-      <div class="tab-pane fade show active" id="calendarSection">
-        <div id="calendar"></div>
-      </div>
-      <!-- Inventory Tab -->
-      <div class="tab-pane fade" id="inventorySection">
-        <div class="dashboard-box">
-          <h4 class="mb-4">📦 Current Inventory</h4>
-          <div id="inventoryList" class="mb-4"></div>
-          <form id="inventoryForm">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <input type="text" class="form-control" placeholder="Item name" required>
-              </div>
-              <div class="col-md-4">
-                <input type="number" class="form-control" placeholder="Quantity" required>
-              </div>
-              <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Update</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-      <!-- Shipments Tab -->
-      <div class="tab-pane fade" id="shipmentsSection">
-        <div class="dashboard-box">
-          <h4 class="mb-4">🚚 Shipment Schedule</h4>
-          <form id="shipmentForm" class="mb-4">
-            <div class="row g-3">
-              <div class="col-md-5">
-                <input type="text" class="form-control" placeholder="Item name" required>
-              </div>
-              <div class="col-md-5">
-                <input type="date" class="form-control" required>
-              </div>
-              <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Add</button>
-              </div>
-            </div>
-          </form>
-          <div id="shipmentList"></div>
-        </div>
-      </div>
-      <form id="eventForm">
-  <label>
-    Title: <br>
-    <input type="text" name="title" required />
-  </label><br><br>
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('events')">Events</div>
+  <div class="tab" onclick="switchTab('shipments')">Shipments</div>
+</div>
 
-  <label>
-    Description: <br>
-    <textarea name="description" required></textarea>
-  </label><br><br>
+<div id="events" class="tab-content active">
+  <h2>Add Event</h2>
+  <form id="eventForm">
+    <input type="text" name="title" placeholder="Event Title" required />
+    <input type="text" name="location" placeholder="Location" required />
+    <input type="text" name="description" placeholder="Description" required />
+    <input type="text" name="start_time" placeholder="Start Time (YYYY-MM-DD HH:mm:ss)" required />
+    <input type="text" name="end_time" placeholder="End Time (YYYY-MM-DD HH:mm:ss)" required />
+    <button type="submit">Submit Event</button>
+  </form>
+  <table id="event-table">
+    <thead>
+      <tr><th>ID</th><th>Title</th><th>Location</th><th>Description</th><th>Start</th><th>End</th><th>Actions</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
 
-  <label>
-    Start Time (YYYY-MM-DD HH:mm:ss): <br>
-    <input type="text" name="start_time" placeholder="2025-05-25 14:00:00" required />
-  </label><br><br>
-
-  <label>
-    End Time (YYYY-MM-DD HH:mm:ss): <br>
-    <input type="text" name="end_time" placeholder="2025-05-25 15:00:00" required />
-  </label><br><br>
-
-  <label>
-    Category: <br>
-    <input type="text" name="category" required />
-  </label><br><br>
-
-  <button type="submit">Add Event</button>
-</form>
-
-<h2>Add Shipment</h2>
-<form id="shipmentForm">
-  <label>
-    Inventory Item:<br>
-    <input type="text" name="inventory" required />
-  </label><br><br>
-
-  <label>
-    Quantity:<br>
-    <input type="number" name="amount" required />
-  </label><br><br>
-
-  <label>
-    Transport Method:<br>
-    <input type="text" name="transport_method" required />
-  </label><br><br>
-
-  <label>
-    Shipment Time (YYYY-MM-DD HH:mm:ss):<br>
-    <input type="text" name="shipment_time" required />
-  </label><br><br>
-
-  <button type="submit">Submit Shipment</button>
-</form>
-
-<h2>Shipment List</h2>
-<table id="shipment-table" border="1">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Item</th>
-      <th>Quantity</th>
-      <th>Transport Method</th>
-      <th>Shipment Time</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<div id="calendar"></div>
-          <div id="eventList"></div>
-        </div>
-      </div>
-      <!-- Tasks Tab -->
-      <div class="tab-pane fade" id="tasksSection">
-        <div class="dashboard-box">
-          <h4 class="mb-4">✅ Employee Management</h4>
-          <form id="taskForm" class="mb-4">
-            <div class="row g-3">
-              <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Employee name" required>
-              </div>
-              <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Task description" required>
-              </div>
-              <div class="col-md-3">
-                <input type="date" class="form-control" required>
-              </div>
-              <div class="col-md-1">
-                <button type="submit" class="btn btn-primary w-100">➕</button>
-              </div>
-            </div>
-          </form>
-          <div id="taskList"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</head>
+<div id="shipments" class="tab-content">
+  <h2>Add Shipment</h2>
+  <form id="shipmentForm">
+    <input type="text" name="inventory" placeholder="Inventory Item" required />
+    <input type="number" name="amount" placeholder="Quantity" required />
+    <input type="text" name="transport_method" placeholder="Transport Method" required />
+    <input type="text" name="shipment_time" placeholder="Shipment Time (YYYY-MM-DD HH:mm:ss)" required />
+    <button type="submit">Submit Shipment</button>
+  </form>
+  <table id="shipment-table">
+    <thead>
+      <tr><th>ID</th><th>Item</th><th>Quantity</th><th>Transport</th><th>Time</th><th>Actions</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
 <div class="container">
   <h1>Calendar</h1>
   <div id="calendar"></div>
