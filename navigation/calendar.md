@@ -364,7 +364,6 @@ permalink: /Calendar
 <div id="calendar"></div>
           <div id="eventList"></div>
         </div>
-      </div>
       <!-- Tasks Tab -->
       <div class="tab-pane fade" id="tasksSection">
         <div class="dashboard-box">
