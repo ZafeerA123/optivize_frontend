@@ -254,44 +254,61 @@ permalink: /Calendar
   </style>
 </head>
 <!-- Events Tab -->
-<div id="events" class="tab-content">
-  <h2>Event Manager</h2>
-
-  <h3>Add New Event</h3>
-  <form id="eventForm">
-    <label>
-      Title:
-      <input type="text" name="title" placeholder="Enter event title" required />
-    </label>
-    <label>
-      Location:
-      <input type="text" name="location" placeholder="Enter location" required />
-    </label>
-    <label>
-      Description:
-      <input type="text" name="description" placeholder="Enter short description" required />
-    </label>
-    <label>
-      Start Time:
-      <input type="text" name="start_time" placeholder="YYYY-MM-DD HH:mm:ss" required />
-    </label>
-    <label>
-      End Time:
-      <input type="text" name="end_time" placeholder="YYYY-MM-DD HH:mm:ss" required />
-    </label>
-    <button type="submit">Submit Event</button>
-  </form>
-
-  <h3>Upcoming Events</h3>
-  <table id="event-table">
-    <thead>
-      <tr>
-        <th>ID</th><th>Title</th><th>Location</th><th>Description</th><th>Start</th><th>End</th><th>Actions</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<div id="events" class="tab-content mt-4">
+  <div class="card shadow p-4 rounded-4">
+    <h2 class="mb-4 fw-bold text-center">Event Manager</h2>
+    <!-- Add New Event Form -->
+    <div class="mb-5">
+      <h4 class="fw-semibold mb-3">Add New Event</h4>
+      <form id="eventForm" class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Title:</label>
+          <input type="text" name="title" class="form-control rounded-3" placeholder="Enter event title" required />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Location:</label>
+          <input type="text" name="location" class="form-control rounded-3" placeholder="Enter location" required />
+        </div>
+        <div class="col-md-12">
+          <label class="form-label fw-bold">Description:</label>
+          <input type="text" name="description" class="form-control rounded-3" placeholder="Enter short description" required />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Start Time:</label>
+          <input type="text" name="start_time" class="form-control rounded-3" placeholder="YYYY-MM-DD HH:mm:ss" required />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">End Time:</label>
+          <input type="text" name="end_time" class="form-control rounded-3" placeholder="YYYY-MM-DD HH:mm:ss" required />
+        </div>
+        <div class="col-12 text-end">
+          <button type="submit" class="btn btn-warning fw-semibold rounded-3 px-4">Submit Event</button>
+        </div>
+      </form>
+    </div>
+    <!-- Upcoming Events Table -->
+    <div>
+      <h4 class="fw-semibold mb-3">Upcoming Events</h4>
+      <div class="table-responsive">
+        <table id="event-table" class="table table-bordered table-striped rounded-4 overflow-hidden">
+          <thead class="table-dark text-center">
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Location</th>
+              <th>Description</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
+
 
 <!-- Shipments Tab -->
 <div id="shipments" class="tab-content">
