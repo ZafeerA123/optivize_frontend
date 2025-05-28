@@ -255,7 +255,7 @@ permalink: /Calendar
 </head>
 <!-- Events Tab -->
 <div id="events" class="tab-content mt-4">
-  <div class="card shadow p-4 rounded-4">
+  <div class="card shadow p-4 rounded-4" style="background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(6px); color: #ccc;">
     <h2 class="mb-4 fw-bold text-center">Event Manager</h2>
     <!-- Add New Event Form -->
     <div class="mb-5">
@@ -286,97 +286,39 @@ permalink: /Calendar
         </div>
       </form>
     </div>
-    <!-- Upcoming Events Table -->
-    <div>
-      <h4 class="fw-semibold mb-3">Upcoming Events</h4>
-      <div class="table-responsive">
-        <table id="event-table" class="table table-bordered table-striped rounded-4 overflow-hidden">
-          <thead class="table-dark text-center">
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Location</th>
-              <th>Description</th>
-              <th>Start</th>
-              <th>End</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
   </div>
 </div>
 
-
+<hr>
 <!-- Shipments Tab -->
-<div id="shipments" class="tab-content">
-  <h2>Shipment Manager</h2>
+<div id="shipments" class="tab-content mt-4">
+  <div class="card shadow p-4 rounded-4" style="background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(6px); color: #ccc;">
+    <h2 class="mb-4 fw-bold text-center">Shipment Manager</h2>
+    <h4 class="fw-semibold mb-3">Add New Shipment</h4>
+    <form id="shipmentForm" class="row g-3 mb-5">
+      <div class="col-md-6">
+        <label class="form-label fw-bold" for="inventory">Inventory Item:</label>
+        <input type="text" id="inventory" name="inventory" class="form-control rounded-3" placeholder="e.g., Cookie Dough" required />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold" for="amount">Quantity:</label>
+        <input type="number" id="amount" name="amount" class="form-control rounded-3" placeholder="e.g., 100" required />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold" for="transport_method">Transport Method:</label>
+        <input type="text" id="transport_method" name="transport_method" class="form-control rounded-3" placeholder="e.g., Truck, Plane" required />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold" for="shipment_time">Shipment Time:</label>
+        <input type="text" id="shipment_time" name="shipment_time" class="form-control rounded-3" placeholder="YYYY-MM-DD HH:mm:ss" required />
+      </div>
+      <div class="col-12 text-end">
+        <button type="submit" class="btn btn-warning fw-semibold rounded-3 px-4">Submit Shipment</button>
+      </div>
+    </form>
+  </div>
 
-  <h3>Add New Shipment</h3>
-  <form id="shipmentForm">
-    <label>
-      Inventory Item:
-      <input type="text" name="inventory" placeholder="e.g., Cookie Dough" required />
-    </label>
-    <label>
-      Quantity:
-      <input type="number" name="amount" placeholder="e.g., 100" required />
-    </label>
-    <label>
-      Transport Method:
-      <input type="text" name="transport_method" placeholder="e.g., Truck, Plane" required />
-    </label>
-    <label>
-      Shipment Time:
-      <input type="text" name="shipment_time" placeholder="YYYY-MM-DD HH:mm:ss" required />
-    </label>
-    <button type="submit">Submit Shipment</button>
-  </form>
-
-  <button type="submit">Add Event</button>
-</form>
-
-<h2>Add Shipment</h2>
-<form id="shipmentForm">
-  <label>
-    Inventory Item:<br>
-    <input type="text" name="inventory" required />
-  </label><br><br>
-
-  <label>
-    Quantity:<br>
-    <input type="number" name="amount" required />
-  </label><br><br>
-
-  <label>
-    Transport Method:<br>
-    <input type="text" name="transport_method" required />
-  </label><br><br>
-
-  <label>
-    Shipment Time (YYYY-MM-DD HH:mm:ss):<br>
-    <input type="text" name="shipment_time" required />
-  </label><br><br>
-
-  <button type="submit">Submit Shipment</button>
-</form>
-
-<h2>Shipment List</h2>
-<table id="shipment-table" border="1">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Item</th>
-      <th>Quantity</th>
-      <th>Transport Method</th>
-      <th>Shipment Time</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+<hr>
 
 <div id="calendar"></div>
           <div id="eventList"></div>
