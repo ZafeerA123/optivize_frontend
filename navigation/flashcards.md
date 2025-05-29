@@ -1252,7 +1252,16 @@ document.getElementById('confirm-google-import')?.addEventListener('click', asyn
   }
 
   sessionStorage.setItem("pending_sheet_id", sheetId);
-  window.location.href = "http://localhost:8212/google/connect";  // OAuth step
+  let backendBaseURL;
+
+  if (window.location.href.startsWith("http://127.0.0.1") || window.location.href.startsWith("http://localhost")) {
+    backendBaseURL = "http://localhost:8212";  // LOCAL
+  } else {
+    backendBaseURL = "https://zafeera123.onrender.com";  // DEPLOYED
+  }
+
+  window.location.href = `${backendBaseURL}/google/connect`;
+
 });
 
 // Auto-import after OAuth callback
@@ -1263,7 +1272,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (shouldImport && sheetId) {
     try {
-      const response = await fetch("http://localhost:8212/google/import", {
+      let backendBaseURL;
+      if (window.location.href.startsWith("http://127.0.0.1") || window.location.href.startsWith("http://localhost")) {
+        backendBaseURL = "http://localhost:8212";
+      } else {
+        backendBaseURL = "https://zafeera123.onrender.com";
+      }
+
+      const response = await fetch(`${backendBaseURL}/google/import`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
