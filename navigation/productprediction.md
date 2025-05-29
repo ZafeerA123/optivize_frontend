@@ -977,18 +977,10 @@ tr:last-child td {
               <p><strong>${marketingAnalysis.rating || 'N/A'}</strong>: ${marketingAnalysis.advice || ''}</p>
               <p>Effective range: ${marketingAnalysis.effective_range?.min || 'N/A'}-${marketingAnalysis.effective_range?.max || 'N/A'}/10</p>
             ` : '<p class="no-data">No marketing data available</p>'}
+
+
           </div>
-          
-          <!-- Seasonality Analysis -->
-          <div class="insight-card seasonality-analysis ${seasonalityAnalysis.match ? 'match' : 'mismatch'}">
-            <h4>Seasonal Timing</h4>
-            ${seasonalityAnalysis.message ? `
-              <p>${seasonalityAnalysis.message}</p>
-              <p>Current: ${seasonalityAnalysis.current_season || 'N/A'}</p>
-              <p>Recommended: ${seasonalityAnalysis.recommended_season || 'N/A'}</p>
-              <p class="impact">${seasonalityAnalysis.impact || ''}</p>
-            ` : '<p class="no-data">No seasonality data available</p>'}
-          </div>
+
           
           <!-- Recommendations -->
           <div class="insight-card recommendations">
