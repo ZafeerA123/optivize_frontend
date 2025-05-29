@@ -9,197 +9,157 @@ permalink: /Calendar
 
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Operations Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Optivize Calendar Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    :root {
+      --primary: #1a2980;
+      --secondary: #26d0ce;
+      --accent: #fbb034;
+      --dark: #0b1e3b;
+      --darker: #162b4d;
+      --glass: rgba(255, 255, 255, 0.1);
+    }
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #1a2980, #26d0ce);
-      color: #fbb034;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--accent);
       margin: 0;
       padding: 20px;
       min-height: 100vh;
+      overflow-x: hidden;
     }
-  /* Base styles with dark blue theme */
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', sans-serif;
-    color: #fff;
-  }
-  /* Gradient background with animation */
-  .page-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #0b1e3b, #162b4d);
-    z-index: -2;
-  }
-  /* Gradient overlay animation */
-  .gradient-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 70% 20%, rgba(43, 83, 158, 0.2), transparent 60%),
-                radial-gradient(circle at 20% 80%, rgba(29, 47, 94, 0.3), transparent 60%);
-    animation: gradientMove 20s infinite alternate;
-    z-index: -1;
-  }
-  @keyframes gradientMove {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 100% 100%; }
-  }
-  .hero-container {
-    position: relative;
-    padding: 40px 20px;
-    overflow: hidden;
-  }
-  /* Glowing orbs in background */
-  .glow-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.15;
-    z-index: 0;
-  }
-  .glow-orb-1 {
-    top: 10%;
-    left: 5%;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(251, 176, 52, 0.6), rgba(251, 176, 52, 0) 70%);
-    animation: float 25s infinite alternate;
-  }
-  .glow-orb-2 {
-    bottom: 10%;
-    right: 5%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(66, 99, 176, 0.4), rgba(66, 99, 176, 0) 70%);
-    animation: float 30s infinite alternate-reverse;
-  }
-  .glow-orb-3 {
-    top: 50%;
-    left: 50%;
-    width: 350px;
-    height: 350px;
-    background: radial-gradient(circle, rgba(251, 176, 52, 0.3), rgba(66, 99, 176, 0.2), rgba(66, 99, 176, 0) 70%);
-    animation: float 35s infinite alternate;
-  }
-  @keyframes float {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(50px, -30px) scale(1.1); }
-    100% { transform: translate(-30px, 50px) scale(0.9); }
-  }
-  /* Hero section */
-  .hero-section {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 40px;
-    position: relative;
-    z-index: 1;
-  }
-  .hero-content {
-    flex: 1;
-    min-width: 300px;
-  }
-  .hero-title {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    background: linear-gradient(to right, #fbb034, #ffdd00, #fbb034);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: shine 3s linear infinite;
-  }
+    /* Gradient background with animation */
+    .page-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--dark), var(--darker));
+      z-index: -2;
+    }
+    .gradient-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 70% 20%, rgba(43, 83, 158, 0.2), transparent 60%),
+                  radial-gradient(circle at 20% 80%, rgba(29, 47, 94, 0.3), transparent 60%);
+      animation: gradientMove 20s infinite alternate;
+      z-index: -1;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
+    /* Glowing orbs in background */
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.15;
+      z-index: 0;
+    }
+    .glow-orb-1 {
+      top: 10%;
+      left: 5%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(251, 176, 52, 0.6), rgba(251, 176, 52, 0) 70%);
+      animation: float 25s infinite alternate;
+    }
+    .glow-orb-2 {
+      bottom: 10%;
+      right: 5%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(66, 99, 176, 0.4), rgba(66, 99, 176, 0) 70%);
+      animation: float 30s infinite alternate-reverse;
+    }
+    .glow-orb-3 {
+      top: 50%;
+      left: 50%;
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(251, 176, 52, 0.3), rgba(66, 99, 176, 0.2), rgba(66, 99, 176, 0) 70%);
+      animation: float 35s infinite alternate;
+    }
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(50px, -30px) scale(1.1); }
+      100% { transform: translate(-30px, 50px) scale(0.9); }
+    }
+    /* Main container */
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--glass);
       backdrop-filter: blur(10px);
-      border-radius: 8px;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
       padding: 30px;
       min-height: calc(100vh - 40px);
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
-    /* Improved Tab Styling */
-    .nav-tabs {
-      border-bottom: none;
-      gap: 8px;
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
-    .nav-tabs .nav-link {
-      border: none;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.8);
-      transition: all 0.3s ease;
-      padding: 12px 24px;
-    }
-    .nav-tabs .nav-link:hover,
-    .nav-tabs .nav-link.active {
-      background: rgba(255, 255, 255, 0.2);
-      color: #fbb034;
-      transform: translateY(-2px);
-    }
-    /* Updated Button Styling */
-    .btn-primary {
-      background: linear-gradient(135deg, #ffdd00, #fbb034);
-      border: none;
-      color: #333;
-      transition: all 0.3s ease;
-    }
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #fbb034, #ffdd00);
-      color: #000;
-      transform: translateY(-2px);
-    }
-    /* Updated Title Styling */
-    h1 {
+    .header h1 {
       background: linear-gradient(135deg, #ffdd00, #fbb034);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
     }
-    /* Updated Tab Styling */
-    .nav-tabs .nav-link:hover,
-    .nav-tabs .nav-link.active {
+    .header p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.2rem;
+    }
+    /* Action buttons */
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .action-btn {
       background: linear-gradient(135deg, rgba(255, 221, 0, 0.2), rgba(251, 176, 52, 0.2));
+      border: 1px solid rgba(251, 176, 52, 0.3);
       color: #ffdd00;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    /* Updated Calendar Button Styling */
-    .fc-button {
-      background: linear-gradient(135deg, rgba(255, 221, 0, 0.2), rgba(251, 176, 52, 0.2)) !important;
-      color: #fbb034 !important;
-      border: 1px solid rgba(251, 176, 52, 0.3) !important;
+    .action-btn:hover {
+      background: linear-gradient(135deg, rgba(255, 221, 0, 0.3), rgba(251, 176, 52, 0.3));
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-    .fc-button:hover {
-      background: linear-gradient(135deg, rgba(255, 221, 0, 0.3), rgba(251, 176, 52, 0.3)) !important;
-    }
-    /* Updated Event Color */
-    .fc-event {
-      background: linear-gradient(135deg, #ffdd00, #fbb034) !important;
-      border: none !important;
-      color: #333 !important;
-    }
-    /* Calendar Styling */
+    /* Calendar styling */
     #calendar {
       background: rgba(255, 255, 255, 0.05);
       border-radius: 12px;
       padding: 20px;
       border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 30px;
+      height: 600px;
     }
     .fc-toolbar {
       color: white !important;
@@ -207,587 +167,636 @@ permalink: /Calendar
     }
     .fc-toolbar-title {
       color: white !important;
-      font-size: 1.4rem !important;
+      font-size: 1.6rem !important;
+      font-weight: 600;
     }
     .fc-button {
       background: rgba(255, 255, 255, 0.1) !important;
       border: 1px solid rgba(255, 255, 255, 0.2) !important;
       color: white !important;
-      transition: all 0.3s ease;
+      transition: all 0.3s ease !important;
     }
     .fc-button:hover {
       background: rgba(255, 255, 255, 0.2) !important;
     }
-    .dashboard-box {
+    .fc-event {
+      background: linear-gradient(135deg, #ffdd00, #fbb034) !important;
+      border: none !important;
+      color: #333 !important;
+      font-weight: 600;
+      padding: 3px 6px;
+      border-radius: 4px;
+    }
+    /* Data tables */
+    .data-section {
       background: rgba(255, 255, 255, 0.05);
       border-radius: 12px;
-      padding: 20px;
+      padding: 25px;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
+      margin-bottom: 30px;
     }
-    .form-control {
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .section-header h3 {
+      color: #fbb034;
+      font-weight: 600;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .table-responsive {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .table {
+      background: rgba(255, 255, 255, 0.03);
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 0;
+    }
+    .table th {
+      background: rgba(251, 176, 52, 0.15);
+      color: #fbb034;
+      font-weight: 600;
+      padding: 15px 12px;
+    }
+    .table td {
+      padding: 12px;
+      vertical-align: middle;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .table tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .table tr:hover {
+      background: rgba(251, 176, 52, 0.1);
+    }
+    /* Modal styling */
+    .modal-content {
+      background: linear-gradient(135deg, #0b1e3b, #162b4d);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.9);
+    }
+    .modal-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .modal-title {
+      color: #fbb034;
+      font-weight: 600;
+    }
+    .btn-close {
+      filter: invert(1);
+    }
+    .form-control, .form-select {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+    .form-control:focus, .form-select:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(251, 176, 52, 0.4);
+      box-shadow: 0 0 0 0.25rem rgba(251, 176, 52, 0.25);
       color: white;
     }
     .form-control::placeholder {
       color: rgba(255, 255, 255, 0.6) !important;
     }
-    .btn-primary {
-      background: #4a90e2;
+    .submit-btn {
+      background: linear-gradient(135deg, #ffdd00, #fbb034);
       border: none;
+      color: #333;
+      font-weight: 600;
+      padding: 10px 25px;
+      border-radius: 8px;
       transition: all 0.3s ease;
     }
-    .btn-primary:hover {
-      background: #357abd;
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #fbb034, #ffdd00);
       transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-    .list-item {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    /* Responsive */
+    @media (max-width: 768px) {
+      .action-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      .action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      #calendar {
+        height: 400px;
+      }
     }
   </style>
 </head>
-<!-- Events Tab -->
-<div id="events" class="tab-content mt-4">
-  <div class="card shadow p-4 rounded-4" style="background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(6px); color: #ccc;">
-    <h2 class="mb-4 fw-bold text-center">Event Manager</h2>
-    <!-- Add New Event Form -->
-    <div class="mb-5">
-      <h4 class="fw-semibold mb-3">Add New Event</h4>
-      <form id="eventForm" class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label fw-bold">Title:</label>
-          <input type="text" name="title" class="form-control rounded-3" placeholder="Enter event title" required />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-bold">Location:</label>
-          <input type="text" name="location" class="form-control rounded-3" placeholder="Enter location" required />
-        </div>
-        <div class="col-md-12">
-          <label class="form-label fw-bold">Description:</label>
-          <input type="text" name="description" class="form-control rounded-3" placeholder="Enter short description" required />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-bold">Start Time:</label>
-          <input type="text" name="start_time" class="form-control rounded-3" placeholder="YYYY-MM-DD HH:mm:ss" required />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-bold">End Time:</label>
-          <input type="text" name="end_time" class="form-control rounded-3" placeholder="YYYY-MM-DD HH:mm:ss" required />
-        </div>
-        <div class="col-12 text-end">
-          <button type="submit" class="btn btn-warning fw-semibold rounded-3 px-4">Submit Event</button>
-        </div>
-      </form>
+<body>
+  <div class="page-background"></div>
+  <div class="gradient-overlay"></div>
+  <div class="glow-orb glow-orb-1"></div>
+  <div class="glow-orb glow-orb-2"></div>
+  <div class="glow-orb glow-orb-3"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Optivize Calendar Dashboard</h1>
+      <p>Product Success Prediction & Operations Management</p>
+    </div>
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button type="button" class="btn action-btn" data-bs-toggle="modal" data-bs-target="#eventModal">
+        <i class="fas fa-calendar-plus"></i> Add Event
+      </button>
+      <button type="button" class="btn action-btn" data-bs-toggle="modal" data-bs-target="#shipmentModal">
+        <i class="fas fa-truck"></i> Add Shipment
+      </button>
+      <button type="button" class="btn action-btn" data-bs-toggle="modal" data-bs-target="#taskModal">
+        <i class="fas fa-tasks"></i> Add Task
+      </button>
+      <button type="button" class="btn action-btn" data-bs-toggle="modal" data-bs-target="#employeeModal">
+        <i class="fas fa-users"></i> Manage Employees
+      </button>
+    </div>
+    <!-- Calendar -->
+    <div id="calendar"></div>
+    <!-- Data Sections -->
+    <div class="data-section">
+      <div class="section-header">
+        <h3><i class="fas fa-calendar-day"></i> Upcoming Events</h3>
+        <span class="badge bg-warning">5 events</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Location</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><i class="fas fa-bullhorn me-2"></i> Product Launch</td>
+              <td>Conference Room A</td>
+              <td>2025-05-21 10:00 AM</td>
+              <td>2025-05-21 12:00 PM</td>
+              <td><span class="badge bg-success">Confirmed</span></td>
+            </tr>
+            <tr>
+              <td><i class="fas fa-chart-line me-2"></i> Quarterly Review</td>
+              <td>Main Office</td>
+              <td>2025-05-25 09:00 AM</td>
+              <td>2025-05-25 11:00 AM</td>
+              <td><span class="badge bg-warning">Pending</span></td>
+            </tr>
+            <tr>
+              <td><i class="fas fa-lightbulb me-2"></i> Innovation Workshop</td>
+              <td>Creative Space</td>
+              <td>2025-05-28 01:00 PM</td>
+              <td>2025-05-28 04:00 PM</td>
+              <td><span class="badge bg-success">Confirmed</span></td>
+            </tr>
+            <tr>
+              <td><i class="fas fa-users me-2"></i> Team Building</td>
+              <td>Outdoor Area</td>
+              <td>2025-06-02 10:00 AM</td>
+              <td>2025-06-02 03:00 PM</td>
+              <td><span class="badge bg-info">Scheduled</span></td>
+            </tr>
+            <tr>
+              <td><i class="fas fa-gift me-2"></i> Anniversary Celebration</td>
+              <td>Grand Hall</td>
+              <td>2025-06-10 06:00 PM</td>
+              <td>2025-06-10 10:00 PM</td>
+              <td><span class="badge bg-primary">Planned</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="data-section">
+      <div class="section-header">
+        <h3><i class="fas fa-shipping-fast"></i> Recent Shipments</h3>
+        <span class="badge bg-warning">3 shipments</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Inventory</th>
+              <th>Quantity</th>
+              <th>Transport Method</th>
+              <th>Shipment Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><i class="fas fa-box me-2"></i> Cookie Dough</td>
+              <td>500 units</td>
+              <td>Refrigerated Truck</td>
+              <td>2025-05-20 08:00 AM</td>
+              <td><span class="badge bg-success">Delivered</span></td>
+            </tr>
+            <tr>
+              <td><i class="fas fa-box me-2"></i> Packaging Materials</td>
+              <td>2000 units</td>
+              <td>Standard Truck</td>
+              <td>2025-05-22 10:30 AM</td>
+              <td><span class="badge bg-primary">In Transit</span></td>
+            </tr>
+            <tr>
+              <td><i class="fas fa-box me-2"></i> Promotional Items</td>
+              <td>1500 units</td>
+              <td>Air Freight</td>
+              <td>2025-05-24 02:00 PM</td>
+              <td><span class="badge bg-warning">Processing</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="data-section">
+      <div class="section-header">
+        <h3><i class="fas fa-tasks"></i> Employee Tasks</h3>
+        <span class="badge bg-warning">4 tasks</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Task</th>
+              <th>Due Date</th>
+              <th>Priority</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><i class="fas fa-user me-2"></i> Sarah Johnson</td>
+              <td>Prepare launch presentation</td>
+              <td>2025-05-20</td>
+              <td><span class="badge bg-danger">High</span></td>
+              <td><span class="badge bg-success">Completed</span></td>
+            </tr>
+            <tr>
+              <td><i class="fas fa-user me-2"></i> Michael Chen</td>
+              <td>Finalize product packaging</td>
+              <td>2025-05-22</td>
+              <td><span class="badge bg-danger">High</span></td>
+              <td><span class="badge bg-primary">In Progress</span></td>
+            </tr>
+            <tr>
+              <td><i class="fas fa-user me-2"></i> Emma Rodriguez</td>
+              <td>Coordinate media coverage</td>
+              <td>2025-05-25</td>
+              <td><span class="badge bg-warning">Medium</span></td>
+              <td><span class="badge bg-primary">In Progress</span></td>
+            </tr>
+            <tr>
+              <td><i class="fas fa-user me-2"></i> David Wilson</td>
+              <td>Prepare inventory report</td>
+              <td>2025-05-28</td>
+              <td><span class="badge bg-info">Low</span></td>
+              <td><span class="badge bg-secondary">Not Started</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
-
-<hr>
-<!-- Shipments Tab -->
-<div id="shipments" class="tab-content mt-4">
-  <div class="card shadow p-4 rounded-4" style="background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(6px); color: #ccc;">
-    <h2 class="mb-4 fw-bold text-center">Shipment Manager</h2>
-    <h4 class="fw-semibold mb-3">Add New Shipment</h4>
-    <form id="shipmentForm" class="row g-3 mb-5">
-      <div class="col-md-6">
-        <label class="form-label fw-bold" for="inventory">Inventory Item:</label>
-        <input type="text" id="inventory" name="inventory" class="form-control rounded-3" placeholder="e.g., Cookie Dough" required />
-      </div>
-      <div class="col-md-6">
-        <label class="form-label fw-bold" for="amount">Quantity:</label>
-        <input type="number" id="amount" name="amount" class="form-control rounded-3" placeholder="e.g., 100" required />
-      </div>
-      <div class="col-md-6">
-        <label class="form-label fw-bold" for="transport_method">Transport Method:</label>
-        <input type="text" id="transport_method" name="transport_method" class="form-control rounded-3" placeholder="e.g., Truck, Plane" required />
-      </div>
-      <div class="col-md-6">
-        <label class="form-label fw-bold" for="shipment_time">Shipment Time:</label>
-        <input type="text" id="shipment_time" name="shipment_time" class="form-control rounded-3" placeholder="YYYY-MM-DD HH:mm:ss" required />
-      </div>
-      <div class="col-12 text-end">
-        <button type="submit" class="btn btn-warning fw-semibold rounded-3 px-4">Submit Shipment</button>
-      </div>
-    </form>
-  </div>
-
-<hr>
-
-<div id="calendar"></div>
-          <div id="eventList"></div>
+  
+  <!-- Event Modal -->
+  <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="eventModalLabel"><i class="fas fa-calendar-plus me-2"></i> Add New Event</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-      <!-- Tasks Tab -->
-      <div class="tab-pane fade" id="tasksSection">
-        <div class="dashboard-box">
-          <h4 class="mb-4">✅ Employee Management</h4>
-          <form id="taskForm" class="mb-4">
-            <div class="row g-3">
-              <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Employee name" required>
+        <div class="modal-body">
+          <form id="eventForm">
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Title</label>
+                <input type="text" name="title" class="form-control" placeholder="Enter event title" required>
               </div>
-              <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Task description" required>
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Location</label>
+                <input type="text" name="location" class="form-control" placeholder="Enter location" required>
               </div>
-              <div class="col-md-3">
-                <input type="date" class="form-control" required>
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Description</label>
+                <textarea name="description" class="form-control" placeholder="Enter event description" rows="3" required></textarea>
               </div>
-              <div class="col-md-1">
-                <button type="submit" class="btn btn-primary w-100">➕</button>
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Start Time</label>
+                <input type="datetime-local" name="start_time" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold">End Time</label>
+                <input type="datetime-local" name="end_time" class="form-control" required>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Category</label>
+                <select class="form-select" name="category" required>
+                  <option value="">Select category</option>
+                  <option value="Meeting">Meeting</option>
+                  <option value="Workshop">Workshop</option>
+                  <option value="Conference">Conference</option>
+                  <option value="Social">Social Event</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
             </div>
+            <div class="text-end">
+              <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn submit-btn">Submit Event</button>
+            </div>
           </form>
-          <div id="taskList"></div>
         </div>
       </div>
+    </div>
+  </div>
+  
+  <!-- Shipment Modal -->
+  <div class="modal fade" id="shipmentModal" tabindex="-1" aria-labelledby="shipmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="shipmentModalLabel"><i class="fas fa-truck me-2"></i> Add New Shipment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="shipmentForm">
+            <div class="row g-3 mb-4">
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Inventory Item</label>
+                <input type="text" name="inventory" class="form-control" placeholder="e.g., Cookie Dough" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Quantity</label>
+                <input type="number" name="amount" class="form-control" placeholder="e.g., 100" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Transport Method</label>
+                <select class="form-select" name="transport_method" required>
+                  <option value="">Select method</option>
+                  <option value="Truck">Truck</option>
+                  <option value="Air Freight">Air Freight</option>
+                  <option value="Ship">Ship</option>
+                  <option value="Rail">Rail</option>
+                </select>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Shipment Time</label>
+                <input type="datetime-local" name="shipment_time" class="form-control" required>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Destination</label>
+                <input type="text" name="destination" class="form-control" placeholder="Enter destination" required>
+              </div>
+            </div>
+            <div class="text-end">
+              <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn submit-btn">Submit Shipment</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Task Modal -->
+  <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="taskModalLabel"><i class="fas fa-tasks me-2"></i> Add New Task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="taskForm">
+            <div class="row g-3 mb-4">
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Employee</label>
+                <select class="form-select" name="employee" required>
+                  <option value="">Select employee</option>
+                  <option value="Sarah Johnson">Sarah Johnson</option>
+                  <option value="Michael Chen">Michael Chen</option>
+                  <option value="Emma Rodriguez">Emma Rodriguez</option>
+                  <option value="David Wilson">David Wilson</option>
+                  <option value="Alex Thompson">Alex Thompson</option>
+                </select>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Task Description</label>
+                <textarea name="description" class="form-control" placeholder="Enter task description" rows="3" required></textarea>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Due Date</label>
+                <input type="date" name="due_date" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Priority</label>
+                <select class="form-select" name="priority" required>
+                  <option value="">Select priority</option>
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </div>
+            </div>
+            <div class="text-end">
+              <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn submit-btn">Add Task</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Employee Modal -->
+  <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="employeeModalLabel"><i class="fas fa-users me-2"></i> Manage Employees</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Email</th>
+                  <th>Department</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><i class="fas fa-user me-2"></i> Sarah Johnson</td>
+                  <td>Product Manager</td>
+                  <td>sarah@optivize.com</td>
+                  <td>Product</td>
+                  <td><span class="badge bg-success">Active</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-warning me-1"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-user me-2"></i> Michael Chen</td>
+                  <td>Design Lead</td>
+                  <td>michael@optivize.com</td>
+                  <td>Design</td>
+                  <td><span class="badge bg-success">Active</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-warning me-1"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-user me-2"></i> Emma Rodriguez</td>
+                  <td>Marketing Specialist</td>
+                  <td>emma@optivize.com</td>
+                  <td>Marketing</td>
+                  <td><span class="badge bg-success">Active</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-warning me-1"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-user me-2"></i> David Wilson</td>
+                  <td>Operations Manager</td>
+                  <td>david@optivize.com</td>
+                  <td>Operations</td>
+                  <td><span class="badge bg-success">Active</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-warning me-1"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-user me-2"></i> Alex Thompson</td>
+                  <td>Developer</td>
+                  <td>alex@optivize.com</td>
+                  <td>Engineering</td>
+                  <td><span class="badge bg-info">On Leave</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-warning me-1"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="text-end mt-4">
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Add New Employee</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-
-<!-- Scripts -->
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- Bootstrap JS + Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      events: [
-        {
-          title: 'Launch Date',
-          start: '2025-05-21'
-        }
-      ]
-    });
-    calendar.render();
-  });
-</script>
-
-<script>
-  const pythonURI = 'https://optivize.stu.nighthawkcodingsociety.com'; // Replace with your backend
-  const fetchOptions = { credentials: 'include' };
-document.addEventListener('DOMContentLoaded', async () => {
-  await loadShipmentTable(); // Load shipment table + events
-  await loadEmployeeTable(); // Load employee table
-});
-
- async function loadShipmentTable() {
-  try {
-    const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/shipments');
-    const data = await response.json();
-
-    const tableBody = document.querySelector("#shipment-table tbody");
-    tableBody.innerHTML = "";
-
-    const events = [];
-
-    data.shipments.forEach(shipment => {
-      // Populate table row
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${shipment.id}</td>
-        <td>${shipment.title}</td>
-        <td>${shipment.start_time}</td>
-        <td>${shipment.end_time}</td>
-        <td>${shipment.category}</td>
-      `;
-      tableBody.appendChild(row);
-
-      // Add to calendar
-      events.push({
-        title: shipment.title,
-        start: shipment.start_time,
-        end: shipment.end_time,
-        extendedProps: {
-          category: shipment.category,
-          description: shipment.description
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize calendar
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: [
+          {
+            title: 'Product Launch',
+            start: '2025-05-21T10:00:00',
+            end: '2025-05-21T12:00:00',
+            backgroundColor: '#fbb034',
+            borderColor: '#fbb034'
+          },
+          {
+            title: 'Team Meeting',
+            start: '2025-05-23T14:00:00',
+            end: '2025-05-23T15:30:00'
+          },
+          {
+            title: 'Shipment Arrival',
+            start: '2025-05-24T09:00:00',
+            backgroundColor: '#4a90e2',
+            borderColor: '#4a90e2'
+          },
+          {
+            title: 'Quarterly Review',
+            start: '2025-05-25T09:00:00',
+            end: '2025-05-25T11:00:00'
+          },
+          {
+            title: 'Innovation Workshop',
+            start: '2025-05-28T13:00:00',
+            end: '2025-05-28T16:00:00'
+          },
+          {
+            title: 'Team Building',
+            start: '2025-06-02T10:00:00',
+            end: '2025-06-02T15:00:00'
+          }
+        ],
+        eventClick: function(info) {
+          alert('Event: ' + info.event.title + '\nStart: ' + info.event.start.toLocaleString());
         }
       });
+      calendar.render();
+      // Form submission handlers
+      document.getElementById('eventForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Event submitted successfully!');
+        this.reset();
+        var modal = bootstrap.Modal.getInstance(document.getElementById('eventModal'));
+        modal.hide();
+      });
+      document.getElementById('shipmentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Shipment submitted successfully!');
+        this.reset();
+        var modal = bootstrap.Modal.getInstance(document.getElementById('shipmentModal'));
+        modal.hide();
+      });
+      document.getElementById('taskForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Task added successfully!');
+        this.reset();
+        var modal = bootstrap.Modal.getInstance(document.getElementById('taskModal'));
+        modal.hide();
+      });
     });
-
-    // Render calendar
-    renderCalendar(events);
-
-  } catch (err) {
-    console.error("Error fetching shipments:", err);
-  }
-}
-
- async function loadEmployeeTable() {
-  try {
-    const response = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/employees');
-    const data = await response.json();
-
-    const tableBody = document.querySelector("#employee-table tbody");
-    tableBody.innerHTML = "";
-
-    data.employees.forEach(emp => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${emp.id}</td>
-        <td>${emp.name}</td>
-        <td>${emp.role}</td>
-        <td>${emp.email}</td>
-      `;
-      tableBody.appendChild(row);
-    });
-
-  } catch (err) {
-    console.error("Error fetching employees:", err);
-  }
-}
-function renderCalendar(events) {
-  const calendarEl = document.getElementById('calendar');
-  if (!calendarEl) {
-    console.error("No calendar element found");
-    return;
-  }
-
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    height: 'auto',
-    events: events,
-    eventClick: function(info) {
-      alert(`${info.event.title}\n${info.event.extendedProps.category}\n${info.event.extendedProps.description}`);
-    }
-  });
-
-  calendar.render();
-}
-
-  async function postEvent({ title, description, start_time, end_time, category }) {
-  try {
-    const response = await fetch(`${pythonURI}/api/calendarv3/events`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, description, start_time, end_time, category })
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to post event');
-    }
-
-    const data = await response.json();
-    console.log('Event posted:', data);
-    await getEvents();  // Refresh list after posting
-
-  } catch (error) {
-    console.error('Error posting event:', error);
-    alert('Failed to add event: ' + error.message);
-  }
-}
-
-async function getEvents() {
-  try {
-    const response = await fetch(`${pythonURI}/api/calendarv3/events`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch events: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    if (data.success && Array.isArray(data.events)) {
-      displayEvents(data.events);
-    } else {
-      console.error('Unexpected response structure:', data);
-      document.getElementById('calendar').innerHTML = '<p>Failed to load events.</p>';
-    }
-  } catch (error) {
-    console.error('Error fetching events:', error);
-    document.getElementById('calendar').innerHTML = `<p>Error fetching events: ${error.message}</p>`;
-  }
-}
-
-function displayEvents(events) {
-  const calendarDiv = document.getElementById('calendar');
-  calendarDiv.innerHTML = '';
-
-  if (!events.length) {
-    calendarDiv.innerHTML = '<p>No events found.</p>';
-    return;
-  }
-
-  const ul = document.createElement('ul');
-
-  events.forEach(event => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <strong>Title:</strong> ${event.title || 'N/A'}<br>
-      <strong>Description:</strong> ${event.description || 'N/A'}<br>
-      <strong>Start:</strong> ${event.start_time || 'N/A'}<br>
-      <strong>End:</strong> ${event.end_time || 'N/A'}<br>
-      <strong>Category:</strong> ${event.category || 'N/A'}
-    `;
-    ul.appendChild(li);
-  });
-
-  calendarDiv.appendChild(ul);
-}
-
-// Attach form submit handler
-document.addEventListener('DOMContentLoaded', () => {
-  getEvents();  // Load events on page load
-
-  const form = document.getElementById('eventForm');
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // Get form data
-    const formData = new FormData(form);
-    const eventData = {
-      title: formData.get('title'),
-      description: formData.get('description'),
-      start_time: formData.get('start_time'),
-      end_time: formData.get('end_time'),
-      category: formData.get('category')
-    };
-
-    await postEvent(eventData);
-
-    form.reset(); // Clear form after successful submission
-  });
-});
-
-async function updateEvent(id, { title, description, start_time, end_time, category }) {
-    await fetch(`${pythonURI}/api/calendarv3/events/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, description, start_time, end_time, category })
-    });
-  }
-  async function deleteEvent(id) {
-    await fetch(`${pythonURI}/api/calendarv3/events/${id}`, {
-      method: 'DELETE'
-    });
-  }
-  document.addEventListener('DOMContentLoaded', async () => {
-  const events = await fetchCalendarEvents();
-  renderFullCalendar(events);
-});
- async function fetchCalendarEvents() {
-  try {
-    const res = await fetch('https://optivize.stu.nighthawkcodingsociety.com/api/calendarv3/events');
-    const json = await res.json();
-
-    if (!json.success || !json.events) {
-      console.error('Invalid API response', json);
-      return [];
-    }
-
-    // Map events to FullCalendar format
-    return json.events.map(event => ({
-      id: event.id,
-      title: event.title,
-      start: event.start_time.replace(' ', 'T'),
-      end: event.end_time.replace(' ', 'T'),
-      extendedProps: {
-        description: event.description,
-        category: event.category
-      }
-    }));
-  } catch (error) {
-    console.error('Error fetching calendar events:', error);
-    return [];
-  }
-}
-
-function renderFullCalendar(events) {
-  const calendarEl = document.getElementById('calendar');
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    height: 'auto',
-    events: events,
-    eventClick: function(info) {
-      alert(`Title: ${info.event.title}
-Description: ${info.event.extendedProps.description}
-Category: ${info.event.extendedProps.category}`);
-    }
-  });
-
-  calendar.render();
-}
-  // --- SHIPMENTS ---
-  // Fetch all shipments
-async function getShipments() {
-  try {
-    const response = await fetch(`${pythonURI}/api/calendarv3/shipments`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-    const data = await response.json();
-    displayShipments(data.shipments || []);
-  } catch (error) {
-    console.error('Error fetching shipments:', error);
-  }
-}
-
-// Add a shipment
-async function postShipment({ inventory, amount, transport_method, shipment_time }) {
-  try {
-    await fetch(`${pythonURI}/api/calendarv3/shipments`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ inventory, amount, transport_method, shipment_time })
-    });
-
-    getShipments(); // Refresh list
-  } catch (error) {
-    console.error('Error posting shipment:', error);
-  }
-}
-
-// Update a shipment
-async function updateShipment(id, { inventory, amount, transport_method, shipment_time }) {
-  try {
-    await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ inventory, amount, transport_method, shipment_time })
-    });
-
-    getShipments();
-  } catch (error) {
-    console.error('Error updating shipment:', error);
-  }
-}
-
-// Delete a shipment
-async function deleteShipment(id) {
-  try {
-    await fetch(`${pythonURI}/api/calendarv3/shipments/${id}`, {
-      method: 'DELETE'
-    });
-
-    getShipments();
-  } catch (error) {
-    console.error('Error deleting shipment:', error);
-  }
-}
-
-// Display shipments in a table
-function displayShipments(shipments) {
-  const tableBody = document.querySelector('#shipment-table tbody');
-  tableBody.innerHTML = '';
-
-  shipments.forEach(shipment => {
-    const tr = document.createElement('tr');
-
-    tr.innerHTML = `
-      <td>${shipment.id || ''}</td>
-      <td>${shipment.inventory || ''}</td>
-      <td>${shipment.amount || ''}</td>
-      <td>${shipment.transport_method || ''}</td>
-      <td>${shipment.shipment_time || ''}</td>
-      <td>
-        <button onclick="deleteShipment('${shipment.id}')">Delete</button>
-      </td>
-    `;
-
-    tableBody.appendChild(tr);
-  });
-}
-
-// Form submission handler
-document.addEventListener('DOMContentLoaded', () => {
-  getShipments();
-
-  const shipmentForm = document.getElementById('shipmentForm');
-  shipmentForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(shipmentForm);
-    const shipmentData = {
-      inventory: formData.get('inventory'),
-      amount: parseInt(formData.get('amount')),
-      transport_method: formData.get('transport_method'),
-      shipment_time: formData.get('shipment_time')
-    };
-
-    await postShipment(shipmentData);
-    shipmentForm.reset();
-  });
-});
- // --- TABLE LOGIC ---
-
-  // EMPLOYEES
-  async function loadEmployeeTable() {
-    const data = await getEmployees();
-    const tbody = document.querySelector('#employeeTable tbody');
-    tbody.innerHTML = '';
-    data.employees.forEach(emp => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td contenteditable="true">${emp.name}</td>
-        <td contenteditable="true">${emp.position}</td>
-        <td contenteditable="true">${emp.work_time}</td>
-        <td>
-          <button onclick="saveEmployee(${emp.id}, this)">Update</button>
-          <button onclick="deleteEmployee(${emp.id}).then(loadEmployeeTable)">Delete</button>
-        </td>
-      `;
-      tbody.appendChild(row);
-    });
-  }
-
-  async function saveEmployee(id, btn) {
-    const row = btn.closest('tr');
-    const [name, position, work_time] = Array.from(row.children).map(td => td.textContent.trim());
-    await updateEmployee(id, { name, position, work_time });
-    loadEmployeeTable();
-  }
-
-  // SHIPMENTS
-  async function loadShipmentTable() {
-    const data = await getShipments();
-    const tbody = document.querySelector('#shipmentTable tbody');
-    tbody.innerHTML = '';
-    data.shipments.forEach(ship => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td contenteditable="true">${ship.inventory}</td>
-        <td contenteditable="true">${ship.amount}</td>
-        <td contenteditable="true">${ship.transport_method}</td>
-        <td contenteditable="true">${ship.shipment_time}</td>
-        <td>
-          <button onclick="saveShipment(${ship.id}, this)">Update</button>
-          <button onclick="deleteShipment(${ship.id}).then(loadShipmentTable)">Delete</button>
-        </td>
-      `;
-      tbody.appendChild(row);
-    });
-  }
-
-  async function saveShipment(id, btn) {
-    const row = btn.closest('tr');
-    const [inventory, amount, transport_method, shipment_time] = Array.from(row.children).map(td => td.textContent.trim());
-    await updateShipment(id, {
-      inventory,
-      amount: parseInt(amount),
-      transport_method,
-      shipment_time
-    });
-    loadShipmentTable();
-  }
-
-  // LOAD EVERYTHING
-  document.addEventListener('DOMContentLoaded', () => {
-    loadEmployeeTable();
-    loadShipmentTable();
-    if (typeof loadCalendar === 'function') loadCalendar(); // your calendar init function
-  });
-</script>
-
+  </script>
+</body>
+</html>
