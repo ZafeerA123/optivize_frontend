@@ -621,7 +621,7 @@ tr:last-child td {
       <label>Training Samples (JSON)</label>
       <textarea id="training-data" rows="8" placeholder='[
   {
-    "product_type": "Double Chocolate",
+    "product_type": "Phone",
     "seasonality": "All Year",
     "price": 3.75,
     "marketing": 8,
@@ -629,7 +629,7 @@ tr:last-child td {
     "success_score": 82
   },
   {
-    "product_type": "Pumpkin Spice",
+    "product_type": "Pants",
     "seasonality": "Fall",
     "price": 4.25,
     "marketing": 7,
@@ -648,7 +648,7 @@ tr:last-child td {
     <div class="form-row">
       <div class="form-group">
         <label>Product Title</label>
-        <input type="text" id="product-type" placeholder="e.g. Triple Chocolate">
+        <input type="text" id="product-type" placeholder="e.g. Laptop">
       </div>
       <div class="form-group">
         <label>Seasonality</label>
