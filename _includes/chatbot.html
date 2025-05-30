@@ -262,11 +262,17 @@
 <script>
     const tutorialPrompts = [
         { title: "📖 Help", content: "Ask: <code>what can you do</code> to see all available commands." },
-        { title: "Explanation", content: "Ask: <code>How does product prediction work</code> to see how product prediction API works." },
         { title: "📦 List All Items", content: "Ask: <code>list all products</code> or <code>show my flashcards</code>." },
         { title: "📁 Create a Group", content: "Ask: <code>create group [group name]</code> or <code>add group [group name]</code>." },
         { title: "🆕 Add Item (Two-Step)", content: "Ask: <code>add new item called [item] with content [Description]</code> → Then: <code>[Group Name]</code> when prompted." },
         { title: "⚡ Add Item to Group (One Line)", content: "Ask: <code>add item [item name] to group [group name]</code>." },
+        { 
+        title: "🎯 Predict Product", 
+        content: "Ask: <code>predict product: type=[type], seasonality=[season], price=[price], marketing=[1-10], distribution=[1-10]</code>.<br>Example: <code>predict product: type=chocolate bar, seasonality=holiday, price=3.99, marketing=8, distribution=9</code>." 
+        },
+        { title: "🔍 Search Item", content: "Ask: <code>search for [item name]</code>." },
+        { title: "📊 Get Item Details", content: "Ask: <code>what is the item [Item name]?</code>" },
+        { title: "📦 List Items in Group", content: "Ask: <code>list items in group [Group name]</code>." },
         { title: "✏️ Update Item", content: "Ask: <code>update item [Existing Item] with new content [New Description]</code>." },
         { title: "❌ Delete Item", content: "Ask: <code>delete item [Item name]</code> → Then: <code>yes</code> when asked." },
         { title: "📌 Find Item Group", content: "Ask: <code>what group is [item]} in?</code>" },

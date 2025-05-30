@@ -534,6 +534,10 @@ const floatingPrompts = [
   { title: "📦 List All Items", content: "Ask: <code>list all products</code>" },
   { title: "📁 Create a Group", content: "Ask: <code>create group [group name]</code>" },
   { title: "🆕 Add Item (Two-Step)", content: "Ask: <code>add new item called [item name] with content [description]</code> → then: <code>[group name]</code>" },
+  { 
+      title: "🎯 Predict Product", 
+      content: "Ask: <code>predict product: type=[type], seasonality=[season], price=[price], marketing=[1-10], distribution=[1-10]</code>.<br>Example: <code>predict product: type=chocolate bar, seasonality=holiday, price=3.99, marketing=8, distribution=9</code>." 
+  },
   { title: "⚡ Add Item to Group", content: "Ask: <code>add item [group] to group [Group name]</code>" },
   { title: "✏️ Update Item (WORK IN PROGRESS)", content: "Ask: <code>update item [item name] with new content [description]</code>" },
   { title: "❌ Delete Item", content: "Ask: <code>delete item [item name]</code> → then: <code>yes</code>" },
