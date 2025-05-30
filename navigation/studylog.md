@@ -226,7 +226,7 @@ permalink: navigation/log
 </div>
 
 <script>
-    const API_URL = "https://optivize.stu.nighthawkcodingsociety.com/api/predict";
+    const API_URL = "https://optivize.opencodingsociety.com/api/predict";
 
     document.getElementById("predictionForm").addEventListener("submit", async function (e) {
         e.preventDefault();

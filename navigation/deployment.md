@@ -48,7 +48,7 @@ if (location.hostname === "localhost") {
 } else if (location.hostname === "127.0.0.1") {
         pythonURI = "http://127.0.0.1:8212";
 } else {
-        pythonURI =  "https://optivize.stu.nighthawkcodingsociety.com";
+        pythonURI =  "https://optivize.opencodingsociety.com";
 }
 ```
 
@@ -107,7 +107,7 @@ if (location.hostname === "localhost") {
 server {
     listen 80;
     listen [::]:80;
-    server_name optivize.stu.nighthawkcodingsociety.com ; # Change server name to the one on R53
+    server_name optivize.opencodingsociety.com ; # Change server name to the one on R53
     # Configure CORS Headers
     location / { 
         proxy_pass http://localhost:8212; # Change port to port on docker
@@ -154,7 +154,7 @@ The next step (when on the Route 53 page) is to press the **Hosted zones** secti
 
 <img src="{{site.baseurl}}/images/deployment-blog/hosted-zones.png" width="100%">
 
-Here, click on the hosted zone called `stu.nighthawkcodingsociety.com`
+Here, click on the hosted zone called `opencodingsociety.com`
 
 <img src="{{site.baseurl}}/images/deployment-blog/nighthawkcodingsociety-hosted-zone.png">
 
@@ -182,7 +182,7 @@ If successful, you should receive a notification that a new record was successfu
 At this point, you have successfully created a DNS record (which we will use later on).
 
 ### (2) AWS Setup
-First, login into the [AWS Terminal](https://cockpit.stu.nighthawkcodingsociety.com/system/terminal)
+First, login into the [AWS Terminal](https://cockpit.opencodingsociety.com/system/terminal)
 
 <img src ="{{site.baseurl}}/images/deployment-blog/aws-terminal.png">
 
@@ -237,7 +237,7 @@ This should be the output:
 
 Once on this screen, enter the number corresponding to your subdomain. In the case of my own website, optivize, I would pick the number 2 based off the image above.
 
-Assuming, you did all the steps before correctly, you will be met with output that includes `Successfully deployed certificate for [subdomain].stu.nighthawkcodingsociety.com`
+Assuming, you did all the steps before correctly, you will be met with output that includes `Successfully deployed certificate for [subdomain].opencodingsociety.com`
 
 
 ## Post-Deployment Process
@@ -259,7 +259,7 @@ When you edit and commit changes on VSCode, they don't automatically get changed
 ### Update Index Page
 Once, you get your subdomain fully setup, you can access the link online.
 
-Here is our link for [reference](https://optivize.stu.nighthawkcodingsociety.com/)
+Here is our link for [reference](https://optivize.opencodingsociety.com/)
 
 However, initially, all our pages will look like this by default.
 
