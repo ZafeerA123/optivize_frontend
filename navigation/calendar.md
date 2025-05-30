@@ -327,6 +327,9 @@ permalink: /Calendar
       <button type="button" class="btn action-btn" data-bs-toggle="modal" data-bs-target="#employeeModal">
         <i class="fas fa-users"></i> Manage Employees
       </button>
+      <button type="button" class="btn action-btn" id="connectCalendarBtn">
+        <i class="fab fa-google me-2"></i> Connect Calendar
+      </button>
     </div>
     <!-- Calendar -->
     <div id="calendar"></div>
@@ -724,17 +727,26 @@ permalink: /Calendar
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Initialize calendar
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        events: [
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize data stores in localStorage if they don't exist
+  if (!localStorage.getItem('optivizeEvents')) {
+    localStorage.setItem('optivizeEvents', JSON.stringify([]));
+  }
+  if (!localStorage.getItem('optivizeGoogleEvents')) {
+    localStorage.setItem('optivizeGoogleEvents', JSON.stringify([]));
+  }
+// Initialize calendar
+  var calendarEl = document.getElementById('calendar');
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+    events: function(fetchInfo, successCallback, failureCallback) {
+      try {
+        const staticEvents = [
           {
             title: 'Product Launch',
             start: '2025-05-21T10:00:00',
@@ -768,35 +780,157 @@ permalink: /Calendar
             start: '2025-06-02T10:00:00',
             end: '2025-06-02T15:00:00'
           }
-        ],
-        eventClick: function(info) {
-          alert('Event: ' + info.event.title + '\nStart: ' + info.event.start.toLocaleString());
+        ];
+        const localEvents = JSON.parse(localStorage.getItem('optivizeEvents')) || [];
+        const googleEvents = JSON.parse(localStorage.getItem('optivizeGoogleEvents')) || [];
+        successCallback([...staticEvents, ...localEvents, ...googleEvents]);
+      } catch (error) {
+        console.error('Error loading events:', error);
+        successCallback([]);
+      }
+    },
+    eventClick: function(info) {
+      showEventDetails(info.event);
+    }
+  });
+  calendar.render();
+// Event form submission
+  document.getElementById('eventForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = {
+      id: Date.now().toString(),
+      title: this.elements.title.value,
+      description: this.elements.description.value,
+      category: this.elements.category.value,
+      date: this.elements.start_time.value.split('T')[0],
+      start_time: this.elements.start_time.value,
+      end_time: this.elements.end_time.value,
+      location: this.elements.location.value
+    };
+    try {
+      // Get current events
+      const events = JSON.parse(localStorage.getItem('optivizeEvents')) || [];
+      // Add new event
+      events.push({
+        id: formData.id,
+        title: formData.title,
+        start: formData.start_time,
+        end: formData.end_time,
+        description: formData.description,
+        backgroundColor: '#28a745',
+        borderColor: '#28a745',
+        extendedProps: {
+          location: formData.location,
+          category: formData.category
         }
       });
-      calendar.render();
-      // Form submission handlers
-      document.getElementById('eventForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert('Event submitted successfully!');
-        this.reset();
-        var modal = bootstrap.Modal.getInstance(document.getElementById('eventModal'));
-        modal.hide();
-      });
-      document.getElementById('shipmentForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert('Shipment submitted successfully!');
-        this.reset();
-        var modal = bootstrap.Modal.getInstance(document.getElementById('shipmentModal'));
-        modal.hide();
-      });
-      document.getElementById('taskForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert('Task added successfully!');
-        this.reset();
-        var modal = bootstrap.Modal.getInstance(document.getElementById('taskModal'));
-        modal.hide();
-      });
-    });
-  </script>
-</body>
-</html>
+      // Save back to localStorage
+      localStorage.setItem('optivizeEvents', JSON.stringify(events));
+      showAlert('Event created successfully!', 'success');
+      calendar.refetchEvents();
+      this.reset();
+      bootstrap.Modal.getInstance(document.getElementById('eventModal')).hide();
+    } catch (error) {
+      console.error('Error saving event:', error);
+      showAlert('Failed to create event', 'danger');
+    }
+  });
+// Google Calendar Simulation
+  function checkCalendarConnection() {
+    // For localStorage implementation, we'll simulate being always connected
+    updateConnectionUI(true);
+  }
+  function updateConnectionUI(isConnected) {
+    const connectBtn = document.getElementById('connectCalendarBtn');
+    if (connectBtn) connectBtn.style.display = isConnected ? 'none' : 'block';
+  }
+  function connectGoogleCalendar() {
+    // Simulate Google connection by adding some sample events
+    const sampleGoogleEvents = [
+      {
+        id: 'google-1',
+        title: 'Google Meeting',
+        start: '2025-05-26T10:00:00',
+        end: '2025-05-26T11:00:00',
+        description: 'Scheduled via Google Calendar',
+        backgroundColor: '#4285F4',
+        borderColor: '#4285F4'
+      },
+      {
+        id: 'google-2',
+        title: 'Team Sync',
+        start: '2025-05-29T15:00:00',
+        end: '2025-05-29T16:00:00',
+        description: 'Weekly team sync',
+        backgroundColor: '#4285F4',
+        borderColor: '#4285F4'
+      }
+    ];
+    localStorage.setItem('optivizeGoogleEvents', JSON.stringify(sampleGoogleEvents));
+    updateConnectionUI(true);
+    showAlert('Google Calendar connected with sample events!', 'success');
+    calendar.refetchEvents();
+  }
+// Shipment form submission (using localStorage)
+  document.getElementById('shipmentForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!localStorage.getItem('optivizeShipments')) {
+      localStorage.setItem('optivizeShipments', JSON.stringify([]));
+    }
+    const formData = {
+      id: Date.now().toString(),
+      inventory: this.elements.inventory.value,
+      amount: this.elements.amount.value,
+      transport_method: this.elements.transport_method.value,
+      shipment_time: this.elements.shipment_time.value,
+      destination: this.elements.destination.value
+    };
+    const shipments = JSON.parse(localStorage.getItem('optivizeShipments')) || [];
+    shipments.push(formData);
+    localStorage.setItem('optivizeShipments', JSON.stringify(shipments));
+    showAlert('Shipment submitted successfully!', 'success');
+    this.reset();
+    bootstrap.Modal.getInstance(document.getElementById('shipmentModal')).hide();
+  });
+// Task form submission (using localStorage)
+  document.getElementById('taskForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!localStorage.getItem('optivizeTasks')) {
+      localStorage.setItem('optivizeTasks', JSON.stringify([]));
+    }
+    const formData = {
+      id: Date.now().toString(),
+      employee: this.elements.employee.value,
+      description: this.elements.description.value,
+      due_date: this.elements.due_date.value,
+      priority: this.elements.priority.value
+    };
+    const tasks = JSON.parse(localStorage.getItem('optivizeTasks')) || [];
+    tasks.push(formData);
+    localStorage.setItem('optivizeTasks', JSON.stringify(tasks));
+    showAlert('Task added successfully!', 'success');
+    this.reset();
+    bootstrap.Modal.getInstance(document.getElementById('taskModal')).hide();
+  });
+// Show event details popup
+  function showEventDetails(event) {
+    const description = event.extendedProps?.description || 'No description';
+    const start = event.start ? event.start.toLocaleString() : 'No start time';
+    const end = event.end ? event.end.toLocaleString() : 'No end time';
+    alert(`Event: ${event.title}\n\nDescription: ${description}\n\nStart: ${start}\nEnd: ${end}`);
+  }
+// Alert helper
+  function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} fixed-top w-50 mx-auto mt-2 text-center`;
+    alertDiv.textContent = message;
+    document.body.appendChild(alertDiv);
+    setTimeout(() => {
+      alertDiv.remove();
+    }, 3000);
+  }
+// Initialize Google Calendar connection button listener
+  checkCalendarConnection();
+  document.getElementById('connectCalendarBtn')?.addEventListener('click', connectGoogleCalendar);
+});
+</script>
