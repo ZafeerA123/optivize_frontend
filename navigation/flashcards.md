@@ -1257,7 +1257,7 @@ document.getElementById('confirm-google-import')?.addEventListener('click', asyn
   if (window.location.href.startsWith("http://127.0.0.1") || window.location.href.startsWith("http://localhost")) {
     backendBaseURL = "http://localhost:8212";  // LOCAL
   } else {
-    backendBaseURL = "https://zafeera123.onrender.com";  // DEPLOYED
+    backendBaseURL = "https://optivize-backend.onrender.com";  // DEPLOYED
   }
 
   window.location.href = `${backendBaseURL}/google/connect`;
@@ -1276,7 +1276,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (window.location.href.startsWith("http://127.0.0.1") || window.location.href.startsWith("http://localhost")) {
         backendBaseURL = "http://localhost:8212";
       } else {
-        backendBaseURL = "https://zafeera123.onrender.com";
+        backendBaseURL = "https://optivize-backend.onrender.com";
       }
 
       const response = await fetch(`${backendBaseURL}/google/import`, {
