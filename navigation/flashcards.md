@@ -81,7 +81,7 @@ permalink: /flashcards
   }
 
   h1 {
-    color: #2c3e50;
+    color:rgb(255, 255, 255);
     border-bottom: 2px solid #eee;
     padding-bottom: 10px;
     margin-bottom: 20px;
