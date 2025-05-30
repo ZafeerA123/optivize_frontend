@@ -1295,7 +1295,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           "Content-Type": "application/json"
         },
         credentials: "include",
-        body: JSON.stringify({ sheet_id: sheetId })
+        body: JSON.stringify({ sheet_id: sheetId }),
+        user_id: 1 
       });
 
       if (response.ok) {
