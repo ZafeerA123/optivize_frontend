@@ -798,7 +798,8 @@ permalink: /flashcards
     try {
       const groupsResponse = await fetch(`${pythonURI}/api/deck`, {
         ...fetchOptions,
-        method: 'GET'
+        method: 'GET',
+        credentials: 'include'
       });
 
       if (groupsResponse.ok) {
@@ -808,7 +809,8 @@ permalink: /flashcards
           try {
             const detailResponse = await fetch(`${pythonURI}/api/deck/${group.id}?include_cards=true`, {
               ...fetchOptions,
-              method: 'GET'
+              method: 'GET',
+              credentials: 'include'
             });
             
             if (detailResponse.ok) {
@@ -835,7 +837,8 @@ permalink: /flashcards
     try {
       const response = await fetch(`${pythonURI}/api/deck/${groupId}?include_cards=true`, {
         ...fetchOptions,
-        method: 'GET'
+        method: 'GET',
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -877,6 +880,7 @@ permalink: /flashcards
         ...fetchOptions,
         method: 'POST',
         body: JSON.stringify({ title: groupName, user_id: 1 }),
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -915,6 +919,7 @@ permalink: /flashcards
           ...fetchOptions,
           method: 'PUT',
           body: JSON.stringify({ title: newName }),
+          credentials: 'include'
         });
 
         if (response.ok) {
@@ -944,7 +949,8 @@ permalink: /flashcards
     try {
       const response = await fetch(`${pythonURI}/api/deck/${groupId}`, {
         ...fetchOptions,
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -982,6 +988,7 @@ permalink: /flashcards
           ...fetchOptions,
           method: 'PUT',
           body: JSON.stringify({ title, content }),
+          credentials: 'include'
         });
       } else {
         response = await fetch(`${pythonURI}/api/flashcard`, {
@@ -1000,7 +1007,8 @@ permalink: /flashcards
         document.getElementById('item-modal').style.display = 'none';
         const groupResponse = await fetch(`${pythonURI}/api/deck/${currentGroup.id}?include_cards=true`, {
           ...fetchOptions,
-          method: 'GET'
+          method: 'GET',
+          credentials: 'include'
         });
         
         if (groupResponse.ok) {
@@ -1046,13 +1054,15 @@ permalink: /flashcards
     try {
       const response = await fetch(`${pythonURI}/api/flashcard/${itemId}`, {
         ...fetchOptions,
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'include'
       });
 
       if (response.ok) {
         const groupResponse = await fetch(`${pythonURI}/api/deck/${currentGroup.id}?include_cards=true`, {
           ...fetchOptions,
-          method: 'GET'
+          method: 'GET',
+          credentials: 'include'
         });
         
         if (groupResponse.ok) {
