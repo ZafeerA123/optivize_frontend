@@ -1,11 +1,10 @@
 ---
 layout: base
-title: Optivize Calendar 
+title: Optivize Calendar
 description: Product Success Prediction
 hide: true
-permalink: /Calendar 
+permalink: /Calendar
 ---
-
 
 <html lang="en">
 <head>
@@ -735,7 +734,230 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!localStorage.getItem('optivizeGoogleEvents')) {
     localStorage.setItem('optivizeGoogleEvents', JSON.stringify([]));
   }
-// Initialize calendar
+  if (!localStorage.getItem('optivizeShipments')) {
+    localStorage.setItem('optivizeShipments', JSON.stringify([]));
+  }
+  if (!localStorage.getItem('optivizeTasks')) {
+    localStorage.setItem('optivizeTasks', JSON.stringify([]));
+  }
+
+  // Load data sections from localStorage
+  function loadDataSections() {
+    // Static events data
+    const staticEvents = [
+      {
+        title: 'Product Launch',
+        location: 'Conference Room A',
+        start: '2025-05-21T10:00:00',
+        end: '2025-05-21T12:00:00',
+        status: 'Confirmed'
+      },
+      {
+        title: 'Quarterly Review',
+        location: 'Main Office',
+        start: '2025-05-25T09:00:00',
+        end: '2025-05-25T11:00:00',
+        status: 'Pending'
+      },
+      {
+        title: 'Innovation Workshop',
+        location: 'Creative Space',
+        start: '2025-05-28T13:00:00',
+        end: '2025-05-28T16:00:00',
+        status: 'Confirmed'
+      },
+      {
+        title: 'Team Building',
+        location: 'Outdoor Area',
+        start: '2025-06-02T10:00:00',
+        end: '2025-06-02T15:00:00',
+        status: 'Scheduled'
+      },
+      {
+        title: 'Anniversary Celebration',
+        location: 'Grand Hall',
+        start: '2025-06-10T18:00:00',
+        end: '2025-06-10T22:00:00',
+        status: 'Planned'
+      }
+    ];
+
+    const staticShipments = [
+      {
+        inventory: 'Cookie Dough',
+        amount: '500',
+        transport_method: 'Refrigerated Truck',
+        shipment_time: '2025-05-20T08:00:00',
+        status: 'Delivered'
+      },
+      {
+        inventory: 'Packaging Materials',
+        amount: '2000',
+        transport_method: 'Standard Truck',
+        shipment_time: '2025-05-22T10:30:00',
+        status: 'In Transit'
+      },
+      {
+        inventory: 'Promotional Items',
+        amount: '1500',
+        transport_method: 'Air Freight',
+        shipment_time: '2025-05-24T14:00:00',
+        status: 'Processing'
+      }
+    ];
+
+    const staticTasks = [
+      {
+        employee: 'Sarah Johnson',
+        description: 'Prepare launch presentation',
+        due_date: '2025-05-20',
+        priority: 'High',
+        status: 'Completed'
+      },
+      {
+        employee: 'Michael Chen',
+        description: 'Finalize product packaging',
+        due_date: '2025-05-22',
+        priority: 'High',
+        status: 'In Progress'
+      },
+      {
+        employee: 'Emma Rodriguez',
+        description: 'Coordinate media coverage',
+        due_date: '2025-05-25',
+        priority: 'Medium',
+        status: 'In Progress'
+      },
+      {
+        employee: 'David Wilson',
+        description: 'Prepare inventory report',
+        due_date: '2025-05-28',
+        priority: 'Low',
+        status: 'Not Started'
+      }
+    ];
+
+    // Load Events
+    const events = JSON.parse(localStorage.getItem('optivizeEvents')) || [];
+    const upcomingEventsTable = document.querySelector('.data-section .table tbody');
+    if (upcomingEventsTable) {
+      upcomingEventsTable.innerHTML = ''; // Clear existing rows
+      
+      // Add static events
+      staticEvents.forEach(event => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+          <td><i class="fas fa-calendar me-2"></i> ${event.title}</td>
+          <td>${event.location}</td>
+          <td>${new Date(event.start).toLocaleString()}</td>
+          <td>${new Date(event.end).toLocaleString()}</td>
+          <td><span class="badge bg-${getStatusColor(event.status)}">${event.status}</span></td>
+        `;
+        upcomingEventsTable.appendChild(newRow);
+      });
+
+      // Add dynamic events
+      events.forEach(event => {
+        if (!event.extendedProps?.type) { // Only show regular events, not shipments or tasks
+          const newRow = document.createElement('tr');
+          newRow.innerHTML = `
+            <td><i class="fas fa-calendar me-2"></i> ${event.title}</td>
+            <td>${event.extendedProps?.location || 'N/A'}</td>
+            <td>${new Date(event.start).toLocaleString()}</td>
+            <td>${event.end ? new Date(event.end).toLocaleString() : 'N/A'}</td>
+            <td><span class="badge bg-success">Confirmed</span></td>
+          `;
+          upcomingEventsTable.appendChild(newRow);
+        }
+      });
+      // Update events count badge
+      const eventsBadge = document.querySelector('.data-section .section-header .badge');
+      if (eventsBadge) {
+        eventsBadge.textContent = `${staticEvents.length + events.filter(e => !e.extendedProps?.type).length} events`;
+      }
+    }
+
+    // Load Shipments
+    const shipments = JSON.parse(localStorage.getItem('optivizeShipments')) || [];
+    const shipmentsTable = document.querySelectorAll('.data-section .table tbody')[1];
+    if (shipmentsTable) {
+      shipmentsTable.innerHTML = ''; // Clear existing rows
+      
+      // Add static shipments
+      staticShipments.forEach(shipment => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+          <td><i class="fas fa-box me-2"></i> ${shipment.inventory}</td>
+          <td>${shipment.amount} units</td>
+          <td>${shipment.transport_method}</td>
+          <td>${new Date(shipment.shipment_time).toLocaleString()}</td>
+          <td><span class="badge bg-${getStatusColor(shipment.status)}">${shipment.status}</span></td>
+        `;
+        shipmentsTable.appendChild(newRow);
+      });
+
+      // Add dynamic shipments
+      shipments.forEach(shipment => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+          <td><i class="fas fa-box me-2"></i> ${shipment.inventory}</td>
+          <td>${shipment.amount} units</td>
+          <td>${shipment.transport_method}</td>
+          <td>${new Date(shipment.shipment_time).toLocaleString()}</td>
+          <td><span class="badge bg-primary">Processing</span></td>
+        `;
+        shipmentsTable.appendChild(newRow);
+      });
+      // Update shipments count badge
+      const shipmentsBadge = document.querySelectorAll('.data-section .section-header .badge')[1];
+      if (shipmentsBadge) {
+        shipmentsBadge.textContent = `${staticShipments.length + shipments.length} shipments`;
+      }
+    }
+
+    // Load Tasks
+    const tasks = JSON.parse(localStorage.getItem('optivizeTasks')) || [];
+    const tasksTable = document.querySelectorAll('.data-section .table tbody')[2];
+    if (tasksTable) {
+      tasksTable.innerHTML = ''; // Clear existing rows
+      
+      // Add static tasks
+      staticTasks.forEach(task => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+          <td><i class="fas fa-user me-2"></i> ${task.employee}</td>
+          <td>${task.description}</td>
+          <td>${task.due_date}</td>
+          <td><span class="badge bg-${getPriorityColor(task.priority)}">${task.priority}</span></td>
+          <td><span class="badge bg-${getStatusColor(task.status)}">${task.status}</span></td>
+        `;
+        tasksTable.appendChild(newRow);
+      });
+
+      // Add dynamic tasks
+      tasks.forEach(task => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+          <td><i class="fas fa-user me-2"></i> ${task.employee}</td>
+          <td>${task.description}</td>
+          <td>${task.due_date}</td>
+          <td><span class="badge bg-${getPriorityColor(task.priority)}">${task.priority}</span></td>
+          <td><span class="badge bg-secondary">Not Started</span></td>
+        `;
+        tasksTable.appendChild(newRow);
+      });
+      // Update tasks count badge
+      const tasksBadge = document.querySelectorAll('.data-section .section-header .badge')[2];
+      if (tasksBadge) {
+        tasksBadge.textContent = `${staticTasks.length + tasks.length} tasks`;
+      }
+    }
+  }
+
+  // Call loadDataSections when page loads
+  loadDataSections();
+
+  // Initialize calendar
   var calendarEl = document.getElementById('calendar');
   var calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
@@ -794,7 +1016,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   calendar.render();
-// Event form submission
+
+  // Update the event form submission to use loadDataSections
   document.getElementById('eventForm')?.addEventListener('submit', function(e) {
     e.preventDefault();
     const formData = {
@@ -826,8 +1049,10 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       // Save back to localStorage
       localStorage.setItem('optivizeEvents', JSON.stringify(events));
+      
       showAlert('Event created successfully!', 'success');
       calendar.refetchEvents();
+      loadDataSections(); // Reload all data sections
       this.reset();
       bootstrap.Modal.getInstance(document.getElementById('eventModal')).hide();
     } catch (error) {
@@ -835,7 +1060,103 @@ document.addEventListener('DOMContentLoaded', function() {
       showAlert('Failed to create event', 'danger');
     }
   });
-// Google Calendar Simulation
+
+  // Update the shipment form submission to use loadDataSections
+  document.getElementById('shipmentForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = {
+      id: Date.now().toString(),
+      inventory: this.elements.inventory.value,
+      amount: this.elements.amount.value,
+      transport_method: this.elements.transport_method.value,
+      shipment_time: this.elements.shipment_time.value,
+      destination: this.elements.destination.value
+    };
+    const shipments = JSON.parse(localStorage.getItem('optivizeShipments')) || [];
+    shipments.push(formData);
+    localStorage.setItem('optivizeShipments', JSON.stringify(shipments));
+
+    // Add to calendar events
+    const events = JSON.parse(localStorage.getItem('optivizeEvents')) || [];
+    events.push({
+      id: `shipment-${formData.id}`,
+      title: `Shipment: ${formData.inventory}`,
+      start: formData.shipment_time,
+      backgroundColor: '#4a90e2',
+      borderColor: '#4a90e2',
+      extendedProps: {
+        type: 'shipment',
+        amount: formData.amount,
+        transport_method: formData.transport_method,
+        destination: formData.destination
+      }
+    });
+    localStorage.setItem('optivizeEvents', JSON.stringify(events));
+
+    showAlert('Shipment submitted successfully!', 'success');
+    this.reset();
+    bootstrap.Modal.getInstance(document.getElementById('shipmentModal')).hide();
+    calendar.refetchEvents();
+    loadDataSections(); // Reload all data sections
+  });
+
+  // Update the task form submission to use loadDataSections
+  document.getElementById('taskForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = {
+      id: Date.now().toString(),
+      employee: this.elements.employee.value,
+      description: this.elements.description.value,
+      due_date: this.elements.due_date.value,
+      priority: this.elements.priority.value
+    };
+    const tasks = JSON.parse(localStorage.getItem('optivizeTasks')) || [];
+    tasks.push(formData);
+    localStorage.setItem('optivizeTasks', JSON.stringify(tasks));
+
+    // Add to calendar events
+    const events = JSON.parse(localStorage.getItem('optivizeEvents')) || [];
+    events.push({
+      id: `task-${formData.id}`,
+      title: `Task: ${formData.description}`,
+      start: formData.due_date,
+      backgroundColor: '#fbb034',
+      borderColor: '#fbb034',
+      extendedProps: {
+        type: 'task',
+        employee: formData.employee,
+        priority: formData.priority
+      }
+    });
+    localStorage.setItem('optivizeEvents', JSON.stringify(events));
+
+    showAlert('Task added successfully!', 'success');
+    this.reset();
+    bootstrap.Modal.getInstance(document.getElementById('taskModal')).hide();
+    calendar.refetchEvents();
+    loadDataSections(); // Reload all data sections
+  });
+
+  // Show event details popup
+  function showEventDetails(event) {
+    const description = event.extendedProps?.description || 'No description';
+    const start = event.start ? event.start.toLocaleString() : 'No start time';
+    const end = event.end ? event.end.toLocaleString() : 'No end time';
+    alert(`Event: ${event.title}\n\nDescription: ${description}\n\nStart: ${start}\nEnd: ${end}`);
+  }
+
+  // Alert helper
+  function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} fixed-top w-50 mx-auto mt-2 text-center`;
+    alertDiv.textContent = message;
+    document.body.appendChild(alertDiv);
+    setTimeout(() => {
+      alertDiv.remove();
+    }, 3000);
+  }
+
+  // Google Calendar Simulation
   function checkCalendarConnection() {
     // For localStorage implementation, we'll simulate being always connected
     updateConnectionUI(true);
@@ -871,66 +1192,40 @@ document.addEventListener('DOMContentLoaded', function() {
     showAlert('Google Calendar connected with sample events!', 'success');
     calendar.refetchEvents();
   }
-// Shipment form submission (using localStorage)
-  document.getElementById('shipmentForm')?.addEventListener('submit', function(e) {
-    e.preventDefault();
-    if (!localStorage.getItem('optivizeShipments')) {
-      localStorage.setItem('optivizeShipments', JSON.stringify([]));
-    }
-    const formData = {
-      id: Date.now().toString(),
-      inventory: this.elements.inventory.value,
-      amount: this.elements.amount.value,
-      transport_method: this.elements.transport_method.value,
-      shipment_time: this.elements.shipment_time.value,
-      destination: this.elements.destination.value
-    };
-    const shipments = JSON.parse(localStorage.getItem('optivizeShipments')) || [];
-    shipments.push(formData);
-    localStorage.setItem('optivizeShipments', JSON.stringify(shipments));
-    showAlert('Shipment submitted successfully!', 'success');
-    this.reset();
-    bootstrap.Modal.getInstance(document.getElementById('shipmentModal')).hide();
-  });
-// Task form submission (using localStorage)
-  document.getElementById('taskForm')?.addEventListener('submit', function(e) {
-    e.preventDefault();
-    if (!localStorage.getItem('optivizeTasks')) {
-      localStorage.setItem('optivizeTasks', JSON.stringify([]));
-    }
-    const formData = {
-      id: Date.now().toString(),
-      employee: this.elements.employee.value,
-      description: this.elements.description.value,
-      due_date: this.elements.due_date.value,
-      priority: this.elements.priority.value
-    };
-    const tasks = JSON.parse(localStorage.getItem('optivizeTasks')) || [];
-    tasks.push(formData);
-    localStorage.setItem('optivizeTasks', JSON.stringify(tasks));
-    showAlert('Task added successfully!', 'success');
-    this.reset();
-    bootstrap.Modal.getInstance(document.getElementById('taskModal')).hide();
-  });
-// Show event details popup
-  function showEventDetails(event) {
-    const description = event.extendedProps?.description || 'No description';
-    const start = event.start ? event.start.toLocaleString() : 'No start time';
-    const end = event.end ? event.end.toLocaleString() : 'No end time';
-    alert(`Event: ${event.title}\n\nDescription: ${description}\n\nStart: ${start}\nEnd: ${end}`);
-  }
-// Alert helper
-  function showAlert(message, type) {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} fixed-top w-50 mx-auto mt-2 text-center`;
-    alertDiv.textContent = message;
-    document.body.appendChild(alertDiv);
-    setTimeout(() => {
-      alertDiv.remove();
-    }, 3000);
-  }
-// Initialize Google Calendar connection button listener
+
+  // Initialize Google Calendar connection button listener
   checkCalendarConnection();
   document.getElementById('connectCalendarBtn')?.addEventListener('click', connectGoogleCalendar);
+
+  // Helper function to get badge color based on priority
+  function getPriorityColor(priority) {
+    switch(priority.toLowerCase()) {
+      case 'high': return 'danger';
+      case 'medium': return 'warning';
+      case 'low': return 'info';
+      default: return 'secondary';
+    }
+  }
+
+  // Helper function to get badge color based on status
+  function getStatusColor(status) {
+    switch(status.toLowerCase()) {
+      case 'confirmed':
+      case 'delivered':
+      case 'completed':
+        return 'success';
+      case 'pending':
+      case 'processing':
+        return 'warning';
+      case 'in transit':
+      case 'in progress':
+        return 'primary';
+      case 'scheduled':
+      case 'planned':
+        return 'info';
+      default:
+        return 'secondary';
+    }
+  }
 });
 </script>
