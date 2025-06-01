@@ -127,6 +127,72 @@ menu: nav/home.html
     }
   }
   
+
+  /* Static floating particles */
+.static-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.static-particle {
+  position: absolute;
+  background: #fbb034;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: gentleFloat 12s ease-in-out infinite;
+}
+
+.static-particle:nth-child(odd) {
+  animation-direction: alternate-reverse;
+}
+
+@keyframes gentleFloat {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px); 
+    opacity: 0.3; 
+  }
+  50% { 
+    transform: translateY(-60px) translateX(60px); 
+    opacity: 0.5; 
+  }
+}
+
+/* Individual particle styles */
+.static-particle:nth-child(1) {
+  width: 8px; height: 8px; top: 15%; left: 8%; animation-delay: 0s; animation-duration: 8s; /* Faster duration */
+}
+.static-particle:nth-child(2) {
+  width: 12px; height: 12px; top: 25%; left: 85%; animation-delay: 2s; animation-duration: 10s;
+}
+.static-particle:nth-child(3) {
+  width: 6px; height: 6px; top: 45%; left: 12%; animation-delay: 4s; animation-duration: 7s;
+}
+.static-particle:nth-child(4) {
+  width: 14px; height: 14px; top: 65%; left: 88%; animation-delay: 1s; animation-duration: 12s;
+}
+.static-particle:nth-child(5) {
+  width: 10px; height: 10px; top: 75%; left: 15%; animation-delay: 6s; animation-duration: 9s;
+}
+.static-particle:nth-child(6) {
+  width: 11px; height: 11px; top: 35%; left: 90%; animation-delay: 3s; animation-duration: 8s;
+}
+.static-particle:nth-child(7) {
+  width: 7px; height: 7px; top: 55%; left: 5%; animation-delay: 5s; animation-duration: 6s;
+}
+.static-particle:nth-child(8) {
+  width: 9px; height: 9px; top: 85%; left: 92%; animation-delay: 7s; animation-duration: 11s;
+}
+.static-particle:nth-child(9) {
+  width: 13px; height: 13px; top: 10%; left: 75%; animation-delay: 1.5s; animation-duration: 10s;
+}
+.static-particle:nth-child(10) {
+  width: 8px; height: 8px; top: 90%; left: 25%; animation-delay: 8s; animation-duration: 7s;
+}
   .hero-description {
     font-size: 1.2rem;
     margin-bottom: 30px;
@@ -171,6 +237,17 @@ menu: nav/home.html
     box-shadow: 0 4px 15px rgba(251, 176, 52, 0.3);
   }
   
+  @keyframes buttonPulse {
+  0% { box-shadow: 0 4px 15px rgba(251, 176, 52, 0.3); }
+  50% { box-shadow: 0 4px 25px rgba(251, 176, 52, 0.6); }
+  100% { box-shadow: 0 4px 15px rgba(251, 176, 52, 0.3); }
+}
+
+.primary-button {
+  /* Keep your existing styles */
+  animation: buttonPulse 3s infinite;
+}
+
   .primary-button::before {
     background: linear-gradient(90deg, #ffdd00, #fbb034);
   }
@@ -450,7 +527,29 @@ menu: nav/home.html
     flex: 1;
     position: relative;
   }
-  
+  @keyframes floatCard {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(0.5deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.feature-card {
+  /* Keep your existing styles */
+  animation: floatCard 6s ease-in-out infinite;
+}
+
+/* Make each card float at different times */
+.feature-card:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.feature-card:nth-child(2) {
+  animation-delay: 1.5s;
+}
+
+.bottom-feature .feature-card {
+  animation-delay: 3s;
+}
   /* Gradient border effect */
   .feature-card::before {
     content: '';
@@ -639,12 +738,33 @@ menu: nav/home.html
       font-size: 1.5rem;
     }
   }
+
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
 </style>
 
 <!-- Page Background with Gradients -->
 <div class="page-background"></div>
 <div class="gradient-overlay"></div>
-
+<div id="particles-js"></div>
+<div class="static-particles">
+  <div class="static-particle"></div>
+  <div class="static-particle"></div>
+  <div class="static-particle"></div>
+  <div class="static-particle"></div>
+  <div class="static-particle"></div>
+  <div class="static-particle"></div>
+  <div class="static-particle"></div>
+  <div class="static-particle"></div>
+  <div class="static-particle"></div>
+  <div class="static-particle"></div>
+</div>
 <!-- Hero Section -->
 <div class="hero-container">
   <!-- Glowing Orbs -->
@@ -773,4 +893,214 @@ menu: nav/home.html
       <a href="/optivize_frontend/bot" class="button primary-button">Try Chatbot</a>
     </div>
   </div>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    particlesJS("particles-js", {
+      "particles": {
+        "number": {
+          "value": 30,
+          "density": {
+            "enable": true,
+            "value_area": 800
+          }
+        },
+        "color": {
+          "value": "#fbb034"
+        },
+        "shape": {
+          "type": "circle",
+          "stroke": {
+            "width": 0,
+            "color": "#000000"
+          }
+        },
+        "opacity": {
+          "value": 0.3,
+          "random": true,
+          "anim": {
+            "enable": true,
+            "speed": 1,
+            "opacity_min": 0.1,
+            "sync": false
+          }
+        },
+        "size": {
+          "value": 3,
+          "random": true,
+          "anim": {
+            "enable": true,
+            "speed": 2,
+            "size_min": 0.1,
+            "sync": false
+          }
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#fbb034",
+          "opacity": 0.2,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 1,
+          "direction": "none",
+          "random": true,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false,
+          "attract": {
+            "enable": false,
+            "rotateX": 600,
+            "rotateY": 1200
+          }
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "grab"
+          },
+          "onclick": {
+            "enable": true,
+            "mode": "push"
+          },
+          "resize": true
+        },
+        "modes": {
+          "grab": {
+            "distance": 140,
+            "line_linked": {
+              "opacity": 0.5
+            }
+          },
+          "push": {
+            "particles_nb": 3
+          }
+        }
+      },
+      "retina_detect": true
+    });
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    particlesJS("particles-js", {
+      "particles": {
+        "number": {
+          "value": 30,
+          "density": {
+            "enable": true,
+            "value_area": 800
+          }
+        },
+        "color": {
+          "value": "#fbb034"
+        },
+        "shape": {
+          "type": "circle",
+          "stroke": {
+            "width": 0,
+            "color": "#000000"
+          }
+        },
+        "opacity": {
+          "value": 0.3,
+          "random": true,
+          "anim": {
+            "enable": true,
+            "speed": 1,
+            "opacity_min": 0.1,
+            "sync": false
+          }
+        },
+        "size": {
+          "value": 3,
+          "random": true,
+          "anim": {
+            "enable": true,
+            "speed": 2,
+            "size_min": 0.1,
+            "sync": false
+          }
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#fbb034",
+          "opacity": 0.2,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 1,
+          "direction": "none",
+          "random": true,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false,
+          "attract": {
+            "enable": false,
+            "rotateX": 600,
+            "rotateY": 1200
+          }
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "grab"
+          },
+          "onclick": {
+            "enable": true,
+            "mode": "push"
+          },
+          "resize": true
+        },
+        "modes": {
+          "grab": {
+            "distance": 140,
+            "line_linked": {
+              "opacity": 0.5
+            }
+          },
+          "push": {
+            "particles_nb": 3
+          }
+        }
+      },
+      "retina_detect": true
+    });
+    
+    // Add the animated counting for product quantities
+    const productQuantities = document.querySelectorAll('.product-quantity');
+    
+    productQuantities.forEach(element => {
+      const finalText = element.textContent;
+      const finalValue = parseInt(finalText);
+      let currentValue = 0;
+      const duration = 2000; // 2 seconds
+      const interval = 50; // Update every 50ms
+      const steps = duration / interval;
+      const increment = finalValue / steps;
+      
+      element.textContent = "0 units";
+      
+      const counter = setInterval(() => {
+        currentValue += increment;
+        if (currentValue >= finalValue) {
+          currentValue = finalValue;
+          clearInterval(counter);
+        }
+        element.textContent = Math.floor(currentValue) + " units";
+      }, interval);
+    });
+  });
+</script>
 </div>
