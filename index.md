@@ -169,6 +169,38 @@ menu: nav/home.html
 .static-particle:nth-child(2) {
   width: 12px; height: 12px; top: 25%; left: 85%; animation-delay: 2s; animation-duration: 10s;
 }
+
+.static-particle:nth-child(2) {
+  width: 12px; height: 12px; top: 25%; left: 85%; animation-delay: 2s; animation-duration: 10s;
+}
+
+.static-particle:nth-child(2) {
+  width: 12px; height: 12px; top: 25%; left: 85%; animation-delay: 2s; animation-duration: 10s;
+}
+
+.static-particle:nth-child(2) {
+  width: 12px; height: 12px; top: 25%; left: 85%; animation-delay: 2s; animation-duration: 10s;
+}
+
+.static-particle:nth-child(2) {
+  width: 12px; height: 12px; top: 25%; left: 85%; animation-delay: 2s; animation-duration: 10s;
+}
+
+.static-particle:nth-child(2) {
+  width: 12px; height: 12px; top: 25%; left: 85%; animation-delay: 2s; animation-duration: 10s;
+}
+
+.static-particle:nth-child(2) {
+  width: 12px; height: 12px; top: 25%; left: 85%; animation-delay: 2s; animation-duration: 10s;
+}
+
+.static-particle:nth-child(2) {
+  width: 12px; height: 12px; top: 25%; left: 85%; animation-delay: 2s; animation-duration: 10s;
+}
+
+.static-particle:nth-child(2) {
+  width: 12px; height: 12px; top: 25%; left: 85%; animation-delay: 2s; animation-duration: 10s;
+}
 .static-particle:nth-child(3) {
   width: 6px; height: 6px; top: 45%; left: 12%; animation-delay: 4s; animation-duration: 7s;
 }
