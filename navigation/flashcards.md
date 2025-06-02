@@ -512,6 +512,20 @@ permalink: /flashcards
   <input type="number" id="alert-threshold" min="1" value="5">
 </div>
 
+<div class="form-group">
+  <label for="notification-method">Send notification via:</label>
+  <select id="notification-method">
+    <option value="email">Email</option>
+    <option value="sms">SMS (Text Message)</option>
+    <option value="both">Both Email & SMS</option>
+  </select>
+</div>
+
+<div id="phone-container" class="form-group" style="display: none;">
+  <label for="phone-number">Phone number for SMS alerts:</label>
+  <input type="tel" id="phone-number" placeholder="+1 (555) 123-4567">
+</div>
+
 <div class="zapier-instructions">
   <p><strong>How to set up this alert in Zapier:</strong></p>
   <ol class="zapier-steps">
@@ -523,10 +537,39 @@ permalink: /flashcards
   
   <div class="zapier-code" id="zapier-url"></div>
   
-  <ol class="zapier-steps" start="5">
-    <li>Choose where to send alerts: Email, SMS, Slack, etc.</li>
-    <li>Test and enable your Zap</li>
-  </ol>
+  <div id="email-instructions">
+    <p><strong>For Email Alerts:</strong></p>
+    <ol class="zapier-steps" start="5">
+      <li>Add Gmail as your action app</li>
+      <li>Use the "message" field from the webhook as your email body</li>
+      <li>Test and enable your Zap</li>
+    </ol>
+  </div>
+  
+  <div id="sms-instructions" style="display: none;">
+    <p><strong>For SMS Alerts:</strong></p>
+    <ol class="zapier-steps" start="5">
+      <li>Add Twilio as your action app</li>
+      <li>Select "Send SMS Message" as the action</li>
+      <li>Connect your Twilio account</li>
+      <li>Set the "To Number" field to use the "to_number" field from the webhook response</li>
+      <li>Use the "sms_message" field from the webhook for your message</li>
+      <li>Test and enable your Zap</li>
+    </ol>
+  </div>
+  
+  <div id="both-instructions" style="display: none;">
+    <p><strong>For Both Email and SMS:</strong></p>
+    <ol class="zapier-steps" start="5">
+      <li>Add Gmail as your first action app (for email)</li>
+      <li>Use the "message" field from the webhook as your email body</li>
+      <li>Click "+" to add another action</li>
+      <li>Add Twilio as your second action app</li>
+      <li>Set the "To Number" to use the "to_number" field</li>
+      <li>Set the "Message Body" to use the "sms_message" field</li>
+      <li>Test and enable your Zap</li>
+    </ol>
+  </div>
   
   <p><small>Zapier will check stock levels every 15 minutes (free plan) or 1 minute (paid plan).</small></p>
 </div>
@@ -1194,6 +1237,15 @@ function showZapierModal(itemId, itemName) {
   zapierItemId = itemId;
   zapierItemName = itemName;
   
+  // Reset form to defaults
+  document.getElementById('alert-threshold').value = '5';
+  document.getElementById('notification-method').value = 'email';
+  document.getElementById('phone-number').value = '';
+  document.getElementById('phone-container').style.display = 'none';
+  
+  // Show appropriate instructions
+  showInstructionsForMethod('email');
+  
   // Update the URL with the correct item ID and default threshold
   updateZapierUrl();
   
@@ -1202,10 +1254,48 @@ function showZapierModal(itemId, itemName) {
 
 function updateZapierUrl() {
   const threshold = document.getElementById('alert-threshold').value;
-  const baseUrl = window.location.origin; // Gets the base URL of your site
-  const apiUrl = `${pythonURI}/api/zapier/low-stock/${zapierItemId}/${threshold}`;
+  const notificationMethod = document.getElementById('notification-method').value;
+  const phoneNumber = document.getElementById('phone-number').value;
+  
+  let apiUrl;
+  
+  if (notificationMethod === 'email') {
+    apiUrl = `${pythonURI}/api/zapier/low-stock/${zapierItemId}/${threshold}`;
+  } else if (notificationMethod === 'sms') {
+    if (!phoneNumber) {
+      document.getElementById('zapier-url').textContent = 'Please enter a phone number first';
+      return;
+    }
+    apiUrl = `${pythonURI}/api/zapier/low-stock-sms/${zapierItemId}/${threshold}?phone=${encodeURIComponent(phoneNumber)}`;
+  } else { // both
+    if (!phoneNumber) {
+      document.getElementById('zapier-url').textContent = 'Please enter a phone number first';
+      return;
+    }
+    apiUrl = `${pythonURI}/api/zapier/low-stock-both/${zapierItemId}/${threshold}?phone=${encodeURIComponent(phoneNumber)}`;
+  }
   
   document.getElementById('zapier-url').textContent = apiUrl;
+}
+
+function showInstructionsForMethod(method) {
+  const emailInstructions = document.getElementById('email-instructions');
+  const smsInstructions = document.getElementById('sms-instructions');
+  const bothInstructions = document.getElementById('both-instructions');
+  
+  // Hide all instruction sets first
+  emailInstructions.style.display = 'none';
+  smsInstructions.style.display = 'none';
+  bothInstructions.style.display = 'none';
+  
+  // Show the appropriate instructions
+  if (method === 'email') {
+    emailInstructions.style.display = 'block';
+  } else if (method === 'sms') {
+    smsInstructions.style.display = 'block';
+  } else { // both
+    bothInstructions.style.display = 'block';
+  }
 }
 
 // Setup additional event listeners for Zapier functionality
@@ -1217,6 +1307,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
+
+// Show/hide phone field and instructions based on notification method
+document.getElementById('notification-method')?.addEventListener('change', function() {
+  const phoneContainer = document.getElementById('phone-container');
+  if (this.value === 'sms' || this.value === 'both') {
+    phoneContainer.style.display = 'block';
+  } else {
+    phoneContainer.style.display = 'none';
+  }
+  
+  // Show appropriate instructions
+  showInstructionsForMethod(this.value);
+  
+  // Update the Zapier URL whenever the notification method changes
+  updateZapierUrl();
+});
+  
+  // Update URL when phone number changes too
+  document.getElementById('phone-number')?.addEventListener('input', updateZapierUrl);
+
   // Close Zapier modal
   document.getElementById('close-zapier-modal')?.addEventListener('click', () => {
     document.getElementById('zapier-modal').style.display = 'none';
