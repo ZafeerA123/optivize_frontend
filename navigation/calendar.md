@@ -740,8 +740,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!localStorage.getItem('optivizeTasks')) {
     localStorage.setItem('optivizeTasks', JSON.stringify([]));
   }
-
-  // Load data sections from localStorage
+// Load data sections from localStorage
   function loadDataSections() {
     // Static events data
     const staticEvents = [
