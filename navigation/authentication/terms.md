@@ -13,7 +13,7 @@ Effective Date: 5/21/2025
 Welcome to Optivize! These Terms of Service (“Terms”) govern your access to and use of our services, including the Optivize website, dashboard, and integration features like importing Google Sheets data.
 
 1. Acceptance of Terms
-By using Optivize, you agree to be bound by these Terms and our [Privacy Policy](https://zafeera123.github.io/optivize_frontend/navigation/privacy/). If you do not agree, please do not use our services.
+By using Optivize, you agree to be bound by these Terms and our [Privacy Policy](https://open-coding-society.github.io/optivize_frontend/navigation/privacy/). If you do not agree, please do not use our services.
 
 2. User Responsibilities
 You are responsible for maintaining the confidentiality of your account and credentials.
