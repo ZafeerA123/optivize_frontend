@@ -4,7 +4,7 @@
 $dt-gray-dark: #f73618;  // Background
 $dt-code-cell-background: #f54312;
 $dt-gray: #44475a;       // Current Line & Selection
-$dt-gray-light: #f8f8f2; // Foreground
+$dt-gray-light: #100679; // Foreground
 $dt-blue: #6272a4;       // Comment
 $dt-cyan: #8be9fd;
 $dt-green: #50fa7b;
@@ -16,7 +16,7 @@ $dt-yellow: #f1fa8c;
 $dt-green-light: rgb(172, 229, 145);
 
 .language-python + .language-plaintext {
-    border-left: 1px solid grey;
+    border-left: 1px solid rgb(4, 0, 79);
     margin-left: 1rem !important;
 }
 
@@ -54,7 +54,7 @@ $dt-green-light: rgb(172, 229, 145);
     border-left: 1px solid lightcoral;
 }
 .output_area pre {
-    border-left: 1px solid grey;
+    border-left: 1px solid rgb(18, 5, 118);
     margin-left: 1rem !important;
     font-size: 16px;
 }
@@ -152,7 +152,7 @@ $dt-green-light: rgb(172, 229, 145);
     }
 
     .c1 {
-      color: gray;
+      color: rgb(0, 10, 97);
     }
   
     .kd,
