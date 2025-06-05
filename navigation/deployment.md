@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Deployment
-search_exclude: true
+search_exclude: false
 permalink: /aws-deployment-blog
 author: Optivize
 ---
