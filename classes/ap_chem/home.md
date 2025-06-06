@@ -113,7 +113,7 @@ permalink: classes/ap/chem/home
 
 <script>
   function goToIndex() {
-    window.location.href = '/optivize_frontend/';
+    window.location.href = '/about/';
   }
 
   // Add some fun lab sounds

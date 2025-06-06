@@ -55,9 +55,51 @@ permalink: /about
     p {
       color: #fff;
     }
+    .socials-container {
+      background: rgba(255, 221, 0, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+      color: #fbb034;
+    }
+    .socials-container h1 {
+      background: linear-gradient(135deg, #ffdd00, #fbb034);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 20px;
+    }
+    .socials-container a {
+      text-decoration: none;
+      font-weight: bold;
+    }
+
   </style>
 </head>
 <body>
+  <!-- Socials Section -->
+<div class="socials-container mb-5">
+  <h1>Connect with Optivize</h1>
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-6 text-start">
+      <p>
+        📧 <strong>Email:</strong> 
+        <a href="mailto:optivize47@gmail.com" style="color: #fbb034;">optivize47@gmail.com</a>
+      </p>
+      <p>
+        💻 <strong>GitHub:</strong> 
+        <a href="https://github.com/Open-Coding-Society/optivize_frontend" target="_blank" style="color: #fbb034;">github.com/Open-Coding-Society/optivize_frontend</a>
+      </p>
+      <p>
+        🔗 <strong>LinkedIn:</strong> 
+        <a href="https://www.linkedin.com/in/zafeer-ahmed-9b0235368/" target="_blank" style="color: #fbb034;">Zafeer Ahmed</a>
+      </p>
+    </div>
+  </div>
+</div>
   <div class="container">
     <h1>About Optivize</h1>
     <section>
