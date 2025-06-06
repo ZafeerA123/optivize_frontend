@@ -55,50 +55,91 @@ permalink: /about
     p {
       color: #fff;
     }
-    .socials-container {
+    /* Container for 2 boxes */
+    .socials-section {
       background: rgba(255, 221, 0, 0.05);
       backdrop-filter: blur(10px);
       border-radius: 12px;
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
       padding: 30px;
       border: 1px solid rgba(255, 255, 255, 0.2);
-      text-align: center;
-      color: #fbb034;
+      margin-bottom: 40px;
     }
-    .socials-container h1 {
+    /* Each box */
+    /* Force center QR box and Buttons box content */
+    .socials-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .socials-box h1 {
       background: linear-gradient(135deg, #ffdd00, #fbb034);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       margin-bottom: 20px;
     }
-    .socials-container a {
-      text-decoration: none;
+    /* Blue buttons */
+    .btn-social-blue {
+      background-color: #3498db; /* Bright blue */
+      color: #fff;
       font-weight: bold;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      width: 200px;
+      text-align: center;
+      transition: all 0.3s ease;
     }
+    .btn-social-blue:hover {
+      background-color: #5dade2;
+      transform: translateY(-3px) scale(1.05);
+    }
+    /* QR code */
+    .qr-code {
+      width: 180px;
+      height: 180px;
+      border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 2px solid #fbb034;
+    }
+    .qr-code:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 20px #fbb034;
+    }
+
 
   </style>
 </head>
 <body>
-  <!-- Socials Section -->
-<div class="socials-container mb-5">
-  <h1>Connect with Optivize</h1>
-  <div class="row justify-content-center mt-4">
-    <div class="col-md-6 text-start">
-      <p>
-        📧 <strong>Email:</strong> 
-        <a href="mailto:optivize47@gmail.com" style="color: #fbb034;">optivize47@gmail.com</a>
-      </p>
-      <p>
-        💻 <strong>GitHub:</strong> 
-        <a href="https://github.com/Open-Coding-Society/optivize_frontend" target="_blank" style="color: #fbb034;">github.com/Open-Coding-Society/optivize_frontend</a>
-      </p>
-      <p>
-        🔗 <strong>LinkedIn:</strong> 
-        <a href="https://www.linkedin.com/in/zafeer-ahmed-9b0235368/" target="_blank" style="color: #fbb034;">Zafeer Ahmed</a>
-      </p>
+<!-- Socials Section - Two Boxes -->
+<div class="socials-section d-flex flex-wrap justify-content-center gap-4 mb-5">
+
+  <!-- Buttons Box -->
+  <div class="socials-box d-flex flex-column align-items-center justify-content-center">
+    <h1>Connect with Optivize</h1>
+    <div class="d-flex flex-column align-items-center gap-3 mt-4">
+      <a href="mailto:optivize47@gmail.com" class="btn btn-social-blue" target="_blank">📧 Email</a>
+      <small style="color: #ccc; font-size: 0.9rem;">optivize47@gmail.com</small>
+      <a href="https://github.com/Open-Coding-Society/optivize_frontend" class="btn btn-social-blue" target="_blank">💻 GitHub</a>
+      <a href="https://www.linkedin.com/in/zafeer-ahmed-9b0235368/" class="btn btn-social-blue" target="_blank">🔗 LinkedIn</a>
     </div>
   </div>
+
+
+  <!-- QR Code Box -->
+  <div class="socials-box text-center d-flex flex-column align-items-center justify-content-center">
+    <h1>Scan Our QR</h1>
+    <p style="color: #fff;">Visit the Optivize site:</p>
+    <img src="{{ site.baseurl }}/images/qr.jpg" alt="Optivize QR Code" class="qr-code mt-3">
+  </div>
+
+
+</div>
+
 </div>
   <div class="container">
     <h1>About Optivize</h1>
